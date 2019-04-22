@@ -1,0 +1,52 @@
+// Copyright 2018, TeamDev. All rights reserved.
+//
+// Redistribution and use in source and/or binary forms, with or without
+// modification, must retain the above copyright notice and the following
+// disclaimer.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+syntax = "proto3";
+
+package spine_examples.kanban;
+
+import "spine/options.proto";
+
+option (type_url_prefix) = "type.spine.io";
+option java_package = "io.spine.examples.kanban.rejection";
+
+// Set the value of `java_multiple_files` to `false` to instruct Protobuf Compiler to put all the
+// rejection classes in one outer class.
+//
+// Then Spine Model Compiler for Java would generate `ThrowableMessage` classes for all
+// these messages. These classes will be named after the classes of rejection messages.
+// Putting rejection message classes under an outer class avoids name clash inside the package.
+//
+option java_multiple_files = false;
+
+import "spine_examples/kanban/identifiers.proto";
+import "spine_examples/kanban/wip_limit.proto";
+
+// A rejection thrown on attempt to add a card to a column which already has the number of cards
+// equal to the defined WIP limit.
+message WipLimitExceeded {
+    ColumnId column = 1 [(required) = true];
+    CardId card = 2 [(required) = true];
+    WipLimit limit = 3 [(required) = true];
+}
+
+// The column already has the requested limit value.
+message WipLimitAlreadySet {
+    ColumnId column = 1 [(required) = true];
+    WipLimit limit = 2 [(required) = true];
+}

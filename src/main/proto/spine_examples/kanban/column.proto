@@ -1,0 +1,65 @@
+//
+// Copyright 2018, TeamDev. All rights reserved.
+//
+// Redistribution and use in source and/or binary forms, with or without
+// modification, must retain the above copyright notice and the following
+// disclaimer.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+syntax = "proto3";
+
+package spine_examples.kanban.server;
+
+import "spine/options.proto";
+
+option (type_url_prefix) = "type.spine.io";
+option java_package = "io.spine.examples.kanban";
+option java_outer_classname = "ColumnProto";
+option java_multiple_files = true;
+
+import "spine_examples/kanban/identifiers.proto";
+import "spine_examples/kanban/wip_limit.proto";
+
+// A column on a Kanban board.
+message Column {
+
+    option (entity).kind = AGGREGATE;
+
+    // The identifier of the column on its board.
+    ColumnId id = 1 [(required) = true];
+
+    // A human-readable name of the column.
+    string name = 2 [(required) = true];
+
+    // Cards are placed in the order of their priorities, with the highest priority at the top.
+    repeated CardId card = 3;
+
+    // WIP limit for a column.
+    WipLimit wip_limit = 4;
+}
+
+// The process of moving cards between columns.
+message CardTransition {
+
+    option (entity).kind = PROCESS_MANAGER;
+
+    // The ID of the column to which the user wants to move the card.
+    ColumnId target_column = 1 [(required) = true];
+
+    // The ID of the column where the card is placed when the process begins.
+    ColumnId origin_column = 2 [(required) = true];
+
+    // The ID of the moving card.
+    CardId card = 3 [(required) = true];
+}

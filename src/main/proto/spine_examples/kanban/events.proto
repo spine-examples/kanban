@@ -1,0 +1,170 @@
+//
+// Copyright 2018, TeamDev. All rights reserved.
+//
+// Redistribution and use in source and/or binary forms, with or without
+// modification, must retain the above copyright notice and the following
+// disclaimer.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+syntax = "proto3";
+
+package spine_examples.kanban;
+
+import "spine/options.proto";
+
+option (type_url_prefix) = "type.spine.io";
+option java_package = "io.spine.examples.kanban.event";
+option java_multiple_files = true;
+
+import "spine_examples/kanban/identifiers.proto";
+import "spine_examples/kanban/wip_limit.proto";
+
+// A new board has been created.
+//
+// After this event the board needs to be filled with columns.
+// See: `BoardInitialized`.
+//
+message BoardCreated {
+
+    // The ID of the created board.
+    BoardId board = 1 [(required) = true];
+}
+
+// Default set of columns has been added to the board.
+//
+// After this event the board is ready for placing cards.
+//
+message BoardInitialized {
+
+    BoardId board = 1 [(required) = true];
+
+    repeated ColumnId columns = 2 [(required) = true];
+}
+
+// A column added to the board.
+message ColumnAdded {
+
+    // The ID of the board.
+    BoardId board = 1 [(required) = true];
+
+    // The ID of the added column.
+    ColumnId column = 2 [(required) = true];
+}
+
+// A new card is created.
+message CardCreated {
+
+    // The ID of the newly created card.
+    CardId card = 1 [(required) = true];
+
+    // The ID of the board which contains the card.
+    BoardId board = 2 [(required) = true];
+
+    // A name of card that was created.
+    string name = 3 [(required) = true];
+
+    // Optional work description text.
+    string description = 4;
+}
+
+// A column was created.
+message ColumnCreated {
+
+    // The ID of the created column.
+    ColumnId column = 1 [(required) = true];
+
+    // The ID of the board on which the column created.
+    BoardId board = 2 [(required) = true];
+
+    // The name of the new column.
+    string name = 3 [(required) = true];
+
+    // If `true` the column is created during the board initialization.
+    bool board_init = 4;
+}
+
+// A new card is waiting to be placed to a column.
+message CardWaitingPlacement {
+
+    // The ID of the card which is going to be placed in the column.
+    CardId card = 1 [(required) = true];
+
+    // The ID of the target column.
+    ColumnId column = 2 [(required) = true];
+}
+
+// A card was added to a column.
+message CardAddedToColumn {
+
+    option (is).java_type = "CardMovingEvent";
+
+    // The ID of the card which was added.
+    CardId card = 1 [(required) = true];
+
+    // The ID of the column.
+    ColumnId column = 2 [(required) = true];
+
+    // Is `true` if the card was added because of the move operation.
+    bool moving = 3;
+}
+
+// A card was removed from a column.
+message CardRemovedFromColumn {
+
+    option (is).java_type = "CardMovingEvent";
+
+    // The ID of the card which was removed.
+    CardId card = 1 [(required) = true];
+
+    // The ID of the column.
+    ColumnId column = 2 [(required) = true];
+
+    // Is `true` if the card was added because of the move operation.
+    bool moving = 3;
+
+    // Contains ID of the column to which the card moved during the move operation.
+    ColumnId new_column = 4;
+}
+
+// A card was moved from one column to another.
+message CardMoved {
+
+    // The ID of the moved card.
+    CardId card = 1 [(required) = true];
+
+    // The column where the card was placed before.
+    ColumnId previous = 2 [(required) = true];
+
+    // The column where the card is now.
+    ColumnId current = 3 [(required) = true];
+}
+
+// A column got non-zero WIP limit.
+message WipLimitSet {
+    ColumnId column = 1 [(required) = true];
+    WipLimit limit = 2 [(required) = true];
+}
+
+// A column got new value of WIP limit, which changes previous non-zero value.
+message WipLimitChanged {
+    ColumnId column = 1 [(required) = true];
+    WipLimit new_value = 2 [(required) = true];
+    WipLimit previous_value = 3 [(required) = true];
+}
+
+// WIP limit was cleared in a column.
+message WipLimitRemoved {
+    ColumnId column = 1 [(required) = true];
+    WipLimit previous_limit = 2 [(required) = true];
+}

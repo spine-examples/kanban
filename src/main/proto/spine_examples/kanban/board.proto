@@ -1,0 +1,75 @@
+//
+// Copyright 2018, TeamDev. All rights reserved.
+//
+// Redistribution and use in source and/or binary forms, with or without
+// modification, must retain the above copyright notice and the following
+// disclaimer.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+syntax = "proto3";
+
+package spine_examples.kanban;
+
+import "spine/options.proto";
+
+option (type_url_prefix) = "type.spine.io";
+option java_package = "io.spine.examples.kanban";
+option java_outer_classname = "BoardProto";
+option java_multiple_files = true;
+
+import "spine_examples/kanban/identifiers.proto";
+
+// A Kanban board is segmented with columns.
+//
+// Newly added cards are added to the first column in a board.
+//
+message Board {
+
+    option (entity).kind = AGGREGATE;
+
+    BoardId id = 1 [(required) = true];
+
+    // Columns of the board.
+    //
+    // By convention of this example application, the first column contains cards that wait
+    // to be worked on. The last column is for cards that are done. Columns in between are
+    // for stages of processing (i.e. work in progress).
+    //
+    repeated ColumnId column = 5;
+}
+
+// After a board is created it is initialized with the default set of columns.
+//
+// Once these columns are created, the board is initialized.
+//
+message BoardInit {
+
+    option (entity).kind = PROCESS_MANAGER;
+
+    // The ID of the board we initialize.
+    BoardId id = 1 [(required) = true];
+
+    // The column to create next.
+    DefaultColumn step = 2;
+
+    // Columns already created.
+    repeated ColumnId created_column = 3;
+
+    enum DefaultColumn {
+        TO_DO = 0;
+        IN_PROGRESS = 1;
+        REVIEW = 2;
+        DONE = 3;
+    }
+}

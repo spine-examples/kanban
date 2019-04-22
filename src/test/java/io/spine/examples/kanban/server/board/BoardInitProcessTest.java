@@ -1,0 +1,83 @@
+/*
+ * Copyright 2018, TeamDev. All rights reserved.
+ *
+ * Redistribution and use in source and/or binary forms, with or without
+ * modification, must retain the above copyright notice and the following
+ * disclaimer.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+package io.spine.examples.kanban.server.board;
+
+import io.spine.examples.kanban.Column;
+import io.spine.examples.kanban.ColumnId;
+import io.spine.examples.kanban.command.CreateColumn;
+import io.spine.examples.kanban.server.KanbanContextTest;
+import io.spine.testing.server.CommandSubject;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+import java.util.stream.IntStream;
+
+import static io.spine.examples.kanban.server.board.BoardInitProcess.defaultColumnCount;
+import static java.util.stream.Collectors.toList;
+
+@DisplayName("BoardInitProcess should")
+class BoardInitProcessTest extends KanbanContextTest {
+
+    @BeforeEach
+    void sendCommand() {
+        context().receivesCommand(createBoard());
+    }
+
+    @Test
+    @DisplayName("issue creation commands for all default columns")
+    void issuesCreationCommands() {
+        CommandSubject commands = context().assertCommands();
+        CreateColumn commandForBoardInit = CreateColumn
+                .newBuilder()
+                .setBoardInit(true)
+                .build();
+        IntStream.range(0, defaultColumnCount())
+                 .forEach(i -> commands.message(i)
+                                       .ignoringFields(1, 2, 3) // all but `board_init`.
+                                       .isEqualTo(commandForBoardInit)
+                 );
+    }
+
+    @Test
+    @DisplayName("create default columns")
+    void createsColumns() {
+        List<ColumnId> defaultColumns =
+                context().commandMessages()
+                         .stream()
+                         .filter(m -> m instanceof CreateColumn)
+                         .map(m -> ((CreateColumn) m).getColumn())
+                         .collect(toList());
+        defaultColumns.forEach(
+                c -> context().assertEntityWithState(Column.class, c)
+                              .exists()
+        );
+    }
+
+    @Test
+    @DisplayName("delete itself when finished")
+    void isDeletedWhenFinished() {
+        context().assertEntity(BoardInitProcess.class, board())
+                 .deletedFlag()
+                 .isTrue();
+    }
+}

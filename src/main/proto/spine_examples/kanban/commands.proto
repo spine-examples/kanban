@@ -1,0 +1,131 @@
+//
+// Copyright 2018, TeamDev. All rights reserved.
+//
+// Redistribution and use in source and/or binary forms, with or without
+// modification, must retain the above copyright notice and the following
+// disclaimer.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+syntax = "proto3";
+
+package spine_examples.kanban;
+
+import "spine/options.proto";
+
+option (type_url_prefix) = "type.spine.io";
+option java_package = "io.spine.examples.kanban.command";
+option java_outer_classname = "CommandsProto";
+option java_multiple_files = true;
+
+import "spine_examples/kanban/identifiers.proto";
+import "spine_examples/kanban/wip_limit.proto";
+
+// A command to create a new board.
+message CreateBoard {
+
+    // The ID of the board to create.
+    BoardId board = 1;
+}
+
+// A command to create a new column on a board.
+message CreateColumn {
+
+    // The ID of the column to create.
+    ColumnId column = 1;
+
+    // The ID of the board on which to create the column.
+    BoardId board = 2 [(required) = true];
+
+    // The name of the column.
+    string name = 3 [(required) = true];
+
+    // If `true` the command is created for a board initialization column.
+    bool board_init = 4;
+}
+
+// A command to create a new card on the specified board.
+//
+// New cards are placed into the first column of the board.
+//
+message CreateCard {
+
+    // The ID for newly created card.
+    CardId card = 1;  // Example note: By convention the first field of a command is its target.
+                      // So we don't have to mark it as required.
+    
+    // An ID of the board card is created on.
+    BoardId board = 2 [(required) = true];
+
+    // A name for card to create.
+    string name = 3 [(required) = true];
+
+    // A description of work to be done.
+    string description = 4;
+}
+
+// Move the card from the current column to another column.
+message MoveCard {
+
+    // The column to which we want to move the card.
+    ColumnId target_column = 1;
+
+    // An ID for the card to be moved.
+    CardId card = 2 [(required) = true];
+
+    // The column in which the card is currently placed.
+    ColumnId current_column = 3 [(required) = true];
+}
+
+// Add a card to a column.
+message AddCardToColumn {
+
+    // The ID of the column.
+    ColumnId column = 1;
+
+    // The ID of the card to remove.
+    CardId card = 2 [(required) = true];
+
+    // If `true`, if the card is moving from another column.
+    bool moving = 3;
+}
+
+// Remove a card from a column.
+message RemoveCardFromColumn {
+
+    // The ID of the column.
+    ColumnId column = 1;
+
+    // The ID of the card to remove.
+    CardId card = 2 [(required) = true];
+
+    // If `true`, the card is leaving this column because of the move operation.
+    // If `false`, the card is simply removed from the column.
+    bool moving = 3;
+
+    // Contains ID of the new column which the card is leaving because of the move operation.
+    ColumnId new_column = 4;
+}
+
+// Set the value of Work-In-Progress (WIP) limit for a column.
+message SetWipLimit {
+
+    // The ID of the column.
+    ColumnId column = 1;
+
+    // The value of the limit.
+    //
+    // If not set, the command clears the limit.
+    //
+    WipLimit limit = 2;
+}

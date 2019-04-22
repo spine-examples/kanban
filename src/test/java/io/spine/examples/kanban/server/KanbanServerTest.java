@@ -1,0 +1,88 @@
+/*
+ * Copyright 2018, TeamDev. All rights reserved.
+ *
+ * Redistribution and use in source and/or binary forms, with or without
+ * modification, must retain the above copyright notice and the following
+ * disclaimer.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+package io.spine.examples.kanban.server;
+
+import io.spine.client.QueryResponse;
+import io.spine.examples.kanban.Board;
+import io.spine.examples.kanban.BoardId;
+import io.spine.server.Server;
+import io.spine.testing.client.grpc.TestClient;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+
+import static io.spine.examples.kanban.server.TestCommands.createBoard;
+import static io.spine.testing.core.given.GivenUserId.newUuid;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
+/**
+ * Tests the Kanban server to properly handle commands and respond to queries.
+ */
+@DisplayName("Kanban Server should")
+class KanbanServerTest {
+
+    static final String HOST = "localhost";
+    private Server server;
+    private TestClient client;
+
+    private BoardId boardId;
+
+    @BeforeEach
+    void setup(){
+        server = KanbanServer.create();
+        client = new TestClient(newUuid(), HOST, server.getPort());
+        startServer();
+
+        boardId = BoardId.generate();
+    }
+
+    private void startServer() {
+        try {
+            server.start();
+        } catch (IOException e) {
+            fail(e);
+        }
+    }
+
+    @AfterEach
+    void tearDown() throws InterruptedException {
+        client.shutdown();
+        server.shutdownAndWait();
+    }
+
+    @Nested
+    class Boards {
+
+        @Test
+        @DisplayName("create boards")
+        void create() {
+            client.post(createBoard(boardId));
+
+            QueryResponse response = client.queryAll(Board.class);
+            assertEquals(1, response.getMessagesCount());
+        }
+    }
+}
