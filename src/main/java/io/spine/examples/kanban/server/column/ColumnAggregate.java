@@ -1,5 +1,5 @@
 /*
- * Copyright 2018, TeamDev. All rights reserved.
+ * Copyright 2019, TeamDev. All rights reserved.
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -63,6 +63,7 @@ final class ColumnAggregate extends Aggregate<ColumnId, Column, ColumnVBuilder> 
     @Apply
     private void event(ColumnCreated e) {
         builder().setId(e.getColumn())
+                 .setBoard(e.getBoard())
                  .setName(e.getName());
     }
 

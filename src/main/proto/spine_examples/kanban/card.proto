@@ -19,7 +19,7 @@
 //
 syntax = "proto3";
 
-package spine_examples.kanban.server;
+package spine_examples.kanban;
 
 import "spine/options.proto";
 

@@ -24,45 +24,25 @@ package spine_examples.kanban;
 import "spine/options.proto";
 
 option (type_url_prefix) = "type.spine.io";
-option java_package = "io.spine.examples.kanban";
-option java_outer_classname = "ColumnProto";
+option java_package = "io.spine.examples.kanban.view";
+option java_outer_classname = "ViewsProto";
 option java_multiple_files = true;
 
 import "spine_examples/kanban/identifiers.proto";
-import "spine_examples/kanban/wip_limit.proto";
+import "spine_examples/kanban/column.proto";
+import "spine_examples/kanban/card.proto";
 
-// A column on a Kanban board.
-message Column {
+// Displays board information.
+message BoardView {
 
-    option (entity).kind = AGGREGATE;
+    option (entity).kind = PROJECTION;
 
-    // The identifier of the column on its board.
-    ColumnId id = 1 [(required) = true];
+    // The ID of the board.
+    BoardId id = 1 [(required) = true];
 
-    // The board to which the column belongs.
-    BoardId board = 2 [(required) = true];
+    // Columns of the board.
+    repeated Column column = 2;
 
-    // A human-readable name of the column.
-    string name = 3 [(required) = true];
-
-    // Cards are placed in the order of their priorities, with the highest priority at the top.
-    repeated CardId card = 4;
-
-    // WIP limit for a column.
-    WipLimit wip_limit = 5;
-}
-
-// The process of moving cards between columns.
-message CardTransition {
-
-    option (entity).kind = PROCESS_MANAGER;
-
-    // The ID of the column to which the user wants to move the card.
-    ColumnId target_column = 1 [(required) = true];
-
-    // The ID of the column where the card is placed when the process begins.
-    ColumnId origin_column = 2 [(required) = true];
-
-    // The ID of the moving card.
-    CardId card = 3 [(required) = true];
+    // Cards of the board.
+    repeated Card card = 3;
 }
