@@ -25,6 +25,7 @@ import io.spine.examples.kanban.server.board.BoardRepository;
 import io.spine.examples.kanban.server.card.CardRepository;
 import io.spine.examples.kanban.server.column.ColumnRepository;
 import io.spine.examples.kanban.server.column.MoveCardRepository;
+import io.spine.examples.kanban.server.view.BoardProjectionRepository;
 import io.spine.server.BoundedContext;
 import io.spine.server.BoundedContextBuilder;
 
@@ -50,6 +51,7 @@ final class KanbanContext {
                     .add(new BoardRepository())
                     .add(new BoardInitRepository())
                     .add(new ColumnRepository())
-                    .add(new MoveCardRepository());
+                    .add(new MoveCardRepository())
+                    .add(new BoardProjectionRepository());
     }
 }

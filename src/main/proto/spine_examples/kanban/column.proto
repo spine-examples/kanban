@@ -33,7 +33,7 @@ import "spine_examples/kanban/wip_limit.proto";
 
 // A column on a Kanban board.
 message Column {
-
+    option (is).java_type = "BoardElement";
     option (entity).kind = AGGREGATE;
 
     // The identifier of the column on its board.
