@@ -22,10 +22,12 @@
  * This package contains basic data types of the Kanban example application.
  */
 
+@BoundedContext("Kanban")
 @CheckReturnValue
 @ParametersAreNonnullByDefault
 package io.spine.examples.kanban;
 
 import com.google.errorprone.annotations.CheckReturnValue;
+import io.spine.server.annotation.BoundedContext;
 
 import javax.annotation.ParametersAreNonnullByDefault;
