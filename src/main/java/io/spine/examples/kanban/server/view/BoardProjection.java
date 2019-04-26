@@ -32,11 +32,34 @@ import io.spine.server.projection.Projection;
 
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * Builds display information for a board.
  */
 final class BoardProjection extends Projection<BoardId, BoardView, BoardViewVBuilder> {
+
+
+    @Subscribe
+    void on(BoardCreated e) {
+        builder().setId(e.getBoard());
+    }
+
+    @Subscribe
+    void updated(Column column) {
+        boolean replaced = replace(builder().getColumn(), column, Column::getId);
+        if(!replaced) {
+            builder().addColumn(column);
+        }
+    }
+
+    @Subscribe
+    void updated(Card card) {
+        boolean replaced = replace(builder().getCard(), card, Card::getId);
+        if (!replaced) {
+            builder().addCard(card);
+        }
+    }
 
     /**
      * Replaces an item of the passed list which property obtained by the passed function is
@@ -60,29 +83,13 @@ final class BoardProjection extends Projection<BoardId, BoardView, BoardViewVBui
      * @param <P>
      *         the type of the item property
      */
-    private static <T extends Message, P> void replace(List<T> items, T item, Function<T, P> prop) {
-        for (int i = 0; i < items.size(); i++) {
-            T current = items.get(i);
-            P passed = prop.apply(item);
-            P found = prop.apply(current);
-            if (passed.equals(found)) {
-                items.set(i, item);
-            }
+    private static <T extends Message, P>
+    boolean replace(List<T> items, T item, Function<T, P> prop) {
+        Predicate<T> propsEqual = t -> prop.apply(t).equals(prop.apply(item));
+        boolean found = items.stream().anyMatch(propsEqual);
+        if (found) {
+            items.replaceAll(i -> propsEqual.test(i) ? item : i);
         }
-    }
-
-    @Subscribe
-    void on(BoardCreated e) {
-        builder().setId(e.getBoard());
-    }
-
-    @Subscribe
-    void updated(Column column) {
-        replace(builder().getColumn(), column, Column::getId);
-    }
-
-    @Subscribe
-    void updated(Card card) {
-        replace(builder().getCard(), card, Card::getId);
+        return found;
     }
 }
