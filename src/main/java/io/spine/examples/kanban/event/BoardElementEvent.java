@@ -22,7 +22,7 @@ package io.spine.examples.kanban.event;
 
 import com.google.errorprone.annotations.Immutable;
 import io.spine.annotation.GeneratedMixin;
-import io.spine.base.SerializableMessage;
+import io.spine.base.EventMessage;
 import io.spine.examples.kanban.BoardId;
 
 import java.util.Set;
@@ -31,7 +31,7 @@ import static io.spine.server.route.EventRoute.withId;
 
 @Immutable
 @GeneratedMixin
-public interface BoardElementEvent extends SerializableMessage {
+public interface BoardElementEvent extends EventMessage {
 
     BoardId getBoard();
 

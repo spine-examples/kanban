@@ -37,6 +37,10 @@ public final class BoardRepository extends AggregateRepository<BoardId, BoardAgg
     public BoardRepository() {
         super();
         eventRouting()
+                //TODO:2019-04-26:alexander.yevsyukov: Use interface-base routing when the feature is available form core-java.
+                // See: https://github.com/SpineEventEngine/core-java/issues/1037
+                //                .route(BoardElementEvent.class, (event, context) -> event.board())
+
                 .route(CardCreated.class, (event, context) -> event.board())
                 .route(ColumnCreated.class, (event, context) -> event.board());
     }
