@@ -64,6 +64,7 @@ message ColumnAdded {
 
 // A new card is created.
 message CardCreated {
+    option (is).java_type = "BoardElementEvent";
 
     // The ID of the newly created card.
     CardId card = 1 [(required) = true];
@@ -80,6 +81,7 @@ message CardCreated {
 
 // A column was created.
 message ColumnCreated {
+    option (is).java_type = "BoardElementEvent";
 
     // The ID of the created column.
     ColumnId column = 1 [(required) = true];

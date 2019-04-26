@@ -18,26 +18,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.examples.kanban.server.board;
+package io.spine.examples.kanban.event;
 
+import com.google.errorprone.annotations.Immutable;
+import io.spine.annotation.GeneratedMixin;
+import io.spine.base.SerializableMessage;
 import io.spine.examples.kanban.BoardId;
-import io.spine.examples.kanban.event.CardCreated;
-import io.spine.examples.kanban.event.ColumnCreated;
-import io.spine.server.aggregate.AggregateRepository;
 
-/**
- * The repository for managing {@link BoardAggregate} instances.
- *
- * <p>Routes the {@link io.spine.examples.kanban.event.CardCreated card created event} to an
- * appropriate {@linkplain BoardAggregate board aggregate} so that a new card appears in the
- * first column.
- */
-public final class BoardRepository extends AggregateRepository<BoardId, BoardAggregate> {
+import java.util.Set;
 
-    public BoardRepository() {
-        super();
-        eventRouting()
-                .route(CardCreated.class, (event, context) -> event.board())
-                .route(ColumnCreated.class, (event, context) -> event.board());
+import static io.spine.server.route.EventRoute.withId;
+
+@Immutable
+@GeneratedMixin
+public interface BoardElementEvent extends SerializableMessage {
+
+    BoardId getBoard();
+
+    /**
+     * Obtains the singleton set containing the ID of the target board.
+     */
+    default Set<BoardId> board() {
+        return withId(getBoard());
     }
 }
