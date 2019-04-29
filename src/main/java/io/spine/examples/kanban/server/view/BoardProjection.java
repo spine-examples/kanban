@@ -22,6 +22,7 @@ package io.spine.examples.kanban.server.view;
 
 import com.google.protobuf.Message;
 import io.spine.core.Subscribe;
+import io.spine.examples.kanban.BoardElement;
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.Card;
 import io.spine.examples.kanban.Column;
@@ -31,14 +32,13 @@ import io.spine.examples.kanban.view.BoardViewVBuilder;
 import io.spine.server.projection.Projection;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 /**
  * Builds display information for a board.
  */
 final class BoardProjection extends Projection<BoardId, BoardView, BoardViewVBuilder> {
-
 
     @Subscribe
     void on(BoardCreated e) {
@@ -47,18 +47,32 @@ final class BoardProjection extends Projection<BoardId, BoardView, BoardViewVBui
 
     @Subscribe
     void updated(Column column) {
-        boolean replaced = replace(builder().getColumn(), column, Column::getId);
-        if(!replaced) {
+        setId(column);
+        boolean replaced =
+                replace(builder().getColumn(), column, Column::getId, builder()::addColumn);
+        if (!replaced) {
             builder().addColumn(column);
         }
     }
 
     @Subscribe
     void updated(Card card) {
-        boolean replaced = replace(builder().getCard(), card, Card::getId);
+        setId(card);
+        boolean replaced = replace(builder().getCard(), card, Card::getId, builder()::addCard);
         if (!replaced) {
             builder().addCard(card);
         }
+    }
+
+    /**
+     * Ensures that the board ID is set from the passed board element.
+     *
+     * <p>This method takes care of setting the required state field when the updates to the
+     * entities to which the projection is subscribed are dispatched <em>before</em>
+     * the {@link #on(BoardCreated) BoardCreated}, which normally would set the ID.
+     */
+    void setId(BoardElement e) {
+        builder().setId(e.getBoard());
     }
 
     /**
@@ -78,18 +92,40 @@ final class BoardProjection extends Projection<BoardId, BoardView, BoardViewVBui
      *         the new item
      * @param prop
      *         the function to obtain a property from items
+     * @param replaceFn
+     *         method reference for replacing an item in the list
      * @param <T>
      *         the type of items
      * @param <P>
      *         the type of the item property
      */
     private static <T extends Message, P>
-    boolean replace(List<T> items, T item, Function<T, P> prop) {
-        Predicate<T> propsEqual = t -> prop.apply(t).equals(prop.apply(item));
-        boolean found = items.stream().anyMatch(propsEqual);
-        if (found) {
-            items.replaceAll(i -> propsEqual.test(i) ? item : i);
+    boolean replace(List<T> items, T item, Function<T, P> prop, BiConsumer<Integer, T> replaceFn) {
+        int index = indexOf(items, item, prop);
+        if (index != -1) {
+            replaceFn.accept(index, item);
+            return true;
         }
-        return found;
+        return false;
+    }
+
+    /**
+     * Obtains an index of the item in the list which property obtained through the passed function
+     * is equal to the one of the existing item.
+     *
+     * @return the index of the matching item, or -1 if there is no such item
+     */
+    private static <T extends Message, P>
+    int indexOf(List<T> items, T item, Function<T, P> prop) {
+        int i = 0;
+        P itemProp = prop.apply(item);
+        for (T existing : items) {
+            P existingProp = prop.apply(existing);
+            if (existingProp.equals(itemProp)) {
+                return i;
+            }
+            ++i;
+        }
+        return -1;
     }
 }
