@@ -1,5 +1,5 @@
 /*
- * Copyright 2018, TeamDev. All rights reserved.
+ * Copyright 2019, TeamDev. All rights reserved.
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -53,7 +53,7 @@ class BoardInitProcessTest extends KanbanContextTest {
                 .build();
         IntStream.range(0, defaultColumnCount())
                  .forEach(i -> commands.message(i)
-                                       .ignoringFields(1, 2, 3) // all but `board_init`.
+                                       .comparingExpectedFieldsOnly()
                                        .isEqualTo(commandForBoardInit)
                  );
     }

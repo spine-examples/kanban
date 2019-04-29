@@ -79,13 +79,6 @@ final class BoardProjection extends Projection<BoardId, BoardView, BoardViewVBui
      * Replaces an item of the passed list which property obtained by the passed function is
      * equal to that of the passed new item.
      *
-     * <p>The common use for this method is to replace an item in a {@code List} which represents
-     * a builder of a repeated field:
-     *
-     * <pre>{@code
-     *      replace(builder().getItem(), item, Item::getId);
-     * }</pre>
-     *
      * @param items
      *         the list in which to replace the item
      * @param item
