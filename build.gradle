@@ -1,0 +1,62 @@
+/*
+ * Copyright 2019, TeamDev. All rights reserved.
+ *
+ * Redistribution and use in source and/or binary forms, with or without
+ * modification, must retain the above copyright notice and the following
+ * disclaimer.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+plugins {
+    id 'io.spine.tools.gradle.bootstrap' version '0.15.3' apply false
+    id 'net.ltgt.errorprone' version '0.6' apply false
+}
+
+subprojects {
+    apply plugin: 'io.spine.tools.gradle.bootstrap'
+
+    spine.enableJava().server()
+
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+
+    apply plugin: 'net.ltgt.errorprone'
+    apply from: "$rootDir/gradle/pmd.gradle"
+    apply from: "$rootDir/gradle/idea.gradle"
+    apply from: "$rootDir/gradle/tests.gradle"
+
+    forceConfiguration(project)
+    dependencies {
+        errorprone deps.build.errorProneCore
+        errorproneJavac deps.build.errorProneJavac
+
+        implementation deps.build.guava
+        implementation deps.build.checkerAnnotations
+
+        runtimeOnly "org.slf4j:slf4j-jdk14:$deps.versions.slf4j"
+
+        testImplementation group: 'io.spine', name: 'spine-testutil-server', version: spineVersion
+        testRuntimeOnly deps.test.junit5Runner
+    }
+
+    compileJava {
+        options.encoding = 'UTF-8'
+        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    }
+
+    compileTestJava {
+        options.encoding = 'UTF-8'
+        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    }
+}

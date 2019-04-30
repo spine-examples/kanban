@@ -1,0 +1,57 @@
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+# IntelliJ IDEA modules and interim config files.
+*.iml
+.idea/libraries
+.idea/modules/
+.idea/shelf
+.idea/*.xml
+
+# Do not ingore Gradle Wrapper runtime
+!/gradle/wrapper/gradle-wrapper.jar
+
+# Do not ignore these IDEA config files
+# Legacy code style settings. Since v2018.3RC IDEA keeps them for compatibility reasons.
+!/.idea/codeStyleSettings.xml
+# VCS settings
+!/.idea/vcs.xml
+
+# Gradle interim configs
+.gradle/
+
+# Generated source code
+generated/
+
+# Gradle build files
+build/*
+*/build/*
+
+# IDEA build files
+out/
+
+# Spine temporary artifact storage
+.spine/
+
+# Credentials to Maven repositories and Google Cloud Storage used for Travis build reports
+credentials.tar
+credentials.properties
+cloudrepo.properties
+deploy_key_rsa
+gcs-auth-key.json
+
+#
+# The gradle.properties file should contain settings specific to a developer's workstation.
+#
+# See sample file for a macOS workstation below.
+# -------
+# # Set Java home to point to JDK8
+# # suppress inspection "UnusedProperty"
+# org.gradle.java.home=/Library/Java/JavaVirtualMachines/jdk1.8.0_51.jdk/Contents/Home/
+# -------
+gradle.properties
