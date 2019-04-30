@@ -22,7 +22,6 @@ package io.spine.examples.kanban.server.view;
 
 import com.google.protobuf.Message;
 import io.spine.core.Subscribe;
-import io.spine.examples.kanban.BoardAware;
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.Card;
 import io.spine.examples.kanban.Column;
@@ -47,9 +46,9 @@ final class BoardProjection extends Projection<BoardId, BoardView, BoardViewVBui
 
     @Subscribe
     void updated(Column column) {
-        setId(column);
+        ensureId();
         boolean replaced =
-                replace(builder().getColumn(), column, Column::getId, builder()::addColumn);
+                replace(builder().getColumn(), column, Column::getId, builder()::setColumn);
         if (!replaced) {
             builder().addColumn(column);
         }
@@ -57,22 +56,18 @@ final class BoardProjection extends Projection<BoardId, BoardView, BoardViewVBui
 
     @Subscribe
     void updated(Card card) {
-        setId(card);
-        boolean replaced = replace(builder().getCard(), card, Card::getId, builder()::addCard);
+        ensureId();
+        boolean replaced = replace(builder().getCard(), card, Card::getId, builder()::setCard);
         if (!replaced) {
             builder().addCard(card);
         }
     }
 
     /**
-     * Ensures that the board ID is set from the passed board element.
-     *
-     * <p>This method takes care of setting the required state field when the updates to the
-     * entities to which the projection is subscribed are dispatched <em>before</em>
-     * the {@link #on(BoardCreated) BoardCreated}, which normally would set the ID.
+     * Ensures that the board ID is set to the state.
      */
-    void setId(BoardAware e) {
-        builder().setId(e.getBoard());
+    private void ensureId() {
+        builder().setId(id());
     }
 
     /**
