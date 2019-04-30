@@ -21,7 +21,7 @@
 package io.spine.examples.kanban.server.view;
 
 import com.google.protobuf.Message;
-import io.spine.examples.kanban.BoardElement;
+import io.spine.examples.kanban.BoardAware;
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.view.BoardView;
 import io.spine.protobuf.AnyPacker;
@@ -41,8 +41,8 @@ public final class BoardProjectionRepository
         super();
         eventRouting().route(EntityStateChanged.class, (event, context) -> {
             Message newState = AnyPacker.unpack(event.getNewState());
-            if (newState instanceof BoardElement) {
-                return withId(((BoardElement) newState).getBoard());
+            if (newState instanceof BoardAware) {
+                return withId(((BoardAware) newState).getBoard());
             }
             return noTargets();
         });

@@ -33,7 +33,7 @@ import "spine_examples/kanban/identifiers.proto";
 // A card is definition of work to be done.
 //
 message Card {
-    option (is).java_type = "BoardElement";
+    option (is).java_type = "BoardAware";
     option (entity) = { kind: AGGREGATE visibility: SUBSCRIBE };
 
     // The ID of the card.

@@ -22,7 +22,7 @@ package io.spine.examples.kanban.server.view;
 
 import com.google.protobuf.Message;
 import io.spine.core.Subscribe;
-import io.spine.examples.kanban.BoardElement;
+import io.spine.examples.kanban.BoardAware;
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.Card;
 import io.spine.examples.kanban.Column;
@@ -71,7 +71,7 @@ final class BoardProjection extends Projection<BoardId, BoardView, BoardViewVBui
      * entities to which the projection is subscribed are dispatched <em>before</em>
      * the {@link #on(BoardCreated) BoardCreated}, which normally would set the ID.
      */
-    void setId(BoardElement e) {
+    void setId(BoardAware e) {
         builder().setId(e.getBoard());
     }
 

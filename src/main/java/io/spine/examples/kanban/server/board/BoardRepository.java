@@ -21,7 +21,7 @@
 package io.spine.examples.kanban.server.board;
 
 import io.spine.examples.kanban.BoardId;
-import io.spine.examples.kanban.event.BoardElementEvent;
+import io.spine.examples.kanban.event.BoardAwareEvent;
 import io.spine.server.aggregate.AggregateRepository;
 
 /**
@@ -35,6 +35,6 @@ public final class BoardRepository extends AggregateRepository<BoardId, BoardAgg
 
     public BoardRepository() {
         super();
-        eventRouting().route(BoardElementEvent.class, (event, context) -> event.board());
+        eventRouting().route(BoardAwareEvent.class, (event, context) -> event.board());
     }
 }

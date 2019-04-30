@@ -20,14 +20,10 @@
 
 package io.spine.examples.kanban;
 
-import com.google.errorprone.annotations.Immutable;
-import io.spine.base.SerializableMessage;
-
 /**
  * Common interface for objects on a Kanban board.
  */
-@Immutable
-public interface BoardElement extends SerializableMessage {
+public interface BoardAware {
 
     BoardId getBoard();
 }
