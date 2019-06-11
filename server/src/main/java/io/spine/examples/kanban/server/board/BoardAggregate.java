@@ -22,7 +22,6 @@ package io.spine.examples.kanban.server.board;
 
 import io.spine.examples.kanban.Board;
 import io.spine.examples.kanban.BoardId;
-import io.spine.examples.kanban.BoardVBuilder;
 import io.spine.examples.kanban.ColumnId;
 import io.spine.examples.kanban.command.CreateBoard;
 import io.spine.examples.kanban.event.BoardCreated;
@@ -38,13 +37,13 @@ import io.spine.server.event.React;
 /**
  * An aggregate of a Kanban board.
  */
-final class BoardAggregate extends Aggregate<BoardId, Board, BoardVBuilder> {
+final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
 
     @Assign
     BoardCreated handle(CreateBoard command) {
         BoardId id = command.getBoard();
         return BoardCreated
-                .vBuilder()
+                .newBuilder()
                 .setBoard(id)
                 .build();
     }
@@ -60,7 +59,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, BoardVBuilder> {
     @React
     ColumnAdded columnPlacementPolicy(ColumnCreated event) {
         return ColumnAdded
-                .vBuilder()
+                .newBuilder()
                 .setBoard(event.getBoard())
                 .setColumn(event.getColumn())
                 .build();
@@ -83,7 +82,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, BoardVBuilder> {
     CardWaitingPlacement cardPlacementPolicy(CardCreated event) {
         ColumnId firstColumn = state().getColumn(0);
         return CardWaitingPlacement
-                .vBuilder()
+                .newBuilder()
                 .setCard(event.getCard())
                 .setColumn(firstColumn)
                 .build();

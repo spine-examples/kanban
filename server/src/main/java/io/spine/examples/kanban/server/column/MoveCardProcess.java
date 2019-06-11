@@ -22,7 +22,6 @@ package io.spine.examples.kanban.server.column;
 
 import io.spine.examples.kanban.CardId;
 import io.spine.examples.kanban.CardTransition;
-import io.spine.examples.kanban.CardTransitionVBuilder;
 import io.spine.examples.kanban.ColumnId;
 import io.spine.examples.kanban.command.AddCardToColumn;
 import io.spine.examples.kanban.command.MoveCard;
@@ -42,7 +41,7 @@ import io.spine.server.procman.ProcessManager;
  * consistency of the transition.
  */
 final class MoveCardProcess
-        extends ProcessManager<ColumnId, CardTransition, CardTransitionVBuilder> {
+        extends ProcessManager<ColumnId, CardTransition, CardTransition.Builder> {
 
     /**
      * When the user asks to move the card, remember the source and target columns, and
@@ -57,11 +56,11 @@ final class MoveCardProcess
                  .setTargetColumn(targetColumn)
                  .setCard(card);
         return AddCardToColumn
-                .vBuilder()
+                .newBuilder()
                 .setColumn(targetColumn)
                 .setCard(card)
                 .setMoving(true)
-                .build();
+                .vBuild();
     }
 
     /**
@@ -72,7 +71,7 @@ final class MoveCardProcess
     RemoveCardFromColumn completionPolicy(CardAddedToColumn e) {
         CardTransition t = state();
         return RemoveCardFromColumn
-                .vBuilder()
+                .newBuilder()
                 .setColumn(t.getOriginColumn())
                 .setCard(t.getCard())
                 .setMoving(true)
@@ -88,7 +87,7 @@ final class MoveCardProcess
         setDeleted(true);
         CardTransition t = state();
         return CardMoved
-                .vBuilder()
+                .newBuilder()
                 .setCard(t.getCard())
                 .setPrevious(t.getOriginColumn())
                 .setCurrent(t.getTargetColumn())

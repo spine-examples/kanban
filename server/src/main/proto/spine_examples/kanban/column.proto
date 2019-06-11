@@ -34,7 +34,7 @@ import "spine_examples/kanban/wip_limit.proto";
 // A column on a Kanban board.
 message Column {
     option (is).java_type = "BoardAware";
-    option (entity) = { kind: AGGREGATE visibility: SUBSCRIBE };
+    option (entity) = { kind: AGGREGATE visibility: FULL };
 
     // The identifier of the column on its board.
     ColumnId id = 1 [(required) = true];

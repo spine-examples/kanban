@@ -27,16 +27,15 @@ import io.spine.examples.kanban.WipLimit;
 import io.spine.examples.kanban.command.CreateBoard;
 import io.spine.examples.kanban.command.CreateCard;
 import io.spine.examples.kanban.command.CreateColumn;
-import io.spine.examples.kanban.command.MoveCard;
 import io.spine.examples.kanban.command.SetWipLimit;
-import io.spine.testing.TestValues;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import static io.spine.examples.kanban.server.KanbanTest.wipLimit;
+import static io.spine.testing.TestValues.randomString;
 
 /**
  * Static factories for test command messages.
  */
-class TestCommands {
+final class TestCommands {
 
     /** Prevents instantiation. */
     private TestCommands() {
@@ -45,41 +44,29 @@ class TestCommands {
     /** Create a board with the passed ID. */
     static CreateBoard createBoard(BoardId board) {
         return CreateBoard
-                .vBuilder()
+                .newBuilder()
                 .setBoard(board)
-                .build();
+                .vBuild();
     }
 
     /** Create the column on the specified board. */
     static CreateColumn createColumn(BoardId board, ColumnId column) {
         return CreateColumn
-                .vBuilder()
+                .newBuilder()
                 .setBoard(board)
                 .setColumn(column)
-                .setName("Generated column" + TestValues.randomString())
-                .build();
+                .setName("Generated column" + randomString())
+                .vBuild();
     }
 
     /** Create the card on the specified board. */
     static CreateCard createCard(BoardId board, CardId card) {
         return CreateCard
-                .vBuilder()
+                .newBuilder()
                 .setCard(card)
                 .setBoard(board)
-                .setName("Generated card " + TestValues.randomString())
-                .build();
-    }
-
-    /** Move a card from the current column to the target one. */
-    static MoveCard moveCard(CardId card, ColumnId current, ColumnId target) {
-        checkArgument(!current.equals(target),
-                      "The `target` column must not be equal to `current`.");
-        return MoveCard
-                .vBuilder()
-                .setCard(card)
-                .setCurrentColumn(current)
-                .setTargetColumn(target)
-                .build();
+                .setName("Generated card " + randomString())
+                .vBuild();
     }
 
     /**
@@ -91,11 +78,9 @@ class TestCommands {
      */
     static SetWipLimit setWipLimit(ColumnId column, int limit) {
         return SetWipLimit
-                .vBuilder()
+                .newBuilder()
                 .setColumn(column)
-                .setLimit(WipLimit.vBuilder()
-                                  .setValue(limit)
-                                  .build())
-                .build();
+                .setLimit(wipLimit(limit))
+                .vBuild();
     }
 }

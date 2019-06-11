@@ -18,17 +18,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+apply plugin: 'pmd'
 
 /*
- * This script configures Gradle PMD plugin.
+ * Configure Gradle PMD plugin.
  *
- * Currently a warning on "use incremental analysis" is always emitted. But there is no way
- * to enable it due to a Gradle issue.
+ * Currently a warning on "use incremental analysis" is always emitted. 
+ * But there is no way to enable it due to a Gradle issue.
  *
  * See https://github.com/gradle/gradle/issues/8277.
  */
-apply plugin: 'pmd'
-
 pmd {
     toolVersion = "${deps.versions.pmd}"
     consoleOutput= true
@@ -54,12 +53,21 @@ pmdMain.classpath += sourceSets.main.runtimeClasspath
 tasks.withType(JavaCompile) {
 
     // Configure Error Prone:
-    // 1. Exclude generated sources from being analyzed by Error Prone.
-    // 2. Turn the check off until Error Prone can handle `@Nested` JUnit classes.
-    //    See issue: https://github.com/google/error-prone/issues/956
     //
-    // For more config details see: 
-    //    https://github.com/tbroyer/gradle-errorprone-plugin/tree/v0.6#usage
+    // For more config details see:
+    //    https://github.com/tbroyer/gradle-errorprone-plugin/tree/master#usage
+    //
+    options.errorprone.errorproneArgs.addAll(
+            // 1. Exclude generated sources from being analyzed by Error Prone.
+            '-XepExcludedPaths:.*/generated/.*',
 
-    options.errorprone.errorproneArgs << "-XepExcludedPaths:.*/generated/.*" << "-Xep:ClassCanBeStatic:OFF"
+            // 2. Turn the check off until Error Prone can handle `@Nested` JUnit classes.
+            //    See issue: https://github.com/google/error-prone/issues/956
+            '-Xep:ClassCanBeStatic:OFF',
+
+            // 3. Turn off checks which report unused methods and unused method parameters.
+            //    See issue: https://github.com/SpineEventEngine/config/issues/61
+            '-Xep:UnusedMethod:OFF',
+            '-Xep:UnusedVariable:OFF',
+            '-Xep:CheckReturnValue:OFF')
 }

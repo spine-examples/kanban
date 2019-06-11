@@ -25,6 +25,7 @@ import io.spine.examples.kanban.ColumnId;
 import io.spine.examples.kanban.event.CardAddedToColumn;
 import io.spine.examples.kanban.event.CardRemovedFromColumn;
 import io.spine.server.procman.ProcessManagerRepository;
+import io.spine.server.route.EventRouting;
 
 /**
  * Manages instances of card moving processes.
@@ -32,12 +33,12 @@ import io.spine.server.procman.ProcessManagerRepository;
 public class MoveCardRepository
         extends ProcessManagerRepository<ColumnId, MoveCardProcess, CardTransition> {
 
-    public MoveCardRepository() {
-        super();
-        eventRouting()
-                .route(CardAddedToColumn.class,
-                       (event, context) -> event.routingTarget(event::getColumn))
-                .route(CardRemovedFromColumn.class,
-                       (event, context) -> event.routingTarget(event::getNewColumn));
+    @Override
+    protected void setupEventRouting(EventRouting<ColumnId> routing) {
+        super.setupEventRouting(routing);
+        routing.route(CardAddedToColumn.class, (event, context) ->
+                       event.routingTarget(event::getColumn))
+               .route(CardRemovedFromColumn.class, (event, context) ->
+                       event.routingTarget(event::getNewColumn));
     }
 }

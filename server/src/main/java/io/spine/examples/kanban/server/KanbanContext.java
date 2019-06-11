@@ -25,9 +25,10 @@ import io.spine.examples.kanban.server.board.BoardRepository;
 import io.spine.examples.kanban.server.card.CardRepository;
 import io.spine.examples.kanban.server.column.ColumnRepository;
 import io.spine.examples.kanban.server.column.MoveCardRepository;
-import io.spine.examples.kanban.server.view.BoardProjectionRepository;
+import io.spine.examples.kanban.server.view.BoardProjection;
 import io.spine.server.BoundedContext;
 import io.spine.server.BoundedContextBuilder;
+import io.spine.server.DefaultRepository;
 
 /**
  * Configures Kanban Bounded Context with repositories.
@@ -36,6 +37,7 @@ final class KanbanContext {
 
     static final String NAME = "Kanban";
 
+    /** Prevents instantiation of this utility class. */
     private KanbanContext() {
     }
 
@@ -52,6 +54,6 @@ final class KanbanContext {
                     .add(new BoardInitRepository())
                     .add(new ColumnRepository())
                     .add(new MoveCardRepository())
-                    .add(new BoardProjectionRepository());
+                    .add(DefaultRepository.of(BoardProjection.class));
     }
 }

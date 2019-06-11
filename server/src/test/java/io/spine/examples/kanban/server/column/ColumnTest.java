@@ -25,7 +25,6 @@ import io.spine.examples.kanban.Card;
 import io.spine.examples.kanban.CardId;
 import io.spine.examples.kanban.Column;
 import io.spine.examples.kanban.ColumnId;
-import io.spine.examples.kanban.WipLimit;
 import io.spine.examples.kanban.command.AddCardToColumn;
 import io.spine.examples.kanban.event.ColumnCreated;
 import io.spine.examples.kanban.event.WipLimitChanged;
@@ -70,11 +69,11 @@ class ColumnTest extends KanbanContextTest {
 
             assertEvents.hasSize(1);
             ColumnCreated expected = ColumnCreated
-                    // We use `newBuider()` instead of `vBuilder()` to be able to omit
-                    // the `name` field, which is `required` in the event.
                     .newBuilder()
                     .setBoard(board())
                     .setColumn(column())
+                    // We call `build()` instead of `vBuild()` to be able to omit the `name` field,
+                    // which is `required` in the event.
                     .build();
             assertEvents.message(0)
                         .ignoringFields(3 /* name */)
@@ -98,10 +97,10 @@ class ColumnTest extends KanbanContextTest {
 
             assertEvents.hasSize(1);
             WipLimitSet expected = WipLimitSet
-                    .vBuilder()
+                    .newBuilder()
                     .setColumn(column())
                     .setLimit(wipLimit(limit))
-                    .build();
+                    .vBuild();
             assertEvents.message(0)
                         .isEqualTo(expected);
         }
@@ -122,11 +121,11 @@ class ColumnTest extends KanbanContextTest {
 
             assertEvents.hasSize(1);
             WipLimitChanged expected = WipLimitChanged
-                    .vBuilder()
+                    .newBuilder()
                     .setColumn(column)
                     .setPreviousValue(wipLimit(initialLimit))
                     .setNewValue(wipLimit(updatedLimit))
-                    .build();
+                    .vBuild();
             assertEvents.message(0)
                         .isEqualTo(expected);
         }
@@ -145,10 +144,10 @@ class ColumnTest extends KanbanContextTest {
 
             assertEvents.hasSize(1);
             WipLimitRemoved expected = WipLimitRemoved
-                    .vBuilder()
+                    .newBuilder()
                     .setColumn(column)
                     .setPreviousLimit(wipLimit(initialLimit))
-                    .build();
+                    .vBuild();
             assertEvents.message(0)
                         .isEqualTo(expected);
         }
@@ -170,7 +169,7 @@ class ColumnTest extends KanbanContextTest {
                     .newBuilder()
                     .setColumn(column)
                     .setLimit(wipLimit(limit))
-                    .build();
+                    .vBuild();
             assertEvents.message(0)
                         .isEqualTo(expected);
         }
@@ -226,23 +225,18 @@ class ColumnTest extends KanbanContextTest {
                     .setColumn(columnWithLimit)
                     .setCard(cardToBeRejected)
                     .setLimit(wipLimit(LIMIT))
-                    .build();
+                    .vBuild();
             assertRejections.message(0)
                             .isEqualTo(expectedRejection);
         }
 
         private AddCardToColumn addCardToColumn(CardId card) {
             return AddCardToColumn
-                    .vBuilder()
+                    .newBuilder()
                     .setColumn(columnWithLimit)
                     .setCard(card)
-                    .build();
+                    .vBuild();
         }
     }
 
-    private static WipLimit wipLimit(int limit) {
-        return WipLimit.vBuilder()
-                       .setValue(limit)
-                       .build();
-    }
 }
