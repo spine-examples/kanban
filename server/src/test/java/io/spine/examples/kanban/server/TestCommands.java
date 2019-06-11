@@ -28,7 +28,6 @@ import io.spine.examples.kanban.command.CreateBoard;
 import io.spine.examples.kanban.command.CreateCard;
 import io.spine.examples.kanban.command.CreateColumn;
 import io.spine.examples.kanban.command.SetWipLimit;
-import io.spine.testing.TestValues;
 
 import static io.spine.examples.kanban.server.KanbanTest.wipLimit;
 import static io.spine.testing.TestValues.randomString;
@@ -47,7 +46,7 @@ final class TestCommands {
         return CreateBoard
                 .newBuilder()
                 .setBoard(board)
-                .build();
+                .vBuild();
     }
 
     /** Create the column on the specified board. */
@@ -57,7 +56,7 @@ final class TestCommands {
                 .setBoard(board)
                 .setColumn(column)
                 .setName("Generated column" + randomString())
-                .build();
+                .vBuild();
     }
 
     /** Create the card on the specified board. */
@@ -67,7 +66,7 @@ final class TestCommands {
                 .setCard(card)
                 .setBoard(board)
                 .setName("Generated card " + randomString())
-                .build();
+                .vBuild();
     }
 
     /**
@@ -82,6 +81,6 @@ final class TestCommands {
                 .newBuilder()
                 .setColumn(column)
                 .setLimit(wipLimit(limit))
-                .build();
+                .vBuild();
     }
 }

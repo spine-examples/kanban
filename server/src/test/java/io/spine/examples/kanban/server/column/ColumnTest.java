@@ -100,7 +100,7 @@ class ColumnTest extends KanbanContextTest {
                     .newBuilder()
                     .setColumn(column())
                     .setLimit(wipLimit(limit))
-                    .build();
+                    .vBuild();
             assertEvents.message(0)
                         .isEqualTo(expected);
         }
@@ -125,7 +125,7 @@ class ColumnTest extends KanbanContextTest {
                     .setColumn(column)
                     .setPreviousValue(wipLimit(initialLimit))
                     .setNewValue(wipLimit(updatedLimit))
-                    .build();
+                    .vBuild();
             assertEvents.message(0)
                         .isEqualTo(expected);
         }
@@ -147,7 +147,7 @@ class ColumnTest extends KanbanContextTest {
                     .newBuilder()
                     .setColumn(column)
                     .setPreviousLimit(wipLimit(initialLimit))
-                    .build();
+                    .vBuild();
             assertEvents.message(0)
                         .isEqualTo(expected);
         }
@@ -169,7 +169,7 @@ class ColumnTest extends KanbanContextTest {
                     .newBuilder()
                     .setColumn(column)
                     .setLimit(wipLimit(limit))
-                    .build();
+                    .vBuild();
             assertEvents.message(0)
                         .isEqualTo(expected);
         }
@@ -225,7 +225,7 @@ class ColumnTest extends KanbanContextTest {
                     .setColumn(columnWithLimit)
                     .setCard(cardToBeRejected)
                     .setLimit(wipLimit(LIMIT))
-                    .build();
+                    .vBuild();
             assertRejections.message(0)
                             .isEqualTo(expectedRejection);
         }
@@ -235,7 +235,7 @@ class ColumnTest extends KanbanContextTest {
                     .newBuilder()
                     .setColumn(columnWithLimit)
                     .setCard(card)
-                    .build();
+                    .vBuild();
         }
     }
 

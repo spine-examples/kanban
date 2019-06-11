@@ -50,6 +50,8 @@ class BoardInitProcessTest extends KanbanContextTest {
         CreateColumn commandForBoardInit = CreateColumn
                 .newBuilder()
                 .setBoardInit(true)
+                // Call `build()` instead of `vBuild()` in order to be able to omit setting
+                // the `name` name field which is required.
                 .build();
         IntStream.range(0, defaultColumnCount())
                  .forEach(i -> commands.message(i)

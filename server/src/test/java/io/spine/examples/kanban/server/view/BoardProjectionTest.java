@@ -87,7 +87,7 @@ class BoardProjectionTest extends KanbanContextTest {
                 .newBuilder()
                 .setId(board())
                 .addAllColumn(expectedColumns)
-                .build();
+                .vBuild();
 
         entityState.comparingExpectedFieldsOnly()
                    .isEqualTo(expected);
@@ -106,7 +106,7 @@ class BoardProjectionTest extends KanbanContextTest {
                 .newBuilder()
                 .setId(board())
                 .addAllCard(expectedCards)
-                .build();
+                .vBuild();
 
         entityState.comparingExpectedFieldsOnly()
                    .isEqualTo(expected);

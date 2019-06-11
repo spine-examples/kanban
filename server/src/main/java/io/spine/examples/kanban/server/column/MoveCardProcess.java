@@ -60,7 +60,7 @@ final class MoveCardProcess
                 .setColumn(targetColumn)
                 .setCard(card)
                 .setMoving(true)
-                .build();
+                .vBuild();
     }
 
     /**

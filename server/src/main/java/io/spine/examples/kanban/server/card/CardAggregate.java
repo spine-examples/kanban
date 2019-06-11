@@ -45,7 +45,7 @@ final class CardAggregate extends Aggregate<CardId, Card, Card.Builder> {
                 .setBoard(c.getBoard())
                 .setName(c.getName())
                 .setDescription(c.getDescription())
-                .build();
+                .vBuild();
     }
 
     @Apply

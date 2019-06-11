@@ -45,7 +45,7 @@ public abstract class KanbanTest {
     public static WipLimit wipLimit(int limit) {
         return WipLimit.newBuilder()
                        .setValue(limit)
-                       .build();
+                       .vBuild();
     }
 
     /**
