@@ -22,7 +22,6 @@ package io.spine.examples.kanban.server.card;
 
 import io.spine.examples.kanban.Card;
 import io.spine.examples.kanban.CardId;
-import io.spine.examples.kanban.CardVBuilder;
 import io.spine.examples.kanban.command.CreateCard;
 import io.spine.examples.kanban.event.CardCreated;
 import io.spine.server.aggregate.Aggregate;
@@ -33,7 +32,7 @@ import io.spine.server.command.Assign;
  * A Card aggregate handles the logic of creation, picking/joining, and leaving the team
  * of people who work on the card.
  */
-final class CardAggregate extends Aggregate<CardId, Card, CardVBuilder> {
+final class CardAggregate extends Aggregate<CardId, Card, Card.Builder> {
 
     /**
      * Handles the command to create a card.
@@ -41,7 +40,7 @@ final class CardAggregate extends Aggregate<CardId, Card, CardVBuilder> {
     @Assign
     CardCreated handle(CreateCard c) {
         return CardCreated
-                .vBuilder()
+                .newBuilder()
                 .setCard(c.getCard())
                 .setBoard(c.getBoard())
                 .setName(c.getName())
@@ -51,8 +50,7 @@ final class CardAggregate extends Aggregate<CardId, Card, CardVBuilder> {
 
     @Apply
     private void event(CardCreated e) {
-        builder().setId(e.getCard())
-                 .setBoard(e.getBoard())
+        builder().setBoard(e.getBoard())
                  .setName(e.getName())
                  .setDescription(e.getDescription());
     }

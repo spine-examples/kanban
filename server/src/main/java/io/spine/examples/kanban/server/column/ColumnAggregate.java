@@ -22,7 +22,6 @@ package io.spine.examples.kanban.server.column;
 
 import io.spine.examples.kanban.Column;
 import io.spine.examples.kanban.ColumnId;
-import io.spine.examples.kanban.ColumnVBuilder;
 import io.spine.examples.kanban.WipLimit;
 import io.spine.examples.kanban.command.AddCardToColumn;
 import io.spine.examples.kanban.command.CreateColumn;
@@ -47,12 +46,12 @@ import io.spine.server.tuple.EitherOf3;
  * The Column aggregate is responsible for managing adding and removing its cards, and
  * protecting the {@linkplain WipLimit WIP limit} constraint, if defined.
  */
-final class ColumnAggregate extends Aggregate<ColumnId, Column, ColumnVBuilder> {
+final class ColumnAggregate extends Aggregate<ColumnId, Column, Column.Builder> {
 
     @Assign
     ColumnCreated handle(CreateColumn c) {
         return ColumnCreated
-                .vBuilder()
+                .newBuilder()
                 .setBoard(c.getBoard())
                 .setColumn(c.getColumn())
                 .setName(c.getName())
@@ -62,8 +61,7 @@ final class ColumnAggregate extends Aggregate<ColumnId, Column, ColumnVBuilder> 
 
     @Apply
     private void event(ColumnCreated e) {
-        builder().setId(e.getColumn())
-                 .setBoard(e.getBoard())
+        builder().setBoard(e.getBoard())
                  .setName(e.getName());
     }
 
@@ -74,7 +72,7 @@ final class ColumnAggregate extends Aggregate<ColumnId, Column, ColumnVBuilder> 
     @React
     CardAddedToColumn newCardPolicy(CardWaitingPlacement e) {
         return CardAddedToColumn
-                .vBuilder()
+                .newBuilder()
                 .setColumn(e.getColumn())
                 .setCard(e.getCard())
                 .build();
@@ -105,7 +103,7 @@ final class ColumnAggregate extends Aggregate<ColumnId, Column, ColumnVBuilder> 
         }
 
         return CardAddedToColumn
-                .vBuilder()
+                .newBuilder()
                 .setColumn(c.getColumn())
                 .setCard(c.getCard())
                 .setMoving(c.getMoving())
@@ -115,7 +113,7 @@ final class ColumnAggregate extends Aggregate<ColumnId, Column, ColumnVBuilder> 
     @Assign
     CardRemovedFromColumn handle(RemoveCardFromColumn c) {
         return CardRemovedFromColumn
-                .vBuilder()
+                .newBuilder()
                 .setColumn(c.getColumn())
                 .setCard(c.getCard())
                 .setMoving(c.getMoving())
@@ -125,8 +123,10 @@ final class ColumnAggregate extends Aggregate<ColumnId, Column, ColumnVBuilder> 
 
     @Apply
     private void event(CardRemovedFromColumn e) {
-        builder().getCard()
-                 .remove(e.getCard());
+        int index = state().getCardList()
+                           .indexOf(e.getCard());
+        builder().getCardBuilderList()
+                 .remove(index);
     }
 
     /**
@@ -158,7 +158,7 @@ final class ColumnAggregate extends Aggregate<ColumnId, Column, ColumnVBuilder> 
         if (newLimit.isZero()) {
             return EitherOf3.withC(
                     WipLimitRemoved
-                            .vBuilder()
+                            .newBuilder()
                             .setColumn(id())
                             .setPreviousLimit(currentLimit)
                             .build()
@@ -168,7 +168,7 @@ final class ColumnAggregate extends Aggregate<ColumnId, Column, ColumnVBuilder> 
         if (!currentLimit.isSet()) {
             return EitherOf3.withA(
                     WipLimitSet
-                            .vBuilder()
+                            .newBuilder()
                             .setColumn(id())
                             .setLimit(newLimit)
                             .build()
@@ -176,7 +176,7 @@ final class ColumnAggregate extends Aggregate<ColumnId, Column, ColumnVBuilder> 
         } else {
             return EitherOf3.withB(
                     WipLimitChanged
-                            .vBuilder()
+                            .newBuilder()
                             .setColumn(id())
                             .setNewValue(newLimit)
                             .setPreviousValue(currentLimit)

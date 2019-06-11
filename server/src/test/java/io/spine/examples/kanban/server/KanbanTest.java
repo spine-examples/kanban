@@ -23,6 +23,7 @@ package io.spine.examples.kanban.server;
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.CardId;
 import io.spine.examples.kanban.ColumnId;
+import io.spine.examples.kanban.WipLimit;
 import io.spine.examples.kanban.command.CreateBoard;
 import io.spine.examples.kanban.command.CreateCard;
 import io.spine.examples.kanban.command.CreateColumn;
@@ -37,6 +38,15 @@ public abstract class KanbanTest {
     private BoardId board;
     private ColumnId column;
     private CardId card;
+
+    /**
+     * Creates a limit instance with the passed value.
+     */
+    public static WipLimit wipLimit(int limit) {
+        return WipLimit.newBuilder()
+                       .setValue(limit)
+                       .build();
+    }
 
     /**
      * Generates identifiers used by the test suite.

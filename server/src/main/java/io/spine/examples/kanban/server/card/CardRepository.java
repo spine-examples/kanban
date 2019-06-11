@@ -23,6 +23,7 @@ package io.spine.examples.kanban.server.card;
 import io.spine.examples.kanban.CardId;
 import io.spine.examples.kanban.event.CardMoved;
 import io.spine.server.aggregate.AggregateRepository;
+import io.spine.server.route.EventRouting;
 
 import static io.spine.server.route.EventRoute.withId;
 
@@ -33,8 +34,9 @@ import static io.spine.server.route.EventRoute.withId;
  */
 public final class CardRepository extends AggregateRepository<CardId, CardAggregate> {
 
-    public CardRepository() {
-        super();
-        eventRouting().route(CardMoved.class, (event, context) -> withId(event.getCard()));
+    @Override
+    protected void setupEventRouting(EventRouting<CardId> routing) {
+        super.setupEventRouting(routing);
+        routing.route(CardMoved.class, (event, context) -> withId(event.getCard()));
     }
 }

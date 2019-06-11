@@ -24,7 +24,6 @@ import com.google.common.annotations.VisibleForTesting;
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.BoardInit;
 import io.spine.examples.kanban.BoardInit.DefaultColumn;
-import io.spine.examples.kanban.BoardInitVBuilder;
 import io.spine.examples.kanban.ColumnId;
 import io.spine.examples.kanban.command.CreateColumn;
 import io.spine.examples.kanban.event.BoardCreated;
@@ -43,7 +42,7 @@ import static io.spine.examples.kanban.server.board.Defaults.nameFor;
 /**
  * Creates default columns on a newly created board.
  */
-final class BoardInitProcess extends ProcessManager<BoardId, BoardInit, BoardInitVBuilder> {
+final class BoardInitProcess extends ProcessManager<BoardId, BoardInit, BoardInit.Builder> {
 
     private final Steps steps = new Steps();
 
@@ -54,8 +53,7 @@ final class BoardInitProcess extends ProcessManager<BoardId, BoardInit, BoardIni
     CreateColumn startPolicy(BoardCreated event) {
         BoardId board = event.getBoard();
         DefaultColumn first = Defaults.first();
-        builder().setId(board)
-                 .setStep(first);
+        builder().setStep(first);
         return createColumn(board, nameFor(first));
     }
 
@@ -64,7 +62,7 @@ final class BoardInitProcess extends ProcessManager<BoardId, BoardInit, BoardIni
      */
     private static CreateColumn createColumn(BoardId board, String columnName) {
         return CreateColumn
-                .vBuilder()
+                .newBuilder()
                 .setBoard(board)
                 .setColumn(ColumnId.generate())
                 .setName(columnName)

@@ -36,7 +36,7 @@ import "spine_examples/kanban/identifiers.proto";
 //
 message Board {
 
-    option (entity).kind = AGGREGATE;
+    option (entity) = { kind: AGGREGATE visibility: FULL };
 
     BoardId id = 1 [(required) = true];
 

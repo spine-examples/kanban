@@ -34,7 +34,7 @@ import "spine_examples/kanban/identifiers.proto";
 //
 message Card {
     option (is).java_type = "BoardAware";
-    option (entity) = { kind: AGGREGATE visibility: SUBSCRIBE };
+    option (entity) = { kind: AGGREGATE visibility: FULL };
 
     // The ID of the card.
     //
