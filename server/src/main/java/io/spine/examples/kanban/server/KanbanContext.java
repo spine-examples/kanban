@@ -47,8 +47,7 @@ final class KanbanContext {
      */
     static BoundedContextBuilder newBuilder() {
         return BoundedContext
-                    .newBuilder()
-                    .setName(NAME)
+                    .singleTenant(NAME)
                     .add(new CardRepository())
                     .add(new BoardRepository())
                     .add(new BoardInitRepository())
