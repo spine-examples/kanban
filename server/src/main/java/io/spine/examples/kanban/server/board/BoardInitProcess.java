@@ -29,13 +29,12 @@ import io.spine.examples.kanban.command.CreateColumn;
 import io.spine.examples.kanban.event.BoardCreated;
 import io.spine.examples.kanban.event.ColumnCreated;
 import io.spine.server.command.Command;
-import io.spine.server.model.Nothing;
 import io.spine.server.procman.ProcessManager;
-import io.spine.server.tuple.EitherOf2;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static io.spine.examples.kanban.server.board.Defaults.nameFor;
 
@@ -76,18 +75,18 @@ final class BoardInitProcess extends ProcessManager<BoardId, BoardInit, BoardIni
      * Otherwise, terminate the process.
      */
     @Command
-    EitherOf2<CreateColumn, Nothing> defaultColumnPolicy(ColumnCreated event) {
+    Optional<CreateColumn> defaultColumnPolicy(ColumnCreated event) {
         builder().addCreatedColumn(event.getColumn());
 
         if (!steps.hasNext()) {
             setDeleted(true);
-            return EitherOf2.withB(nothing());
+            return Optional.empty();
         }
 
         DefaultColumn next = steps.next();
 
         BoardId boardId = state().getId();
-        return EitherOf2.withA(createColumn(boardId, nameFor(next)));
+        return Optional.of(createColumn(boardId, nameFor(next)));
     }
 
     /**
