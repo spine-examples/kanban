@@ -44,7 +44,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 @DisplayName("Kanban Server should")
 class KanbanServerTest {
 
-    static final String HOST = "localhost";
+    private static final String HOST = "localhost";
     private Server server;
     private TestClient client;
 
@@ -53,7 +53,7 @@ class KanbanServerTest {
     @BeforeEach
     void setup(){
         server = KanbanServer.create();
-        client = new TestClient(newUuid(), HOST, server.getPort());
+        client = new TestClient(newUuid(), HOST, server.port());
         startServer();
 
         boardId = BoardId.generate();
@@ -82,7 +82,7 @@ class KanbanServerTest {
             client.post(createBoard(boardId));
 
             QueryResponse response = client.queryAll(Board.class);
-            assertEquals(1, response.getMessagesCount());
+            assertEquals(1, response.getMessageCount());
         }
     }
 }
