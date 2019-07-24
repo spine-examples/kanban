@@ -23,10 +23,13 @@ plugins {
     id 'net.ltgt.errorprone' version '0.8.1' apply false
 }
 
+//noinspection GroovyAssignabilityCheck
 ext {
     spineVersion = '1.0.0-SNAPSHOT'
+    junit5Version = '5.5.0'
 }
 
+//noinspection GroovyAssignabilityCheck
 subprojects {
     apply plugin: 'io.spine.tools.gradle.bootstrap'
 
@@ -38,20 +41,24 @@ subprojects {
     apply plugin: 'net.ltgt.errorprone'
     apply from: "$rootDir/gradle/static-analysis.gradle"
     apply from: "$rootDir/gradle/idea.gradle"
-    apply from: "$rootDir/gradle/tests.gradle"
 
     forceConfiguration(project)
     dependencies {
         errorprone "com.google.errorprone:error_prone_core:2.3.3"
         errorproneJavac "com.google.errorprone:javac:9+181-r4173-1"
-
-        implementation "com.google.guava:guava:28.0-jre"
-        implementation "org.checkerframework:checker-qual:2.9.0"
-
+        implementation (
+                "com.google.guava:guava:28.0-jre",
+                "org.checkerframework:checker-qual:2.9.0"
+        )
         runtimeOnly "io.grpc:grpc-netty:1.22.0"
+        testImplementation (
+                "org.junit.jupiter:junit-jupiter-api:$junit5Version",
+                "org.junit.jupiter:junit-jupiter-params:$junit5Version",
+                "org.apiguardian:apiguardian-api:1.0.0",
 
-        testImplementation group: 'io.spine', name: 'spine-testutil-server', version: spineVersion
-        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.5.0"
+                "io.spine:spine-testutil-server:$spineVersion"
+        )
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit5Version"
     }
 
     tasks.withType(JavaCompile) {
@@ -77,5 +84,11 @@ subprojects {
                 '-Xep:UnusedMethod:OFF',
                 '-Xep:UnusedVariable:OFF',
                 '-Xep:CheckReturnValue:OFF')
+    }
+
+    test {
+        useJUnitPlatform {
+            includeEngines 'junit-jupiter'
+        }
     }
 }
