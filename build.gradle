@@ -19,8 +19,12 @@
  */
 
 plugins {
-    id 'io.spine.tools.gradle.bootstrap' version '0.15.5' apply false
+    id 'io.spine.tools.gradle.bootstrap' version '0.15.6' apply false
     id 'net.ltgt.errorprone' version '0.8.1' apply false
+}
+
+ext {
+    spineVersion = '1.0.0-SNAPSHOT'
 }
 
 subprojects {
@@ -38,23 +42,40 @@ subprojects {
 
     forceConfiguration(project)
     dependencies {
-        errorprone deps.build.errorProneCore
-        errorproneJavac deps.build.errorProneJavac
+        errorprone "com.google.errorprone:error_prone_core:2.3.3"
+        errorproneJavac "com.google.errorprone:javac:9+181-r4173-1"
 
-        implementation deps.build.guava
-        implementation deps.build.checkerAnnotations
+        implementation "com.google.guava:guava:28.0-jre"
+        implementation "org.checkerframework:checker-qual:2.9.0"
+
+        runtimeOnly "io.grpc:grpc-netty:1.22.0"
 
         testImplementation group: 'io.spine', name: 'spine-testutil-server', version: spineVersion
-        testRuntimeOnly deps.test.junit5Runner
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.5.0"
     }
 
-    compileJava {
-        options.encoding = 'UTF-8'
-        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
-    }
+    tasks.withType(JavaCompile) {
 
-    compileTestJava {
+        // Explicitly states the encoding of the source and test source files, ensuring
+        // correct execution of the `javac` task.
         options.encoding = 'UTF-8'
         options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+
+        // Configure Error Prone:
+        // 1. Exclude generated sources from being analyzed by Error Prone.
+        // 2. Turn the check off until Error Prone can handle `@Nested` JUnit classes.
+        //    See issue: https://github.com/google/error-prone/issues/956
+        // 3. Turn off checks which report unused methods and unused method parameters.
+        //    See issue: https://github.com/SpineEventEngine/config/issues/61
+        //
+        // For more config details see:
+        //    https://github.com/tbroyer/gradle-errorprone-plugin/tree/master#usage
+
+        options.errorprone.errorproneArgs.addAll(
+                '-XepExcludedPaths:.*/generated/.*',
+                '-Xep:ClassCanBeStatic:OFF',
+                '-Xep:UnusedMethod:OFF',
+                '-Xep:UnusedVariable:OFF',
+                '-Xep:CheckReturnValue:OFF')
     }
 }
