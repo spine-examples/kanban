@@ -48,7 +48,7 @@ subprojects {
         errorproneJavac "com.google.errorprone:javac:9+181-r4173-1"
         implementation (
                 "com.google.guava:guava:28.0-jre",
-                "org.checkerframework:checker-qual:2.9.0"
+                "org.checkerframework:checker-qual:2.10.0"
         )
         runtimeOnly "io.grpc:grpc-netty:1.22.0"
         testImplementation (
