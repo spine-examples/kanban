@@ -28,6 +28,10 @@ import io.spine.examples.kanban.event.BoardCreated;
 import io.spine.examples.kanban.view.BoardView;
 import io.spine.server.projection.Projection;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Predicate;
+
 /**
  * Builds display information for a board.
  */
@@ -40,8 +44,13 @@ public final class BoardProjection extends Projection<BoardId, BoardView, BoardV
 
     @Subscribe
     void updated(Column column) {
-        int index = state().getColumnList()
-                           .indexOf(column);
+        // Find index of the column in the board by matching a column id.
+        // We can't rely on `equals` method of the column case it was updated.
+        int index = indexOf(
+                state().getColumnList(),
+                (c) -> Objects.equals(c.getId(), column.getId())
+        );
+
         if (index != -1) {
             builder().setColumn(index, column);
         } else {
@@ -58,5 +67,24 @@ public final class BoardProjection extends Projection<BoardId, BoardView, BoardV
         } else {
             builder().addCard(card);
         }
+    }
+
+    /**
+     * Finds an index of needed element in the list by testing each element with
+     * a specified predicate.
+     *
+     * @param list
+     *         of elements to search in
+     * @param predicate
+     *         that tests whether a specified element is needed
+     * @return an integer index of the found element if it was found or -1 otherwise
+     */
+    private static <T> int indexOf(List<T> list, Predicate<T> predicate) {
+        for (int i = 0; i < list.size(); i++) {
+            if (predicate.test(list.get(i))) {
+                return i;
+            }
+        }
+        return -1;
     }
 }

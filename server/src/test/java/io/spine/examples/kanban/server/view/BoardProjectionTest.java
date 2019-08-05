@@ -125,7 +125,6 @@ class BoardProjectionTest extends KanbanContextTest {
     @Test
     @DisplayName("has cards in columns")
     void hasCardsInColumns() {
-
         List<Card> expectedCards = IntStream.range(0, 3)
                                             .mapToObj(i -> {
                                                 CardId cardId = CardId.generate();

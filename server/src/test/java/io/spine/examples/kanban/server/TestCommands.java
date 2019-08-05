@@ -65,7 +65,7 @@ final class TestCommands {
                 .newBuilder()
                 .setCard(card)
                 .setBoard(board)
-                .setName("Generated card " + randomString())
+                .setName("Generated card " + card.getUuid())
                 .vBuild();
     }
 
