@@ -36,11 +36,21 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static java.util.stream.Collectors.toList;
 
 @DisplayName("BoardProjection should")
 class BoardProjectionTest extends KanbanContextTest {
+
+    private static final ImmutableList<String> INITIAL_COLUMN_NAMES = ImmutableList.of(
+            "To Do",
+            "In Progress",
+            "Review",
+            "Done"
+    );
 
     private ImmutableList<ColumnId> columns;
     private ImmutableList<CardId> cards;
@@ -110,6 +120,52 @@ class BoardProjectionTest extends KanbanContextTest {
 
         entityState.comparingExpectedFieldsOnly()
                    .isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("has cards in columns")
+    void hasCardsInColumns() {
+
+        List<Card> expectedCards = IntStream.range(0, 3)
+                                            .mapToObj(i -> {
+                                                CardId cardId = CardId.generate();
+                                                context().receivesCommand(createCard(cardId));
+                                                return Card
+                                                        .newBuilder()
+                                                        .setBoard(board())
+                                                        .setName("Generated card " +
+                                                                         cardId.getUuid())
+                                                        .setId(cardId)
+                                                        .build();
+                                            })
+                                            .collect(toList());
+
+        List<CardId> cardIds = expectedCards.stream()
+                                            .map(Card::getId)
+                                            .collect(toList());
+
+        List<Column> expectedColumns = IntStream.range(0, columns.size())
+                                                .mapToObj(i -> {
+                                                    Column.Builder builder = Column
+                                                            .newBuilder()
+                                                            .setBoard(board())
+                                                            .setName(INITIAL_COLUMN_NAMES.get(i))
+                                                            .setId(columns.get(i));
+                                                    if (i == 0) {
+                                                        builder.addAllCard(cardIds);
+                                                    }
+                                                    return builder.vBuild();
+                                                })
+                                                .collect(Collectors.toList());
+
+        BoardView expected = BoardView
+                .newBuilder()
+                .setId(board())
+                .addAllColumn(expectedColumns)
+                .addAllCard(expectedCards)
+                .vBuild();
+
+        assertState().isEqualTo(expected);
     }
 
     private ProtoSubject<?, Message> assertState() {
