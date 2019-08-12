@@ -19,18 +19,15 @@
  */
 
 plugins {
-    id 'io.spine.tools.gradle.bootstrap' version '0.15.6' apply false
+    id 'io.spine.tools.gradle.bootstrap' version '1.0.1' apply false
     id 'net.ltgt.errorprone' version '0.8.1' apply false
 }
 
-//noinspection GroovyAssignabilityCheck
-ext {
-    spineVersion = '1.0.0-SNAPSHOT'
-    junit5Version = '5.5.0'
-}
 
 //noinspection GroovyAssignabilityCheck
 subprojects {
+    apply from: "$rootDir/version.gradle"
+
     apply plugin: 'io.spine.tools.gradle.bootstrap'
 
     spine.enableJava().server()
@@ -42,23 +39,22 @@ subprojects {
     apply from: "$rootDir/gradle/static-analysis.gradle"
     apply from: "$rootDir/gradle/idea.gradle"
 
-    forceConfiguration(project)
     dependencies {
-        errorprone "com.google.errorprone:error_prone_core:2.3.3"
-        errorproneJavac "com.google.errorprone:javac:9+181-r4173-1"
+        errorprone "com.google.errorprone:error_prone_core:$deps.versions.errorProne"
+        errorproneJavac "com.google.errorprone:javac:$deps.versions.errorProneJavac"
         implementation (
-                "com.google.guava:guava:28.0-jre",
-                "org.checkerframework:checker-qual:2.10.0"
+                "com.google.guava:guava:$deps.versions.guava",
+                "org.checkerframework:checker-qual:$deps.versions.checkerFramework"
         )
-        runtimeOnly "io.grpc:grpc-netty:1.22.0"
+        runtimeOnly "io.grpc:grpc-netty:$deps.versions.grpc"
         testImplementation (
-                "org.junit.jupiter:junit-jupiter-api:$junit5Version",
-                "org.junit.jupiter:junit-jupiter-params:$junit5Version",
-                "org.apiguardian:apiguardian-api:1.1.0",
+                "org.junit.jupiter:junit-jupiter-api:$deps.versions.junit5",
+                "org.junit.jupiter:junit-jupiter-params:$deps.versions.junit5",
+                "org.apiguardian:apiguardian-api:$deps.versions.apiGuardian",
 
-                "io.spine:spine-testutil-server:$spineVersion"
+                "io.spine:spine-testutil-server:$deps.versions.spine"
         )
-        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit5Version"
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$deps.versions.junit5"
     }
 
     tasks.withType(JavaCompile) {
