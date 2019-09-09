@@ -40,9 +40,7 @@ subprojects {
     apply from: "$rootDir/gradle/idea.gradle"
 
     dependencies {
-        errorprone ("com.google.errorprone:error_prone_core:$deps.versions.errorProne") {
-            exclude group: 'com.google.guava', module: 'guava'
-        }
+        errorprone "com.google.errorprone:error_prone_core:$deps.versions.errorProne"
         errorproneJavac "com.google.errorprone:javac:$deps.versions.errorProneJavac"
         implementation (
                 "com.google.guava:guava:$deps.versions.guava",
@@ -59,6 +57,14 @@ subprojects {
 
     spine {
         forceDependencies = true
+    }
+
+    configurations.all {
+        resolutionStrategy {
+            force(
+                    "com.google.guava:guava:$deps.versions.guava"
+            )
+        }
     }
 
     tasks.withType(JavaCompile) {
