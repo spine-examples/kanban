@@ -22,7 +22,6 @@ package io.spine.examples.kanban.server.view;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.truth.extensions.proto.ProtoSubject;
-import com.google.protobuf.Message;
 import io.spine.examples.kanban.Card;
 import io.spine.examples.kanban.CardId;
 import io.spine.examples.kanban.Column;
@@ -44,7 +43,7 @@ class BoardProjectionTest extends KanbanContextTest {
 
     private ImmutableList<ColumnId> columns;
     private ImmutableList<CardId> cards;
-    private ProtoSubject<?, Message> entityState;
+    private ProtoSubject entityState;
 
     @BeforeEach
     void initBoard() {
@@ -112,7 +111,7 @@ class BoardProjectionTest extends KanbanContextTest {
                    .isEqualTo(expected);
     }
 
-    private ProtoSubject<?, Message> assertState() {
+    private ProtoSubject assertState() {
         return context().assertEntity(BoardProjection.class, board())
                         .hasStateThat();
     }
