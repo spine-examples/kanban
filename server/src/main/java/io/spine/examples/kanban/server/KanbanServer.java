@@ -22,6 +22,8 @@ package io.spine.examples.kanban.server;
 
 import io.spine.server.BoundedContextBuilder;
 import io.spine.server.Server;
+import io.spine.server.ServerEnvironment;
+import io.spine.server.transport.memory.InMemoryTransportFactory;
 
 import java.io.IOException;
 
@@ -36,12 +38,19 @@ public final class KanbanServer {
     }
 
     static Server create() {
+        configureEnvironment();
         BoundedContextBuilder context = KanbanContext.newBuilder();
         return Server
                 .newBuilder()
                 .add(context)
                 .setPort(DEFAULT_CLIENT_SERVICE_PORT)
                 .build();
+    }
+
+    private static void configureEnvironment() {
+        ServerEnvironment serverEnvironment = ServerEnvironment.instance();
+        serverEnvironment.configureStorage(new KanbanStorageFactory());
+        serverEnvironment.configureTransport(InMemoryTransportFactory.newInstance());
     }
 
     /**
