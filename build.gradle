@@ -19,7 +19,7 @@
  */
 
 plugins {
-    id 'io.spine.tools.gradle.bootstrap' version '1.0.1' apply false
+    id 'io.spine.tools.gradle.bootstrap' version '1.0.3' apply false
     id 'net.ltgt.errorprone' version '0.8.1' apply false
 }
 
@@ -51,10 +51,12 @@ subprojects {
                 "org.junit.jupiter:junit-jupiter-api:$deps.versions.junit5",
                 "org.junit.jupiter:junit-jupiter-params:$deps.versions.junit5",
                 "org.apiguardian:apiguardian-api:$deps.versions.apiGuardian",
-
-                "io.spine:spine-testutil-server:$deps.versions.spine"
         )
         testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$deps.versions.junit5"
+    }
+
+    spine {
+        forceDependencies = true
     }
 
     tasks.withType(JavaCompile) {
