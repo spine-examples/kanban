@@ -21,7 +21,6 @@
 final def versions = [
         errorProne      : "2.3.3",
         errorProneJavac : "9+181-r4173-1", // taken from here: https://github.com/tbroyer/gradle-errorprone-plugin/blob/v0.8/build.gradle.kts
-        errorPronePlugin: "0.8.1",
         guava           : "28.1-jre",
         checkerFramework: "2.11.0",
         apiGuardian     : "1.1.0",
