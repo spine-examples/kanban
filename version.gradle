@@ -25,7 +25,7 @@ final def versions = [
         guava           : "28.1-jre",
         checkerFramework: "2.11.0",
         apiGuardian     : "1.1.0",
-        grpc            : "1.22.0",
+        grpc            : "1.23.0",
         pmd             : "6.16.0",
 
         junit5          : "5.5.2",
