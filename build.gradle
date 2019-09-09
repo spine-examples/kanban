@@ -40,7 +40,9 @@ subprojects {
     apply from: "$rootDir/gradle/idea.gradle"
 
     dependencies {
-        errorprone "com.google.errorprone:error_prone_core:$deps.versions.errorProne"
+        errorprone ("com.google.errorprone:error_prone_core:$deps.versions.errorProne") {
+            exclude group: 'com.google.guava', module: 'guava'
+        }
         errorproneJavac "com.google.errorprone:javac:$deps.versions.errorProneJavac"
         implementation (
                 "com.google.guava:guava:$deps.versions.guava",
