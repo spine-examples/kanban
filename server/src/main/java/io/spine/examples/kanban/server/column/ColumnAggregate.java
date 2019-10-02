@@ -56,7 +56,7 @@ final class ColumnAggregate extends Aggregate<ColumnId, Column, Column.Builder> 
                 .setColumn(c.getColumn())
                 .setName(c.getName())
                 .setBoardInit(c.getBoardInit())
-                .build();
+                .vBuild();
     }
 
     @Apply
@@ -75,7 +75,7 @@ final class ColumnAggregate extends Aggregate<ColumnId, Column, Column.Builder> 
                 .newBuilder()
                 .setColumn(e.getColumn())
                 .setCard(e.getCard())
-                .build();
+                .vBuild();
     }
 
     @Apply
@@ -107,7 +107,7 @@ final class ColumnAggregate extends Aggregate<ColumnId, Column, Column.Builder> 
                 .setColumn(c.getColumn())
                 .setCard(c.getCard())
                 .setMoving(c.getMoving())
-                .build();
+                .vBuild();
     }
 
     @Assign
@@ -118,7 +118,7 @@ final class ColumnAggregate extends Aggregate<ColumnId, Column, Column.Builder> 
                 .setCard(c.getCard())
                 .setMoving(c.getMoving())
                 .setNewColumn(c.getNewColumn())
-                .build();
+                .vBuild();
     }
 
     @Apply
@@ -133,10 +133,10 @@ final class ColumnAggregate extends Aggregate<ColumnId, Column, Column.Builder> 
      * Updates the WIP limit value for a column.
      *
      * @return <ul>
-     *         <li>{@code WipLimitSet} — if the column did not have a limit before;
-     *         <li>{@code WipLimitChanged} — if a non-zero limit value changes to another
-     *         non-zero value;
-     *         <li>{@code WipLimitRemoved} — if the column had a limit before this command.
+     *             <li>{@code WipLimitSet} — if the column did not have a limit before;
+     *             <li>{@code WipLimitChanged} — if a non-zero limit value changes to another
+     *                 non-zero value;
+     *             <li>{@code WipLimitRemoved} — if the column had a limit before this command.
      *         </ul>
      * @throws WipLimitAlreadySet
      *         if the command attempts to change the limit to the value (zero or non-zero)
@@ -161,7 +161,7 @@ final class ColumnAggregate extends Aggregate<ColumnId, Column, Column.Builder> 
                             .newBuilder()
                             .setColumn(id())
                             .setPreviousLimit(currentLimit)
-                            .build()
+                            .vBuild()
             );
         }
 
@@ -171,7 +171,7 @@ final class ColumnAggregate extends Aggregate<ColumnId, Column, Column.Builder> 
                             .newBuilder()
                             .setColumn(id())
                             .setLimit(newLimit)
-                            .build()
+                            .vBuild()
             );
         } else {
             return EitherOf3.withB(
@@ -180,7 +180,7 @@ final class ColumnAggregate extends Aggregate<ColumnId, Column, Column.Builder> 
                             .setColumn(id())
                             .setNewValue(newLimit)
                             .setPreviousValue(currentLimit)
-                            .build()
+                            .vBuild()
             );
         }
     }

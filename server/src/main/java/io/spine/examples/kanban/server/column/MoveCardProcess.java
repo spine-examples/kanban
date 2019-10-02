@@ -76,7 +76,7 @@ final class MoveCardProcess
                 .setCard(t.getCard())
                 .setMoving(true)
                 .setNewColumn(t.getTargetColumn())
-                .build();
+                .vBuild();
     }
 
     /**
@@ -91,6 +91,6 @@ final class MoveCardProcess
                 .setCard(t.getCard())
                 .setPrevious(t.getOriginColumn())
                 .setCurrent(t.getTargetColumn())
-                .build();
+                .vBuild();
     }
 }

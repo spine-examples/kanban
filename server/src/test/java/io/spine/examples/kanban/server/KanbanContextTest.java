@@ -31,7 +31,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public abstract class KanbanContextTest extends KanbanTest {
 
-    private BlackBoxBoundedContext context;
+    private BlackBoxBoundedContext<?> context;
 
     @BeforeEach
     void createContext() {

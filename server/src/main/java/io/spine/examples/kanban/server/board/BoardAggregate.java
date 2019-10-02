@@ -45,7 +45,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
         return BoardCreated
                 .newBuilder()
                 .setBoard(id)
-                .build();
+                .vBuild();
     }
 
     @Apply
@@ -62,7 +62,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
                 .newBuilder()
                 .setBoard(event.getBoard())
                 .setColumn(event.getColumn())
-                .build();
+                .vBuild();
     }
 
     @Apply
@@ -85,7 +85,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
                 .newBuilder()
                 .setCard(event.getCard())
                 .setColumn(firstColumn)
-                .build();
+                .vBuild();
     }
 
     @Apply

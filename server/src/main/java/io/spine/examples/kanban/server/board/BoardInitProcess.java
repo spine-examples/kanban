@@ -66,7 +66,7 @@ final class BoardInitProcess extends ProcessManager<BoardId, BoardInit, BoardIni
                 .setColumn(ColumnId.generate())
                 .setName(columnName)
                 .setBoardInit(true)
-                .build();
+                .vBuild();
     }
 
     /**
