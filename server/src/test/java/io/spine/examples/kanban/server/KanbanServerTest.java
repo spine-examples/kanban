@@ -33,6 +33,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
+import static io.spine.client.ConnectionConstants.DEFAULT_CLIENT_SERVICE_PORT;
 import static io.spine.examples.kanban.server.TestCommands.createBoard;
 import static io.spine.testing.core.given.GivenUserId.newUuid;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -53,7 +54,7 @@ class KanbanServerTest {
     @BeforeEach
     void setup(){
         server = KanbanServer.create();
-        client = new TestClient(newUuid(), HOST, server.port());
+        client = new TestClient(newUuid(), HOST, DEFAULT_CLIENT_SERVICE_PORT);
         startServer();
 
         boardId = BoardId.generate();
