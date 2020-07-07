@@ -75,7 +75,7 @@ class CardTest extends KanbanContextTest {
         @Test
         @DisplayName("as entity with the `Card` state")
         void entity() {
-            context().assertEntityWithState(Card.class, card())
+            context().assertEntityWithState(card(), Card.class)
                      .exists();
         }
     }

@@ -24,11 +24,13 @@ import io.spine.examples.kanban.Column;
 import io.spine.examples.kanban.ColumnId;
 import io.spine.examples.kanban.command.CreateColumn;
 import io.spine.examples.kanban.server.KanbanContextTest;
+import io.spine.protobuf.AnyPacker;
 import io.spine.testing.server.CommandSubject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -63,14 +65,9 @@ class BoardInitProcessTest extends KanbanContextTest {
     @Test
     @DisplayName("create default columns")
     void createsColumns() {
-        List<ColumnId> defaultColumns =
-                context().commandMessages()
-                         .stream()
-                         .filter(m -> m instanceof CreateColumn)
-                         .map(m -> ((CreateColumn) m).getColumn())
-                         .collect(toList());
+        Collection<ColumnId> defaultColumns = createdColumns();
         defaultColumns.forEach(
-                c -> context().assertEntityWithState(Column.class, c)
+                c -> context().assertEntityWithState(c, Column.class)
                               .exists()
         );
     }
@@ -78,8 +75,20 @@ class BoardInitProcessTest extends KanbanContextTest {
     @Test
     @DisplayName("delete itself when finished")
     void isDeletedWhenFinished() {
-        context().assertEntity(BoardInitProcess.class, board())
-                 .deletedFlag()
-                 .isTrue();
+        context().assertEntity(board(), BoardInitProcess.class)
+                .deletedFlag()
+                .isTrue();
+    }
+
+    private Collection<ColumnId> createdColumns() {
+        List<ColumnId
+                > collect = context().assertCommands()
+                .withType(CreateColumn.class)
+                .actual()
+                .stream()
+                .map(c -> AnyPacker.unpack(c.getMessage(), CreateColumn.class))
+                .map(CreateColumn::getColumn)
+                .collect(toList());
+        return collect;
     }
 }

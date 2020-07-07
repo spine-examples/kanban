@@ -56,7 +56,7 @@ class ColumnTest extends KanbanContextTest {
         @Test
         @DisplayName("as entity with `Column` state")
         void entity() {
-            context().assertEntityWithState(Column.class, column())
+            context().assertEntityWithState(column(), Column.class)
                      .exists();
         }
 
@@ -174,7 +174,7 @@ class ColumnTest extends KanbanContextTest {
                         .isEqualTo(expected);
         }
     }
-    
+
     @Nested
     @DisplayName("protect WIP limit")
     class GuardingWipLimit {
@@ -206,7 +206,7 @@ class ColumnTest extends KanbanContextTest {
         void addCards() {
             repeat(LIMIT, () -> {
                 CardId newCard = addCard();
-                context().assertEntityWithState(Card.class, newCard)
+                context().assertEntityWithState(newCard, Card.class)
                          .exists();
             });
         }
