@@ -114,7 +114,8 @@ class BoardProjectionTest extends KanbanContextTest {
     }
 
     private <T extends CommandMessage> Stream<T> commands(Class<T> commandClass) {
-        return context().assertCommands()
+        return context()
+                .assertCommands()
                 .actual()
                 .stream()
                 .filter(commandClass::isInstance)

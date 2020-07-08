@@ -76,8 +76,8 @@ class BoardInitProcessTest extends KanbanContextTest {
     @DisplayName("delete itself when finished")
     void isDeletedWhenFinished() {
         context().assertEntity(board(), BoardInitProcess.class)
-                .deletedFlag()
-                .isTrue();
+                 .deletedFlag()
+                 .isTrue();
     }
 
     private Collection<ColumnId> createdColumns() {
