@@ -20,7 +20,7 @@
 
 package io.spine.examples.kanban.server;
 
-import io.spine.testing.server.blackbox.BlackBoxBoundedContext;
+import io.spine.testing.server.blackbox.BlackBoxContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -31,11 +31,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public abstract class KanbanContextTest extends KanbanTest {
 
-    private BlackBoxBoundedContext<?> context;
+    private BlackBoxContext context;
 
     @BeforeEach
     void createContext() {
-        context = BlackBoxBoundedContext.from(KanbanContext.newBuilder());
+        context = BlackBoxContext.from(KanbanContext.newBuilder());
     }
 
     @AfterEach
@@ -43,7 +43,7 @@ public abstract class KanbanContextTest extends KanbanTest {
         context.close();
     }
 
-    protected BlackBoxBoundedContext<?> context() {
+    protected BlackBoxContext context() {
         return checkNotNull(context);
     }
 }

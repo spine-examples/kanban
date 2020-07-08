@@ -22,6 +22,7 @@ package io.spine.examples.kanban.server.view;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.truth.extensions.proto.ProtoSubject;
+import io.spine.base.CommandMessage;
 import io.spine.examples.kanban.Card;
 import io.spine.examples.kanban.CardId;
 import io.spine.examples.kanban.Column;
@@ -35,8 +36,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static io.spine.protobuf.AnyPacker.unpack;
 
 @DisplayName("BoardProjection should")
 class BoardProjectionTest extends KanbanContextTest {
@@ -48,17 +51,11 @@ class BoardProjectionTest extends KanbanContextTest {
     @BeforeEach
     void initBoard() {
         context().receivesCommand(createBoard());
-        columns = context()
-                .commandMessages()
-                .stream()
-                .filter(c -> c instanceof CreateColumn)
-                .map(c -> ((CreateColumn) c).getColumn())
+        columns = commands(CreateColumn.class)
+                .map(CreateColumn::getColumn)
                 .collect(toImmutableList());
-        cards = context()
-                .commandMessages()
-                .stream()
-                .filter(c -> c instanceof CreateCard)
-                .map(c -> ((CreateCard) c).getCard())
+        cards = commands(CreateCard.class)
+                .map(CreateCard::getCard)
                 .collect(toImmutableList());
         entityState = assertState();
     }
@@ -112,7 +109,16 @@ class BoardProjectionTest extends KanbanContextTest {
     }
 
     private ProtoSubject assertState() {
-        return context().assertEntity(BoardProjection.class, board())
+        return context().assertEntity(board(), BoardProjection.class)
                         .hasStateThat();
+    }
+
+    private <T extends CommandMessage> Stream<T> commands(Class<T> commandClass) {
+        return context()
+                .assertCommands()
+                .actual()
+                .stream()
+                .filter(commandClass::isInstance)
+                .map(c -> unpack(c.getMessage(), commandClass));
     }
 }
