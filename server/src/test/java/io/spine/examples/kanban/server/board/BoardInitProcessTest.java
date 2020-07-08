@@ -24,7 +24,6 @@ import io.spine.examples.kanban.Column;
 import io.spine.examples.kanban.ColumnId;
 import io.spine.examples.kanban.command.CreateColumn;
 import io.spine.examples.kanban.server.KanbanContextTest;
-import io.spine.protobuf.AnyPacker;
 import io.spine.testing.server.CommandSubject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -35,6 +34,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static io.spine.examples.kanban.server.board.BoardInitProcess.defaultColumnCount;
+import static io.spine.protobuf.AnyPacker.unpack;
 import static java.util.stream.Collectors.toList;
 
 @DisplayName("BoardInitProcess should")
@@ -81,12 +81,11 @@ class BoardInitProcessTest extends KanbanContextTest {
     }
 
     private Collection<ColumnId> createdColumns() {
-        List<ColumnId
-                > collect = context().assertCommands()
+        List<ColumnId> collect = context().assertCommands()
                 .withType(CreateColumn.class)
                 .actual()
                 .stream()
-                .map(c -> AnyPacker.unpack(c.getMessage(), CreateColumn.class))
+                .map(c -> unpack(c.getMessage(), CreateColumn.class))
                 .map(CreateColumn::getColumn)
                 .collect(toList());
         return collect;

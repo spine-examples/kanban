@@ -31,7 +31,6 @@ import io.spine.examples.kanban.command.CreateCard;
 import io.spine.examples.kanban.command.CreateColumn;
 import io.spine.examples.kanban.server.KanbanContextTest;
 import io.spine.examples.kanban.view.BoardView;
-import io.spine.protobuf.AnyPacker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,6 +39,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static io.spine.protobuf.AnyPacker.unpack;
 
 @DisplayName("BoardProjection should")
 class BoardProjectionTest extends KanbanContextTest {
@@ -118,6 +118,6 @@ class BoardProjectionTest extends KanbanContextTest {
                 .actual()
                 .stream()
                 .filter(commandClass::isInstance)
-                .map(c -> AnyPacker.unpack(c.getMessage(), commandClass));
+                .map(c -> unpack(c.getMessage(), commandClass));
     }
 }
