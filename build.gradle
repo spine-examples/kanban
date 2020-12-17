@@ -1,5 +1,11 @@
 /*
- * Copyright 2019, TeamDev. All rights reserved.
+ * Copyright 2020, TeamDev. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -37,7 +43,6 @@ subprojects {
 
     apply plugin: 'net.ltgt.errorprone'
     apply from: "$rootDir/gradle/static-analysis.gradle"
-    apply from: "$rootDir/gradle/idea.gradle"
 
     dependencies {
         errorprone "com.google.errorprone:error_prone_core:$deps.versions.errorProne"
@@ -73,23 +78,6 @@ subprojects {
         // correct execution of the `javac` task.
         options.encoding = 'UTF-8'
         options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
-
-        // Configure Error Prone:
-        // 1. Exclude generated sources from being analyzed by Error Prone.
-        // 2. Turn the check off until Error Prone can handle `@Nested` JUnit classes.
-        //    See issue: https://github.com/google/error-prone/issues/956
-        // 3. Turn off checks which report unused methods and unused method parameters.
-        //    See issue: https://github.com/SpineEventEngine/config/issues/61
-        //
-        // For more config details see:
-        //    https://github.com/tbroyer/gradle-errorprone-plugin/tree/master#usage
-
-        options.errorprone.errorproneArgs.addAll(
-                '-XepExcludedPaths:.*/generated/.*',
-                '-Xep:ClassCanBeStatic:OFF',
-                '-Xep:UnusedMethod:OFF',
-                '-Xep:UnusedVariable:OFF',
-                '-Xep:CheckReturnValue:OFF')
     }
 
     test {
