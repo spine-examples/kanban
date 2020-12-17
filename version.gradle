@@ -19,15 +19,15 @@
  */
 
 final def versions = [
-        errorProne      : "2.3.4",
+        errorProne      : "2.4.0",
         errorProneJavac : "9+181-r4173-1", // taken from here: https://github.com/tbroyer/gradle-errorprone-plugin/blob/v0.8/build.gradle.kts
-        guava           : "29.0-jre",
-        checkerFramework: "3.3.0",
+        guava           : "30.0-jre",
+        checkerFramework: "3.7.1",
         apiGuardian     : "1.1.0",
         grpc            : "1.28.1",
         pmd             : "6.24.0",
 
-        junit5          : "5.6.2"
+        junit5          : "5.7.0"
 ]
 
 ext {

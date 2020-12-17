@@ -36,9 +36,16 @@ import static io.spine.client.ConnectionConstants.DEFAULT_CLIENT_SERVICE_PORT;
  */
 public final class KanbanServer {
 
+    /**
+     * Prevents direct instantiation.
+     */
     private KanbanServer() {
     }
 
+    /**
+     * Creates a new Spine {@code Server} instance at the
+     * {@linkplain io.spine.client.ConnectionConstants#DEFAULT_CLIENT_SERVICE_PORT default} port.
+     */
     static Server create() {
         configureEnvironment();
         BoundedContextBuilder context = KanbanContext.newBuilder();
@@ -49,9 +56,10 @@ public final class KanbanServer {
     }
 
     private static void configureEnvironment() {
-        ServerEnvironment serverEnvironment = ServerEnvironment.instance();
-        serverEnvironment.use(InMemoryStorageFactory.newInstance(), Production.class)
-                         .use(InMemoryTransportFactory.newInstance(), Production.class);
+        ServerEnvironment
+                .when(Production.class)
+                .use(InMemoryStorageFactory.newInstance())
+                .use(InMemoryTransportFactory.newInstance());
     }
 
     /**
