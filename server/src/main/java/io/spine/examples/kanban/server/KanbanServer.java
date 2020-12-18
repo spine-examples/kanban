@@ -1,5 +1,11 @@
 /*
- * Copyright 2018, TeamDev. All rights reserved.
+ * Copyright 2020, TeamDev. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -36,9 +42,16 @@ import static io.spine.client.ConnectionConstants.DEFAULT_CLIENT_SERVICE_PORT;
  */
 public final class KanbanServer {
 
+    /**
+     * Prevents direct instantiation.
+     */
     private KanbanServer() {
     }
 
+    /**
+     * Creates a new Spine {@code Server} instance at the
+     * {@linkplain io.spine.client.ConnectionConstants#DEFAULT_CLIENT_SERVICE_PORT default} port.
+     */
     static Server create() {
         configureEnvironment();
         BoundedContextBuilder context = KanbanContext.newBuilder();
@@ -49,9 +62,10 @@ public final class KanbanServer {
     }
 
     private static void configureEnvironment() {
-        ServerEnvironment serverEnvironment = ServerEnvironment.instance();
-        serverEnvironment.use(InMemoryStorageFactory.newInstance(), Production.class)
-                         .use(InMemoryTransportFactory.newInstance(), Production.class);
+        ServerEnvironment
+                .when(Production.class)
+                .use(InMemoryStorageFactory.newInstance())
+                .use(InMemoryTransportFactory.newInstance());
     }
 
     /**

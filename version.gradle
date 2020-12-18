@@ -1,5 +1,11 @@
 /*
- * Copyright 2019, TeamDev. All rights reserved.
+ * Copyright 2020, TeamDev. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -19,15 +25,15 @@
  */
 
 final def versions = [
-        errorProne      : "2.3.4",
+        errorProne      : "2.4.0",
         errorProneJavac : "9+181-r4173-1", // taken from here: https://github.com/tbroyer/gradle-errorprone-plugin/blob/v0.8/build.gradle.kts
-        guava           : "29.0-jre",
-        checkerFramework: "3.3.0",
+        guava           : "30.0-jre",
+        checkerFramework: "3.7.1",
         apiGuardian     : "1.1.0",
         grpc            : "1.28.1",
         pmd             : "6.24.0",
 
-        junit5          : "5.6.2"
+        junit5          : "5.7.0"
 ]
 
 ext {
