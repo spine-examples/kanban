@@ -9,7 +9,5 @@
 This example demonstrates:
 
 * Multiple related Aggregate.
-  
 * Orchestrating Aggregates using Process Managers.
-  
 * Building a Projection which is subscribed to both events and entity updates.
