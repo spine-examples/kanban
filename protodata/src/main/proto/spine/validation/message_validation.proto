@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package spine.validation;
+
+import "spine/options.proto";
+
+option (type_url_prefix) = "type.spine.io";
+option java_package = "io.spine.validation";
+option java_outer_classname = "MessageValidationProto";
+option java_multiple_files = true;
+
+import "spine/protodata/ast.proto";
+import "spine/validation/rule.proto";
+
+message MessageValidation {
+    option (entity).kind = PROJECTION;
+
+    protodata.TypeName name = 1;
+
+    protodata.MessageType type = 2;
+
+    RuleOrComposite root_rule = 3;
+
+    protodata.File declaring_file = 4;
+}

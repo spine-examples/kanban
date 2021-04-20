@@ -24,12 +24,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-repositories {
-    mavenLocal()
-}
+package io.spine.kanban.codegen;
 
-dependencies {
-    implementation("io.spine.protodata:compiler:0.0.7")
-    implementation("org.jboss.forge.roaster:roaster-api:2.21.2.Final")
-    implementation("org.jboss.forge.roaster:roaster-jdt:2.21.2.Final")
+import io.spine.protodata.language.CommonLanguages;
+import io.spine.protodata.renderer.InsertionPoint;
+import io.spine.protodata.renderer.InsertionPointPrinter;
+import io.spine.validation.MessageValidation;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static io.spine.protodata.Ast.typeUrl;
+import static java.lang.String.format;
+
+public final class ValidateInsertionPointPrinter extends InsertionPointPrinter {
+
+    public ValidateInsertionPointPrinter() {
+        super(CommonLanguages.INSTANCE.getJava());
+    }
+
+    @NotNull
+    @Override
+    protected Set<InsertionPoint> getSupportedInsertionPoints() {
+        Set<MessageValidation> types = select(MessageValidation.class).all();
+        return types.stream()
+                    .map(validation -> new Validate(validation.getName()))
+                    .collect(toImmutableSet());
+    }
+
 }

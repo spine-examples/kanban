@@ -26,33 +26,34 @@
 
 package io.spine.kanban.codegen;
 
-import com.google.common.collect.ImmutableSet;
-import io.spine.protodata.renderer.Renderer;
-import io.spine.protodata.renderer.SourceFile;
-import io.spine.protodata.renderer.SourceSet;
-import io.spine.protodata.subscriber.CodeEnhancement;
+import io.spine.protodata.TypeName;
+import io.spine.protodata.renderer.InsertionPoint;
+import io.spine.protodata.renderer.LineNumber;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
+import java.util.List;
 
-public final class ValidationRenderer extends Renderer {
+import static com.google.common.base.Preconditions.checkNotNull;
+import static io.spine.protodata.Ast.typeUrl;
+import static java.lang.String.format;
+
+class Validate implements InsertionPoint {
+
+    private final TypeName type;
+
+    Validate(TypeName type) {
+        this.type = checkNotNull(type);
+    }
 
     @NotNull
     @Override
-    public SourceSet render(@NotNull SourceSet sources) {
-        ImmutableSet.Builder<SourceFile> files = ImmutableSet.builder();
-        for (CodeEnhancement enhancement : getEnhancements()) {
-            if (enhancement instanceof CheckFieldIsSet) {
-                CheckFieldIsSet checkIsSet = (CheckFieldIsSet) enhancement;
-                apply(checkIsSet, sources).ifPresent(files::add);
-            }
-        }
-        return new SourceSet(files.build());
+    public String getLabel() {
+        return format("validate:%s", typeUrl(type));
     }
 
-    private Optional<SourceFile> apply(CheckFieldIsSet enhancement, SourceSet sources) {
-        System.out.println(enhancement);
-        System.out.println(sources);
-        return Optional.empty();
+    @NotNull
+    @Override
+    public LineNumber locate(@NotNull List<String> list) {
+        return LineNumber.Companion.notInFile();
     }
 }

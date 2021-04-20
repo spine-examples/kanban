@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+package spine.validation;
+
+import "spine/options.proto";
+
+option (type_url_prefix) = "type.spine.io";
+option java_package = "io.spine.validation";
+option java_outer_classname = "RuleProto";
+option java_multiple_files = true;
+
+import "spine/protodata/ast.proto";
+import "google/protobuf/any.proto";
+
+message Rule {
+
+    protodata.Field field = 1;
+
+    oneof operation {
+
+        Sign sign = 2;
+
+        UnknownOperation unknown_operation = 3;
+    }
+
+    google.protobuf.Any other_value = 4;
+}
+
+enum Sign {
+
+    OPERATION_UNKNOWN = 0;
+
+    EQUAL = 1;
+
+    NOT_EQUAL = 2;
+
+    LESS_THAN = 3;
+
+    GREATER_THAN = 4;
+
+    LESS_OR_EQUAL = 5;
+
+    GREATER_OR_EQUAL = 6;
+
+    DISTINCT = 7;
+}
+
+message UnknownOperation {
+
+    string description = 1;
+}
+
+message RuleOrComposite {
+
+    oneof kind {
+
+        Rule rule = 1;
+
+        CompositeRule composite = 2;
+    }
+}
+
+message CompositeRule {
+
+    RuleOrComposite left = 1;
+
+    BinaryOperation operation = 2;
+
+    RuleOrComposite right = 3;
+}
+
+enum BinaryOperation {
+
+    BO_UNKNOWN = 0;
+
+    AND = 1;
+
+    OR = 2;
+
+    XOR = 3;
+}

@@ -24,12 +24,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-repositories {
-    mavenLocal()
-}
+package io.spine.kanban.codegen;
 
-dependencies {
-    implementation("io.spine.protodata:compiler:0.0.7")
-    implementation("org.jboss.forge.roaster:roaster-api:2.21.2.Final")
-    implementation("org.jboss.forge.roaster:roaster-jdt:2.21.2.Final")
+import com.google.protobuf.ExtensionRegistry;
+import io.spine.option.OptionsProto;
+import io.spine.protodata.option.OptionsProvider;
+import org.jetbrains.annotations.NotNull;
+
+public final class SpineOptionsProvider implements OptionsProvider {
+
+    @Override
+    public void dumpTo(@NotNull ExtensionRegistry registry) {
+        OptionsProto.registerAllExtensions(registry);
+    }
 }

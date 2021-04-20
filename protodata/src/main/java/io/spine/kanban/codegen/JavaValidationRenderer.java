@@ -26,20 +26,33 @@
 
 package io.spine.kanban.codegen;
 
-import io.spine.protodata.Field;
-import io.spine.protodata.subscriber.CodeEnhancement;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import io.spine.protodata.Ast;
+import io.spine.protodata.language.CommonLanguages;
+import io.spine.protodata.renderer.Renderer;
+import io.spine.protodata.renderer.SourceSet;
+import io.spine.validation.MessageValidation;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import java.nio.file.Path;
 
-public final class CheckFieldIsSet implements CodeEnhancement {
+public final class JavaValidationRenderer extends Renderer {
 
-    private final Field field;
-
-    CheckFieldIsSet(Field field) {
-        this.field = checkNotNull(field);
+    public JavaValidationRenderer() {
+        super(ImmutableSet.of(CommonLanguages.INSTANCE.getJava()));
     }
 
-    public Field field() {
-        return field;
+    @Override
+    protected void doRender(SourceSet sources) {
+        select(MessageValidation.class).all().forEach(validation -> {
+            Path javaFile = Ast.javaFile(validation.getType(), validation.getDeclaringFile());
+            sources.file(javaFile)
+                   .at(new Validate(validation.getName()))
+                   .add(rulesToCode(validation), 0);
+        });
+    }
+
+    private ImmutableList<String> rulesToCode(MessageValidation validation) {
+        return ImmutableList.of();
     }
 }
