@@ -26,18 +26,36 @@
 
 package io.spine.kanban.codegen;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
+import com.google.protobuf.Message;
 import io.spine.protodata.TypeName;
 import io.spine.protodata.renderer.InsertionPoint;
 import io.spine.protodata.renderer.LineNumber;
+import org.jboss.forge.roaster.Roaster;
+import org.jboss.forge.roaster.model.source.JavaClassSource;
+import org.jboss.forge.roaster.model.source.JavaSource;
+import org.jboss.forge.roaster.model.source.MethodSource;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.List;
+import java.util.Optional;
+import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static io.spine.protodata.Ast.typeUrl;
 import static java.lang.String.format;
 
 class Validate implements InsertionPoint {
+
+    private static final Splitter LINE_SPLITTER = Splitter.on(System.lineSeparator());
+    private static final Joiner LINE_JOINER = Joiner.on(System.lineSeparator());
+    private static final Pattern RETURN_LINE = Pattern.compile("\\s*return .+;\\s*");
+    private static final String BUILDER_CLASS = "Builder";
+    private static final String BUILD_METHOD = "build";
+
 
     private final TypeName type;
 
@@ -53,7 +71,86 @@ class Validate implements InsertionPoint {
 
     @NotNull
     @Override
-    public LineNumber locate(@NotNull List<String> list) {
-        return LineNumber.Companion.notInFile();
+    public LineNumber locate(List<String> lines) {
+        String code = LINE_JOINER.join(lines);
+        Optional<JavaClassSource> builder = findBuilder(code);
+        if (!builder.isPresent()) {
+            return LineNumber.notInFile();
+        }
+        JavaClassSource builderClass = builder.get();
+        MethodSource<JavaClassSource> method = builderClass.getMethod(BUILD_METHOD);
+        if (method == null) {
+            return LineNumber.notInFile();
+        }
+        int methodDeclarationLine = method.getLineNumber();
+        int startPosition = method.getStartPosition();
+        int endPosition = method.getEndPosition();
+        String methodSource = code.substring(startPosition, endPosition);
+        int returnIndex = returnLineIndex(methodSource);
+        return LineNumber.at(methodDeclarationLine + returnIndex);
+    }
+
+    private Optional<JavaClassSource> findBuilder(String code) {
+        Optional<JavaClassSource> classSource = findClass(code);
+        if (!classSource.isPresent()) {
+            return Optional.empty();
+        }
+        JavaClassSource source = classSource.get();
+        if (!source.hasNestedType(BUILDER_CLASS)) {
+            return Optional.empty();
+        }
+        JavaSource<?> builder = source.getNestedType(BUILDER_CLASS);
+        if (!builder.isClass()) {
+            return Optional.empty();
+        }
+        JavaClassSource builderClass = (JavaClassSource) builder;
+        return Optional.of(builderClass);
+    }
+
+    private Optional<JavaClassSource> findClass(String code) {
+        JavaSource<?> javaSource = Roaster.parse(JavaSource.class, code);
+        if (!javaSource.isClass()) {
+            return Optional.empty();
+        }
+        JavaClassSource source = (JavaClassSource) javaSource;
+        Deque<String> names = new ArrayDeque<>(type.getNestingTypeNameList());
+        names.addLast(type.getSimpleName());
+
+        if (source.getName().equals(names.peek())) {
+            names.poll();
+        }
+        return findSubClass(source, names);
+    }
+
+    private static Optional<JavaClassSource> findSubClass(JavaClassSource topLevelClass,
+                                                          Iterable<String> names) {
+        JavaClassSource source = topLevelClass;
+        for (String name : names) {
+            if (!source.hasNestedType(name)) {
+                return Optional.empty();
+            }
+            String superType = source.resolveType(source.getSuperType());
+            if (!superType.equals(Message.class.getName())) {
+                return Optional.empty();
+            }
+            JavaSource<?> nestedType = source.getNestedType(name);
+            if (!nestedType.isClass()) {
+                return Optional.empty();
+            }
+            source = (JavaClassSource) nestedType;
+        }
+        return Optional.of(source);
+    }
+
+    private static int returnLineIndex(String code) {
+        List<String> methodLines = LINE_SPLITTER.splitToList(code);
+        int returnIndex = 0;
+        for (String line : methodLines) {
+            if (RETURN_LINE.matcher(line).matches()) {
+                return returnIndex;
+            }
+            returnIndex++;
+        }
+        throw new IllegalArgumentException("No return line.");
     }
 }

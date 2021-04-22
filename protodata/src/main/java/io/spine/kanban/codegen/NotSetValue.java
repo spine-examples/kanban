@@ -43,12 +43,12 @@ import static io.spine.protodata.PrimitiveType.UNRECOGNIZED;
 import static io.spine.util.Exceptions.newIllegalArgumentException;
 import static io.spine.util.Exceptions.newIllegalStateException;
 
-public final class NotSetValueValue {
+public final class NotSetValue {
 
     /**
      * Prevents the utility class instantiation.
      */
-    private NotSetValueValue() {
+    private NotSetValue() {
     }
 
     public static Value forType(Type type) {
@@ -75,12 +75,12 @@ public final class NotSetValueValue {
         if (primitiveType == TYPE_STRING) {
             return Value.newBuilder()
                         .setStringValue("")
-                        .build();
+                        .vBuild();
         }
         if (primitiveType == TYPE_BYTES) {
             return Value.newBuilder()
                         .setBytesValue(EMPTY)
-                        .build();
+                        .vBuild();
         }
         throw newIllegalStateException(
                 "Fields of type `%s` do not support `(required)` validation.",
@@ -94,8 +94,8 @@ public final class NotSetValueValue {
         return Value.newBuilder()
                     .setMessageValue(MessageValue.newBuilder()
                                                  .setTypeUrl(typeUrl(msgName))
-                                                 .build())
-                    .build();
+                                                 .buildPartial())
+                    .vBuild();
     }
 
     private static Value enumValue(Type type) {
@@ -103,7 +103,7 @@ public final class NotSetValueValue {
         return Value.newBuilder()
                     .setEnumValue(EnumValue.newBuilder()
                                            .setTypeUrl(typeUrl(enumName))
-                                           .build())
-                    .build();
+                                           .buildPartial())
+                    .vBuild();
     }
 }

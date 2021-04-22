@@ -43,11 +43,9 @@ import io.spine.validation.AddRule;
 import io.spine.validation.Rule;
 import io.spine.validation.Value;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static io.spine.option.OptionsProto.required;
 import static io.spine.protodata.Ast.typeUrl;
 import static io.spine.util.Exceptions.newIllegalArgumentException;
-import static io.spine.util.Exceptions.newIllegalStateException;
 import static io.spine.validation.Sign.NOT_EQUAL;
 
 public final class ValidationRulePolicy extends Policy {
@@ -78,12 +76,12 @@ public final class ValidationRulePolicy extends Policy {
     }
 
     private static AddRule addRequiredRule(Field field) {
-        Value defaultValue = NotSetValueValue.forType(field.getType());
+        Value defaultValue = NotSetValue.forType(field.getType());
         Rule rule = Rule.newBuilder()
                         .setField(field)
                         .setSign(NOT_EQUAL)
                         .setOtherValue(defaultValue)
-                        .build();
+                        .vBuild();
         return AddRule.newBuilder()
                       .setType(field.getDeclaringType())
                       .setRule(rule)
