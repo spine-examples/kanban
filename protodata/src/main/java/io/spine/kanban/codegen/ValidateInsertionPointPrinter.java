@@ -34,15 +34,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static io.spine.protodata.Ast.typeUrl;
-import static java.lang.String.format;
 
 public final class ValidateInsertionPointPrinter extends InsertionPointPrinter {
 
     public ValidateInsertionPointPrinter() {
-        super(CommonLanguages.INSTANCE.getJava());
+        super(CommonLanguages.getJava());
     }
 
     @NotNull
@@ -53,5 +50,4 @@ public final class ValidateInsertionPointPrinter extends InsertionPointPrinter {
                     .map(validation -> new Validate(validation.getName()))
                     .collect(toImmutableSet());
     }
-
 }

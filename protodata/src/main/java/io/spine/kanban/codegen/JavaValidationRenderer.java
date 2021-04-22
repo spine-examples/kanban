@@ -39,7 +39,7 @@ import java.nio.file.Path;
 public final class JavaValidationRenderer extends Renderer {
 
     public JavaValidationRenderer() {
-        super(ImmutableSet.of(CommonLanguages.INSTANCE.getJava()));
+        super(ImmutableSet.of(CommonLanguages.getJava()));
     }
 
     @Override
@@ -48,11 +48,12 @@ public final class JavaValidationRenderer extends Renderer {
             Path javaFile = Ast.javaFile(validation.getType(), validation.getDeclaringFile());
             sources.file(javaFile)
                    .at(new Validate(validation.getName()))
-                   .add(rulesToCode(validation), 0);
+                   .add(rulesToCode(validation));
         });
     }
 
     private ImmutableList<String> rulesToCode(MessageValidation validation) {
+        System.out.println(validation);
         return ImmutableList.of();
     }
 }

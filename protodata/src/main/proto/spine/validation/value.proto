@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+package spine.validation;
+
+import "spine/options.proto";
+
+option (type_url_prefix) = "type.spine.io";
+option java_package = "io.spine.validation";
+option java_outer_classname = "StructProto";
+option java_multiple_files = true;
+
+// `Value` represents a dynamically typed value which can be either
+// null, a number, a string, a boolean, a recursive struct value, or a
+// list of values. A producer of value is expected to set one of that
+// variants, absence of any variant indicates an error.
+//
+// The JSON representation for `Value` is JSON value.
+message Value {
+    // The kind of value.
+    oneof kind {
+
+        // Represents a null value.
+        NullValue null_value = 1;
+
+        // Represents a boolean value.
+        bool bool_value = 2;
+
+        // Represents a double value.
+        double number_value = 3;
+
+        // Represents a string value.
+        string string_value = 4;
+
+        bytes bytes_value = 5;
+
+        // Represents a structured value.
+        MessageValue message_value = 6;
+
+        EnumValue enum_value = 7;
+
+        // Represents a repeated `Value`.
+        ListValue list_value = 8;
+
+        MapValue map_value = 9;
+    }
+}
+
+// `NullValue` is a singleton enumeration to represent the null value for the
+// `Value` type union.
+//
+//  The JSON representation for `NullValue` is JSON `null`.
+enum NullValue {
+
+    // Null value.
+    NULL_VALUE = 0;
+}
+
+// `Struct` represents a structured data value, consisting of fields
+// which map to dynamically typed values. In some languages, `Struct`
+// might be supported by a native representation. For example, in
+// scripting languages like JS a struct is represented as an
+// object. The details of that representation are described together
+// with the proto support for the language.
+//
+// The JSON representation for `Struct` is JSON object.
+message MessageValue {
+    // Unordered map of dynamically typed values.
+    map<string, Value> fields = 1;
+
+    string type_url = 2;
+}
+
+message EnumValue {
+
+    uint32 const_number = 1;
+
+    string type_url = 2;
+}
+
+// `ListValue` is a wrapper around a repeated field of values.
+//
+// The JSON representation for `ListValue` is JSON array.
+message ListValue {
+
+    // Repeated field of dynamically typed values.
+    repeated Value values = 1;
+}
+
+message MapValue {
+
+    repeated Entry values = 1;
+
+    message Entry {
+
+        Value key = 1;
+
+        Value value = 2;
+    }
+}
+
