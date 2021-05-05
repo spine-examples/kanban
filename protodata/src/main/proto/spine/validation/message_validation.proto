@@ -19,7 +19,7 @@ message MessageValidation {
 
     protodata.MessageType type = 2;
 
-    RuleOrComposite root_rule = 3;
+    repeated RuleOrComposite rule = 3;
 
     protodata.File declaring_file = 4;
 }

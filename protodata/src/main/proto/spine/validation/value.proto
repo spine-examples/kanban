@@ -9,6 +9,8 @@ option java_package = "io.spine.validation";
 option java_outer_classname = "StructProto";
 option java_multiple_files = true;
 
+import "spine/protodata/ast.proto";
+
 // `Value` represents a dynamically typed value which can be either
 // null, a number, a string, a boolean, a recursive struct value, or a
 // list of values. A producer of value is expected to set one of that
@@ -43,6 +45,10 @@ message Value {
 
         MapValue map_value = 9;
     }
+
+    reserved 10 to 20; // For possible extra options in the `kind` oneof.
+
+    protodata.Type type = 21;
 }
 
 // `NullValue` is a singleton enumeration to represent the null value for the
@@ -67,14 +73,14 @@ message MessageValue {
     // Unordered map of dynamically typed values.
     map<string, Value> fields = 1;
 
-    string type_url = 2;
+    protodata.TypeName type = 2;
 }
 
 message EnumValue {
 
     uint32 const_number = 1;
 
-    string type_url = 2;
+    protodata.TypeName type = 2;
 }
 
 // `ListValue` is a wrapper around a repeated field of values.

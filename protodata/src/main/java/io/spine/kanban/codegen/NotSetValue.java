@@ -35,7 +35,6 @@ import io.spine.validation.Value;
 import org.jetbrains.annotations.NotNull;
 
 import static com.google.protobuf.ByteString.EMPTY;
-import static io.spine.protodata.Ast.typeUrl;
 import static io.spine.protodata.PrimitiveType.PT_UNKNOWN;
 import static io.spine.protodata.PrimitiveType.TYPE_BYTES;
 import static io.spine.protodata.PrimitiveType.TYPE_STRING;
@@ -88,12 +87,11 @@ public final class NotSetValue {
         );
     }
 
-    @NotNull
     private static Value messageValue(Type type) {
         TypeName msgName = type.getMessage();
         return Value.newBuilder()
                     .setMessageValue(MessageValue.newBuilder()
-                                                 .setTypeUrl(typeUrl(msgName))
+                                                 .setType(msgName)
                                                  .buildPartial())
                     .vBuild();
     }
@@ -102,7 +100,7 @@ public final class NotSetValue {
         TypeName enumName = type.getEnumeration();
         return Value.newBuilder()
                     .setEnumValue(EnumValue.newBuilder()
-                                           .setTypeUrl(typeUrl(enumName))
+                                           .setType(enumName)
                                            .buildPartial())
                     .vBuild();
     }

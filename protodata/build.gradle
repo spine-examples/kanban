@@ -24,6 +24,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.4.32"
+}
+
 repositories {
     mavenLocal()
 }
@@ -32,4 +36,5 @@ dependencies {
     implementation("io.spine.protodata:compiler:0.0.8")
     implementation("org.jboss.forge.roaster:roaster-api:2.21.2.Final")
     implementation("org.jboss.forge.roaster:roaster-jdt:2.21.2.Final")
+    implementation("com.squareup:javapoet:1.13.0")
 }

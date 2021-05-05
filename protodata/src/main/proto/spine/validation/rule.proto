@@ -25,6 +25,13 @@ message Rule {
     }
 
     Value other_value = 4;
+
+    // A human-readable message explaining the error.
+    //
+    // May include tokens `{value}` and `{other}`, which will be replaced with the runtime values
+    // when the error is constructed.
+    //
+    string error_message = 5;
 }
 
 enum Sign {
@@ -68,6 +75,14 @@ message CompositeRule {
     BinaryOperation operation = 2;
 
     RuleOrComposite right = 3;
+
+    // A human-readable message explaining the error.
+    //
+    // May include tokens `{left}`, `{right}`, and `{operation}`, which will be replaced with at
+    // runtime with the error messages of the `left` and `right` rules and the words "and" or "or"
+    // or "xor".
+    //
+    string error_message = 4;
 }
 
 enum BinaryOperation {
