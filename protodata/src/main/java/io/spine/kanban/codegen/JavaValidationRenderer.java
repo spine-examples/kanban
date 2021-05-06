@@ -32,9 +32,7 @@ import com.google.common.collect.ImmutableSet;
 import com.squareup.javapoet.CodeBlock;
 import io.spine.base.FieldPath;
 import io.spine.protobuf.TypeConverter;
-import io.spine.protodata.EnumType;
 import io.spine.protodata.Field;
-import io.spine.protodata.MessageType;
 import io.spine.protodata.ProtobufSourceFile;
 import io.spine.protodata.Type;
 import io.spine.protodata.TypeName;
@@ -48,6 +46,7 @@ import io.spine.validation.MessageValidation;
 import io.spine.validation.Rule;
 import io.spine.validation.RuleOrComposite;
 import io.spine.validation.Sign;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.nio.file.Path;
@@ -98,7 +97,7 @@ public final class JavaValidationRenderer extends Renderer {
                     XOR, (left, right) -> format("(%s) ^ (%s)", left, right)
             );
 
-    private TypeSystem typeSystem;
+    private @MonotonicNonNull TypeSystem typeSystem;
 
     public JavaValidationRenderer() {
         super(ImmutableSet.of(CommonLanguages.getJava()));
@@ -106,25 +105,27 @@ public final class JavaValidationRenderer extends Renderer {
 
     @Override
     protected void doRender(SourceSet sources) {
-        Set<ProtobufSourceFile> files = select(ProtobufSourceFile.class).all();
-        TypeSystem.Builder types = TypeSystem.newBuilder();
-        for (ProtobufSourceFile file : files) {
-            for (MessageType type : file.getTypeMap().values()) {
-                types.put(file.getFile(), type);
-            }
-            for (EnumType type : file.getEnumTypeMap().values()) {
-                types.put(file.getFile(),type);
-            }
-        }
-        typeSystem = types.build();
+        bakeTypeSystem();
         select(MessageValidation.class)
                 .all()
+                .stream()
+                .filter(validation -> validation.getRuleCount() > 0)
                 .forEach(validation -> {
                     Path javaFile = javaFile(validation.getType(), validation.getDeclaringFile());
                     sources.file(javaFile)
                            .at(new Validate(validation.getName()))
                            .add(rulesToCode(validation));
                 });
+    }
+
+    private void bakeTypeSystem() {
+        Set<ProtobufSourceFile> files = select(ProtobufSourceFile.class).all();
+        TypeSystem.Builder types = TypeSystem.newBuilder();
+        for (ProtobufSourceFile file : files) {
+            file.getTypeMap().values().forEach(type -> types.put(file.getFile(), type));
+            file.getEnumTypeMap().values().forEach(type -> types.put(file.getFile(), type));
+        }
+        typeSystem = types.build();
     }
 
     private ImmutableList<String> rulesToCode(MessageValidation validation) {
@@ -141,7 +142,9 @@ public final class JavaValidationRenderer extends Renderer {
         return lines.build();
     }
 
-    private CodeBlock codeFor(RuleOrComposite rule, MessageReference result, TypeName declaringType) {
+    private CodeBlock codeFor(RuleOrComposite rule,
+                              MessageReference result,
+                              TypeName declaringType) {
         switch (rule.getKindCase()) {
             case RULE:
                 Rule simpleRule = rule.getRule();
@@ -166,7 +169,7 @@ public final class JavaValidationRenderer extends Renderer {
                 return forRule(simpleRule.getErrorMessage(), fieldValue, otherValue);
             case COMPOSITE:
                 CompositeRule composite = rule.getComposite();
-                return errorFor(composite,result);
+                return errorFor(composite, result);
             case KIND_NOT_SET:
             default:
                 throw new IllegalArgumentException("Empty rule.");

@@ -39,7 +39,7 @@ import io.spine.protodata.plugin.Policy;
 import io.spine.server.event.React;
 import io.spine.server.model.Nothing;
 import io.spine.server.tuple.EitherOf2;
-import io.spine.validation.AddRule;
+import io.spine.validation.RuleAdded;
 import io.spine.validation.Rule;
 import io.spine.validation.Value;
 
@@ -51,7 +51,7 @@ import static io.spine.validation.Sign.NOT_EQUAL;
 public final class ValidationRulePolicy extends Policy {
 
     @React
-    EitherOf2<AddRule, Nothing> on(@External FieldOptionDiscovered event) {
+    EitherOf2<RuleAdded, Nothing> on(@External FieldOptionDiscovered event) {
         Option option = event.getOption();
         if (isOption(option, required)) {
             ProtobufSourceFile file = select(ProtobufSourceFile.class)
@@ -64,28 +64,27 @@ public final class ValidationRulePolicy extends Policy {
                                    .get(typeUrl(event.getType()));
             Field field = type.getFieldList()
                               .stream()
-                              .filter(f -> f.getName()
-                                            .equals(event.getField()))
+                              .filter(f -> f.getName().equals(event.getField()))
                               .findAny()
                               .orElseThrow(() -> newIllegalArgumentException(
                                       "Unknown field `%s`.", event.getField()
                               ));
-            return EitherOf2.withA(addRequiredRule(field));
+            return EitherOf2.withA(requiredRule(field));
         }
         return EitherOf2.withB(nothing());
     }
 
-    private static AddRule addRequiredRule(Field field) {
+    private static RuleAdded requiredRule(Field field) {
         Value defaultValue = NotSetValue.forType(field.getType());
         Rule rule = Rule.newBuilder()
                         .setField(field)
                         .setSign(NOT_EQUAL)
                         .setOtherValue(defaultValue)
                         .vBuild();
-        return AddRule.newBuilder()
-                      .setType(field.getDeclaringType())
-                      .setRule(rule)
-                      .vBuild();
+        return RuleAdded.newBuilder()
+                        .setType(field.getDeclaringType())
+                        .setRule(rule)
+                        .vBuild();
     }
 
     private static boolean isOption(Option option, Extension<FieldOptions, ?> extension) {

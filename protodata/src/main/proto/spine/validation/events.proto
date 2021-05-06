@@ -12,14 +12,14 @@ option java_multiple_files = true;
 import "spine/protodata/ast.proto";
 import "spine/validation/rule.proto";
 
-message AddRule {
+message RuleAdded {
 
     protodata.TypeName type = 1;
 
     Rule rule = 2;
 }
 
-message AddCompositeRule {
+message CompositeRuleAdded {
 
     protodata.TypeName type = 1;
 
