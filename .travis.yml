@@ -6,4 +6,8 @@ jdk:
 before_install:
   - chmod +x gradlew
 
+install:
+  - ./gradlew :server:installProtoData --stacktrace
+  - source ~/.bash_profile
+
 script: ./gradlew check --stacktrace

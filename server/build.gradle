@@ -26,10 +26,12 @@
 
 final requestFile = "$buildDir/protodata/types.bin"
 
+final protoDataVersion = "0.0.8"
+
 protobuf {
     plugins {
         protodata {
-            artifact = 'io.spine.protodata:protoc:0.0.8:exe@jar'
+            artifact = "io.spine.protodata:protoc:$protoDataVersion:exe@jar"
         }
     }
 
@@ -62,4 +64,26 @@ task launchProtoData(type: Exec) {
                     File.pathSeparator +
                     projectProtodata.tasks.jar.outputs.files.asPath
     )
+}
+
+configurations {
+    protoDataExecutable
+}
+
+Dependency executable = null
+dependencies {
+    executable = protoDataExecutable "io.spine.protodata:executable:$protoDataVersion"
+}
+
+final File protoDataStaging = file("$buildDir/protodata/staging")
+
+tasks.register('stageProtoData', Copy) {
+    from(zipTree(configurations.protoDataExecutable.files(executable)[0].getAbsoluteFile()))
+    into(protoDataStaging)
+}
+
+tasks.register('installProtoData', Exec) {
+    commandLine("$protoDataStaging/install.sh")
+
+    dependsOn('stageProtoData')
 }
