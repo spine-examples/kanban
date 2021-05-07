@@ -24,4 +24,42 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// No additional configuration required.
+final requestFile = "$buildDir/protodata/types.bin"
+
+protobuf {
+    plugins {
+        protodata {
+            artifact = 'io.spine.protodata:protoc:0.0.8:exe@jar'
+        }
+    }
+
+    generateProtoTasks {
+        all().each { final task ->
+            task.plugins {
+                protodata {
+                    option requestFile
+                }
+            }
+        }
+    }
+}
+
+task launchProtoData(type: Exec) {
+    dependsOn(':protodata:jar', 'generateProto')
+    tasks.getByName('compileJava').dependsOn(it)
+
+    final projectProtodata = project(':protodata')
+
+    commandLine(
+            'protodata',
+            '--plugin', 'io.spine.kanban.codegen.JavaValidationPlugin',
+            '--renderer', 'io.spine.kanban.codegen.ValidateInsertionPointPrinter',
+            '--renderer', 'io.spine.kanban.codegen.JavaValidationRenderer',
+            '--options', 'io.spine.kanban.codegen.SpineOptionsProvider',
+            '--request', requestFile,
+            '--src', "$projectDir/generated/main/java",
+            '--user-classpath', projectProtodata.configurations.runtimeClasspath.asPath +
+                    File.pathSeparator +
+                    projectProtodata.tasks.jar.outputs.files.asPath
+    )
+}
