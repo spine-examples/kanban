@@ -40,14 +40,6 @@ private constructor(private val value: String) {
     companion object {
 
         @JvmStatic
-        fun forRuleOrComposite(rule: RuleOrComposite, message: MessageReference) {
-            if (rule.hasRule()) {
-                val simpleRule = rule.rule
-                forRule(simpleRule.errorMessage, message.field(simpleRule.field.name).getter.toCode(), )
-            }
-        }
-
-        @JvmStatic
         @JvmOverloads
         fun forRule(format: String, value: String = "", other: String = "") =
             ErrorMessage(

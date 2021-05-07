@@ -87,7 +87,8 @@ class Validate implements InsertionPoint {
         int endPosition = method.getEndPosition();
         String methodSource = code.substring(startPosition, endPosition);
         int returnIndex = returnLineIndex(methodSource);
-        return LineNumber.at(methodDeclarationLine + returnIndex);
+        int returnLineNumber = methodDeclarationLine + returnIndex;
+        return LineNumber.at(returnLineNumber - 1);
     }
 
     private Optional<JavaClassSource> findBuilder(String code) {

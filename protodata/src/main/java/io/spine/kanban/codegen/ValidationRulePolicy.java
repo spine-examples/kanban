@@ -75,8 +75,9 @@ public final class ValidationRulePolicy extends Policy {
     }
 
     private static RuleAdded requiredRule(Field field) {
-        Value defaultValue = NotSetValue.forType(field.getType());
+        Value defaultValue = NotSetValue.forField(field);
         Rule rule = Rule.newBuilder()
+                        .setErrorMessage("Field must be set.")
                         .setField(field)
                         .setSign(NOT_EQUAL)
                         .setOtherValue(defaultValue)

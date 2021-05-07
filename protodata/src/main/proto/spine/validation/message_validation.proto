@@ -20,6 +20,4 @@ message MessageValidation {
     protodata.MessageType type = 2;
 
     repeated RuleOrComposite rule = 3;
-
-    protodata.File declaring_file = 4;
 }

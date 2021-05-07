@@ -33,6 +33,8 @@ import com.squareup.javapoet.CodeBlock;
 import io.spine.base.FieldPath;
 import io.spine.protobuf.TypeConverter;
 import io.spine.protodata.Field;
+import io.spine.protodata.File;
+import io.spine.protodata.FilePath;
 import io.spine.protodata.ProtobufSourceFile;
 import io.spine.protodata.Type;
 import io.spine.protodata.TypeName;
@@ -59,6 +61,7 @@ import static io.spine.kanban.codegen.ErrorMessage.forRule;
 import static io.spine.protodata.Ast.javaFile;
 import static io.spine.protodata.Ast.typeUrl;
 import static io.spine.protodata.Type.KindCase.PRIMITIVE;
+import static io.spine.util.Exceptions.newIllegalArgumentException;
 import static io.spine.validation.BinaryOperation.AND;
 import static io.spine.validation.BinaryOperation.OR;
 import static io.spine.validation.BinaryOperation.XOR;
@@ -72,6 +75,7 @@ import static java.lang.String.format;
 
 public final class JavaValidationRenderer extends Renderer {
 
+    private static final int INDENT_LEVEL = 2;
     private static final String VIOLATIONS = "violations";
 
     private static final ImmutableMap<Sign, BinaryOperator<String>> OBJECT_COMPARISON_SIGNS =
@@ -111,11 +115,21 @@ public final class JavaValidationRenderer extends Renderer {
                 .stream()
                 .filter(validation -> validation.getRuleCount() > 0)
                 .forEach(validation -> {
-                    Path javaFile = javaFile(validation.getType(), validation.getDeclaringFile());
+                    File protoFile = findProtoFile(validation.getType().getFile());
+                    Path javaFile = javaFile(validation.getType(), protoFile);
                     sources.file(javaFile)
                            .at(new Validate(validation.getName()))
-                           .add(rulesToCode(validation));
+                           .add(rulesToCode(validation), INDENT_LEVEL);
                 });
+    }
+
+    private File findProtoFile(FilePath path) {
+        return select(ProtobufSourceFile.class)
+                .withId(path)
+                .orElseThrow(() -> newIllegalArgumentException(
+                        "No such Protobuf file: `%s`.",
+                        path.getValue()
+                )).getFile();
     }
 
     private void bakeTypeSystem() {
@@ -131,10 +145,11 @@ public final class JavaValidationRenderer extends Renderer {
     private ImmutableList<String> rulesToCode(MessageValidation validation) {
         MessageReference result = new MessageReference("result");
         ImmutableList.Builder<String> lines = ImmutableList.builder();
-        lines.add(CodeBlock.of("$T<$T> $N = $T.<$T>builder()",
-                               ImmutableList.Builder.class, ConstraintViolation.class,
+        lines.add(CodeBlock.of("$T<$T> $N = $T.builder();",
+                               ImmutableList.Builder.class,
+                               ConstraintViolation.class,
                                VIOLATIONS,
-                               ImmutableList.Builder.class, ConstraintViolation.class).toString());
+                               ImmutableList.class).toString());
         for (RuleOrComposite rule : validation.getRuleList()) {
             CodeBlock block = codeFor(rule, result, validation.getName());
             lines.add(block.toString());
@@ -162,7 +177,7 @@ public final class JavaValidationRenderer extends Renderer {
         switch (rule.getKindCase()) {
             case RULE:
                 Rule simpleRule = rule.getRule();
-                String fieldValue = result.field(simpleRule.getField().getName())
+                String fieldValue = result.field(simpleRule.getField())
                                           .getGetter()
                                           .toCode();
                 String otherValue = typeSystem.valueToJava(simpleRule.getOtherValue()).toCode();
@@ -190,12 +205,12 @@ public final class JavaValidationRenderer extends Renderer {
 
     private CodeBlock codeForRule(Rule rule, MessageReference msg) {
         Field field = rule.getField();
-        Expression fieldValue = msg.field(field.getName()).getGetter();
+        Expression fieldValue = msg.field(field).getGetter();
         Expression otherValue = typeSystem.valueToJava(rule.getOtherValue());
         String binaryCondition = conditionOf(rule, fieldValue, otherValue);
         return CodeBlock
                 .builder()
-                .beginControlFlow("if (!(%s))", binaryCondition)
+                .beginControlFlow("if (!($L))", binaryCondition)
                 .add(createViolation(forRule(rule.getErrorMessage(),
                                              fieldValue.toCode(),
                                              otherValue.toCode()),
@@ -221,7 +236,7 @@ public final class JavaValidationRenderer extends Renderer {
         if (rule.hasRule()) {
             Rule simpleRule = rule.getRule();
             Field field = simpleRule.getField();
-            Expression fieldValue = msg.field(field.getName()).getGetter();
+            Expression fieldValue = msg.field(field).getGetter();
             Expression otherValue = typeSystem.valueToJava(simpleRule.getOtherValue());
             return conditionOf(simpleRule, fieldValue, otherValue);
         } else {
@@ -262,7 +277,7 @@ public final class JavaValidationRenderer extends Renderer {
         Expression violationBuilder = buildViolation(error, type, field, fieldValue);
         return CodeBlock
                 .builder()
-                .add("$N.add($L)", VIOLATIONS, violationBuilder)
+                .addStatement("$N.add($L)", VIOLATIONS, violationBuilder)
                 .build();
     }
 
@@ -270,7 +285,7 @@ public final class JavaValidationRenderer extends Renderer {
         Expression violationBuilder = buildViolation(error, type, null, null);
         return CodeBlock
                 .builder()
-                .add("$N.add($L)", VIOLATIONS, violationBuilder)
+                .addStatement("$N.add($L)", VIOLATIONS, violationBuilder)
                 .build();
     }
 

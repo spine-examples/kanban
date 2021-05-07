@@ -31,12 +31,16 @@ package io.spine.kanban.codegen
 import com.google.common.collect.ImmutableList
 import com.google.common.collect.ImmutableMap
 import com.google.protobuf.ByteString
-import com.google.protobuf.Field
+import io.spine.protodata.Field
 import io.spine.protodata.Field.CardinalityCase
 import io.spine.protodata.Field.CardinalityCase.LIST
 import io.spine.protodata.Field.CardinalityCase.MAP
 import io.spine.protodata.Field.CardinalityCase.SINGLE
 import io.spine.protodata.FieldName
+import kotlin.reflect.KClass
+
+private val immutableListClass = ClassName(ImmutableList::class)
+private val immutableMapClass = ClassName(ImmutableMap::class)
 
 sealed class Expression(private val code: String) {
 
@@ -61,6 +65,8 @@ class ClassName(className: String) : Expression(className) {
 
     constructor(cls: Class<*>) : this(cls.canonicalName)
 
+    constructor(klass: KClass<*>) : this(klass.java)
+
     fun newBuilder(): MethodCall =
         call("newBuilder")
 
@@ -80,16 +86,26 @@ class ClassName(className: String) : Expression(className) {
 
 class MessageReference(label: String) : Expression(label) {
 
-    fun field(name: FieldName): FieldAccess = FieldAccess(this, name)
+    fun field(field: Field): FieldAccess =
+        FieldAccess(this, field.name, field.cardinalityCase)
 }
 
 class FieldAccess
-internal constructor(private val message: Expression,
-                     private val name: FieldName,
-                     private val cardinality: CardinalityCase = SINGLE) {
+internal constructor(
+    private val message: Expression,
+    private val name: FieldName,
+    private val cardinality: CardinalityCase = SINGLE
+) {
 
     val getter: MethodCall
-        get() = MethodCall(message, getterName)
+        get() {
+            val simpleAccess = MethodCall(message, getterName)
+            return when (cardinality) {
+                LIST -> immutableListClass.call("copyOf", listOf(simpleAccess))
+                MAP -> immutableMapClass.call("copyOf", listOf(simpleAccess))
+                else -> simpleAccess
+            }
+        }
 
     fun setter(value: Expression): MethodCall =
         MethodCall(message, setterName, listOf(value))
@@ -107,7 +123,7 @@ internal constructor(private val message: Expression,
         MethodCall(message, putAllName, listOf(value))
 
     private val getterName: String
-        get() = when(cardinality) {
+        get() = when (cardinality) {
             LIST -> getListName
             MAP -> getMapName
             else -> prefixed("get")
@@ -120,7 +136,7 @@ internal constructor(private val message: Expression,
         get() = "get${name.value.CamelCase()}Map"
 
     private val setterName: String
-        get() = when(cardinality) {
+        get() = when (cardinality) {
             LIST -> addAllName
             MAP -> putAllName
             else -> prefixed("set")
@@ -145,6 +161,7 @@ internal constructor(private val message: Expression,
         return "FieldAccess[$message#${name.value}]"
     }
 }
+
 
 class MethodCall
 @JvmOverloads
@@ -185,7 +202,7 @@ constructor(
     fun chainAdd(name: String, value: Expression): MethodCall =
         FieldAccess(this, fieldName(name)).add(value)
 
-    fun chainBuild() : MethodCall =
+    fun chainBuild(): MethodCall =
         chain("build")
 
     private fun fieldName(value: String) = FieldName
@@ -194,23 +211,18 @@ constructor(
         .build()
 }
 
-private val immutableListClass = ImmutableList::class.qualifiedName!!
-private val immutableMapClass = ImmutableMap::class.qualifiedName!!
-
 fun listExpression(expressions: List<Expression>): MethodCall =
-    ClassName(immutableListClass).call("of", expressions)
+    immutableListClass.call("of", expressions)
 
 fun mapExpression(expressions: Map<Expression, Expression>,
                   keyType: ClassName?,
-                  valueType: ClassName?
-): MethodCall {
-    val className = ClassName(immutableMapClass)
+                  valueType: ClassName?): MethodCall {
     if (expressions.isEmpty()) {
-        return className.call("of")
+        return immutableMapClass.call("of")
     }
     checkNotNull(keyType)
     checkNotNull(valueType)
-    var call = className.call("builder", generics = listOf(keyType, valueType))
+    var call = immutableMapClass.call("builder", generics = listOf(keyType, valueType))
     expressions.forEach { k, v ->
         call = call.chain("put", listOf(k, v))
     }

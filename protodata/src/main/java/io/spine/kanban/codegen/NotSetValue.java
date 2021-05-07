@@ -26,10 +26,13 @@
 
 package io.spine.kanban.codegen;
 
+import io.spine.protodata.Field;
 import io.spine.protodata.PrimitiveType;
 import io.spine.protodata.Type;
 import io.spine.protodata.TypeName;
 import io.spine.validation.EnumValue;
+import io.spine.validation.ListValue;
+import io.spine.validation.MapValue;
 import io.spine.validation.MessageValue;
 import io.spine.validation.Value;
 import org.jetbrains.annotations.NotNull;
@@ -50,7 +53,24 @@ public final class NotSetValue {
     private NotSetValue() {
     }
 
-    public static Value forType(Type type) {
+    @SuppressWarnings("EnumSwitchStatementWhichMissesCases") // Covered by `default`.
+    public static Value forField(Field field) {
+        switch (field.getCardinalityCase()) {
+            case LIST:
+                return Value.newBuilder()
+                            .setListValue(ListValue.getDefaultInstance())
+                            .vBuild();
+            case MAP:
+                return Value.newBuilder()
+                            .setMapValue(MapValue.getDefaultInstance())
+                            .vBuild();
+            default:
+                Type type = field.getType();
+                return defaultValue(type);
+        }
+    }
+
+    private static Value defaultValue(Type type) {
         Type.KindCase kind = type.getKindCase();
         switch (kind) {
             case MESSAGE:
