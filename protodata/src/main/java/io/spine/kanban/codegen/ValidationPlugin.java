@@ -38,7 +38,7 @@ import java.util.Set;
  * A ProtoData plugin which attaches validation-related policies and views.
  */
 @SuppressWarnings("unused") // Loaded by ProtoData via reflection.
-public class JavaValidationPlugin implements Plugin {
+public class ValidationPlugin implements Plugin {
 
     @NotNull
     @Override
