@@ -12,6 +12,7 @@ option java_multiple_files = true;
 import "spine/protodata/ast.proto";
 import "spine/validation/rule.proto";
 
+// The event emitted whenever a validation rule is attached to a message type.
 message RuleAdded {
 
     protodata.TypeName type = 1;
@@ -19,6 +20,7 @@ message RuleAdded {
     Rule rule = 2;
 }
 
+// The event emitted whenever a composite validation rule is attached to a message type.
 message CompositeRuleAdded {
 
     protodata.TypeName type = 1;

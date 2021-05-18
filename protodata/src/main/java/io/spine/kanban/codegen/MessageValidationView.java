@@ -37,7 +37,13 @@ import io.spine.validation.MessageValidation;
 import io.spine.validation.RuleAdded;
 import io.spine.validation.RuleOrComposite;
 
-public class MessageValidationView
+/**
+ * A view which accumulates validation data for a message type.
+ *
+ * <p>To add more rules to the message validation, emit {@code RuleAdded} or
+ * {@code CompositeRuleAdded} events.
+ */
+class MessageValidationView
         extends View<TypeName, MessageValidation, MessageValidation.Builder> {
 
     @Subscribe

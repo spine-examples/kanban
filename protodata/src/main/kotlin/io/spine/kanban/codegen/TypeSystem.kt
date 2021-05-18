@@ -60,7 +60,6 @@ import io.spine.validation.Value
 import io.spine.validation.Value.KindCase.BOOL_VALUE
 import io.spine.validation.Value.KindCase.BYTES_VALUE
 import io.spine.validation.Value.KindCase.ENUM_VALUE
-import io.spine.validation.Value.KindCase.KIND_NOT_SET
 import io.spine.validation.Value.KindCase.LIST_VALUE
 import io.spine.validation.Value.KindCase.MAP_VALUE
 import io.spine.validation.Value.KindCase.MESSAGE_VALUE
@@ -68,11 +67,26 @@ import io.spine.validation.Value.KindCase.NULL_VALUE
 import io.spine.validation.Value.KindCase.NUMBER_VALUE
 import io.spine.validation.Value.KindCase.STRING_VALUE
 
+/**
+ * A type system of an application.
+ *
+ * Includes all the types known to the app at runtime.
+ */
 class TypeSystem
 private constructor(
     private val knownTypes: Map<String, ClassName>
 ) {
 
+    /**
+     * Converts the given [Value] of a Java expression which creates that value.
+     *
+     * For different types produces different expressions:
+     *  - for a primitive type, a literal;
+     *  - for byte strings, a construction of a [ByteString] out of a byte array literal;
+     *  - for message, a builder invocation;
+     *  - for an enum, a call of the `forNumber` static method;
+     *  - for lists and maps, construction of a Guava `ImmutableList` or `ImmutableMap`.
+     */
     fun valueToJava(value: Value): Expression {
         return when (value.kindCase) {
             NULL_VALUE -> Null
@@ -103,7 +117,7 @@ private constructor(
             }
             LIST_VALUE -> listExpression(listValuesToJava(value))
             MAP_VALUE -> {
-                val firstEntry = value.mapValue.valuesList.firstOrNull()
+                val firstEntry = value.mapValue.valueList.firstOrNull()
                 val firstKey = firstEntry?.key
                 val keyClass = firstKey?.type?.let(this::toClass)
                 val firstValue = firstEntry?.value
@@ -122,13 +136,27 @@ private constructor(
             }
 
     private fun mapValuesToJava(value: Value): Map<Expression, Expression> =
-        value.mapValue
-            .valuesList
-            .map { valueToJava(it.key) to valueToJava(it.value) }
-            .toMap()
+        value.mapValue.valueList.associate { valueToJava(it.key) to valueToJava(it.value) }
 
+    /**
+     * Obtains the canonical name of the class representing the given [type] in Java.
+     *
+     * For Java primitive types, obtains wrapper classes.
+     *
+     * @throws IllegalStateException if the type is unknown
+     */
     @JvmOverloads
-    fun PrimitiveType.toClass(label: String = "type"): ClassName {
+    fun toClass(type: Type, label: String = "type"): ClassName =
+        when (type.kindCase) {
+            PRIMITIVE -> type.primitive.toClass(label)
+            MESSAGE -> knownTypes[type.message.typeUrl()]
+                ?: unknownType(label, type.message.typeUrl())
+            ENUMERATION -> knownTypes[type.message.typeUrl()]
+                ?: unknownType(label, type.message.typeUrl())
+            else -> throw IllegalArgumentException("Type is empty.")
+        }
+
+    private fun PrimitiveType.toClass(label: String): ClassName {
         val klass = when (this) {
             TYPE_DOUBLE -> Double::class
             TYPE_FLOAT -> Float::class
@@ -142,23 +170,15 @@ private constructor(
         return ClassName(klass.javaObjectType.canonicalName)
     }
 
-    @JvmOverloads
-    fun toClass(type: Type, label: String = "type"): ClassName =
-        when (type.kindCase) {
-            PRIMITIVE -> type.primitive.toClass(label)
-            MESSAGE -> knownTypes[type.message.typeUrl()]
-                ?: unknownType(label, type.message.typeUrl())
-            ENUMERATION -> knownTypes[type.message.typeUrl()]
-                ?: unknownType(label, type.message.typeUrl())
-            else -> throw IllegalArgumentException("Type is empty.")
-        }
-
     private fun unknownType(label: String, key: Any): Nothing {
         throw IllegalStateException("Unknown $label: `$key`.")
     }
 
     companion object {
 
+        /**
+         * Creates a new `TypeSystem` builder.
+         */
         @JvmStatic
         fun newBuilder() = Builder()
     }
@@ -181,6 +201,9 @@ private constructor(
             return this
         }
 
+        /**
+         * Builds an instance of `TypeSystem`.
+         */
         fun build() = TypeSystem(knownTypes)
     }
 }

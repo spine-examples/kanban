@@ -11,12 +11,16 @@ option java_multiple_files = true;
 
 import "spine/protodata/ast.proto";
 
-// `Value` represents a dynamically typed value which can be either
-// null, a number, a string, a boolean, a recursive struct value, or a
-// list of values. A producer of value is expected to set one of that
-// variants, absence of any variant indicates an error.
+// Inspired by the `google/protobuf/struct.proto`.
 //
-// The JSON representation for `Value` is JSON value.
+// Prefer Google's types when integrating with third-party or when converting to/from JSON.
+// Prefer these types when strict typing matters more than JSON representation.
+
+// `Value` represents a dynamically typed value which can be either null, a bool, a number,
+// a string, a byte string, a recursive message value, an enum value, a list, or a map of values.
+//
+// Absence of any kind of value indicates an error.
+//
 message Value {
     // The kind of value.
     oneof kind {
@@ -43,64 +47,82 @@ message Value {
         // Represents a repeated `Value`.
         ListValue list_value = 8;
 
+        // Represents a repeated `Value`.
         MapValue map_value = 9;
     }
 
     reserved 10 to 20; // For possible extra options in the `kind` oneof.
 
+    // The concrete Protobuf type of this value.
+    //
+    // Can be used, for example, to distinguish between number values.
+    //
+    // If `list_value` is set, this is the type of the elements.
+    //
+    // If `map_value` is set, this is the type of the map values.
+    //
     protodata.Type type = 21;
 }
 
-// `NullValue` is a singleton enumeration to represent the null value for the
-// `Value` type union.
-//
-//  The JSON representation for `NullValue` is JSON `null`.
+// `NullValue` is a singleton enumeration to represent the null value for the `Value` type union.
 enum NullValue {
 
     // Null value.
     NULL_VALUE = 0;
 }
 
-// `Struct` represents a structured data value, consisting of fields
-// which map to dynamically typed values. In some languages, `Struct`
-// might be supported by a native representation. For example, in
-// scripting languages like JS a struct is represented as an
-// object. The details of that representation are described together
-// with the proto support for the language.
-//
-// The JSON representation for `Struct` is JSON object.
+// `MessageValue` represents a message for the `Value` type union.
 message MessageValue {
+
     // Unordered map of dynamically typed values.
     map<string, Value> fields = 1;
 
+    // Type of the message.
+    //
+    // Same as the `Value.type.message`.
+    //
     protodata.TypeName type = 2;
 }
 
+// `MessageValue` represents an enum constant for the `Value` type union.
 message EnumValue {
 
+    // The number associated with this enum constant.
     uint32 const_number = 1;
 
+    // Type of the enum.
+    //
+    // Same as the `Value.type.enumeration`.
+    //
     protodata.TypeName type = 2;
 }
 
 // `ListValue` is a wrapper around a repeated field of values.
-//
-// The JSON representation for `ListValue` is JSON array.
 message ListValue {
 
     // Repeated field of dynamically typed values.
     repeated Value values = 1;
 }
 
+// `MapValue` represents a map for the `Value` type union.
+//
+// The map must not contain repeating keys.
+//
 message MapValue {
 
-    repeated Entry values = 1;
+    repeated Entry value = 1;
 
+    // A single map entry.
     message Entry {
 
+        // A map key.
+        //
+        // In Protobuf, a map key can only be of certain primitive types. See the official doc for
+        // more info: https://developers.google.com/protocol-buffers/docs/proto3#maps
+        //
         Value key = 1;
 
+        // A map value.
         Value value = 2;
     }
 }
-

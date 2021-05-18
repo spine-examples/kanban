@@ -35,7 +35,12 @@ import org.jetbrains.annotations.NotNull;
 
 import static io.spine.server.route.EventRoute.withId;
 
-public class MessageValidationRepository
+/**
+ * A repository for the {@link MessageValidationView}.
+ *
+ * <p>Routes the {@code TypeEntered} events to the view by the type name.
+ */
+class MessageValidationRepository
         extends ViewRepository<TypeName, MessageValidationView, MessageValidation> {
 
     @Override

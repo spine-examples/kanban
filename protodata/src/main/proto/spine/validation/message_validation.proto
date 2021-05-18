@@ -12,12 +12,23 @@ option java_multiple_files = true;
 import "spine/protodata/ast.proto";
 import "spine/validation/rule.proto";
 
+// All the validation rules of a single message type.
+//
 message MessageValidation {
     option (entity).kind = PROJECTION;
 
     protodata.TypeName name = 1;
 
+    // Partial information about the type.
+    //
+    // May contain only the type's own data, such as docs, declaring file, etc. Does not contain
+    // information about nested elements, such as fields and options.
+    //
     protodata.MessageType type = 2;
 
+    // Validation rules.
+    //
+    // All these rules must be met in order for a message to be regarded as valid.
+    //
     repeated RuleOrComposite rule = 3;
 }

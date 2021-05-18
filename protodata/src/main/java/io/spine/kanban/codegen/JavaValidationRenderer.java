@@ -73,6 +73,7 @@ import static io.spine.validation.Sign.LESS_THAN;
 import static io.spine.validation.Sign.NOT_EQUAL;
 import static java.lang.String.format;
 
+@SuppressWarnings("unused") // Loaded by ProtoData via reflection.
 public final class JavaValidationRenderer extends Renderer {
 
     private static final int INDENT_LEVEL = 2;
@@ -194,13 +195,10 @@ public final class JavaValidationRenderer extends Renderer {
     private ErrorMessage errorFor(CompositeRule composite, MessageReference result) {
         ErrorMessage leftError = errorFor(composite.getLeft(), result);
         ErrorMessage rightError = errorFor(composite.getRight(), result);
-        String operation = composite.getOperation()
-                                    .name()
-                                    .toLowerCase();
         return forComposite(composite.getErrorMessage(),
                             leftError.toString(),
                             rightError.toString(),
-                            operation);
+                            composite.getOperation());
     }
 
     private CodeBlock codeForRule(Rule rule, MessageReference msg) {

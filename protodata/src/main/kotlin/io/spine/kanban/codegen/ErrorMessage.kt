@@ -26,7 +26,11 @@
 
 package io.spine.kanban.codegen
 
-import io.spine.validation.RuleOrComposite
+import io.spine.validation.BinaryOperation
+import io.spine.validation.BinaryOperation.AND
+import io.spine.validation.BinaryOperation.BO_UNKNOWN
+import io.spine.validation.BinaryOperation.OR
+import io.spine.validation.BinaryOperation.XOR
 
 private const val VALUE = "value"
 private const val OTHER = "other"
@@ -34,11 +38,21 @@ private const val LEFT = "left"
 private const val RIGHT = "right"
 private const val OPERATION = "operation"
 
+/**
+ * A human-readable error message, describing a validation constraint violation.
+ */
 class ErrorMessage
 private constructor(private val value: String) {
 
     companion object {
 
+        /**
+         * Produces an error message for a simple validation rule.
+         *
+         * @param format the message format
+         * @param value the value of the field
+         * @param other the value to which the field is compared
+         */
         @JvmStatic
         @JvmOverloads
         fun forRule(format: String, value: String = "", other: String = "") =
@@ -48,17 +62,25 @@ private constructor(private val value: String) {
                     .replacePlaceholder(OTHER, other)
             )
 
+        /**
+         * Produces an error message for a composite validation rule.
+         *
+         * @param format the message format
+         * @param left the error message of the left rule
+         * @param right the error message of the right rule
+         * @param operation the operator which joins the rule conditions
+         */
         @JvmStatic
         @JvmOverloads
         fun forComposite(format: String,
                          left: String = "",
                          right: String = "",
-                         operation: String = "") =
+                         operation: BinaryOperation = BO_UNKNOWN) =
             ErrorMessage(
                 format
                     .replacePlaceholder(LEFT, left)
                     .replacePlaceholder(RIGHT, right)
-                    .replacePlaceholder(OPERATION, operation)
+                    .replacePlaceholder(OPERATION, operation.printableString())
             )
     }
 
@@ -68,4 +90,9 @@ private constructor(private val value: String) {
 private fun String.replacePlaceholder(placeholder: String, newValue: String): String {
     val formattedPlaceholder = "{$placeholder}"
     return replace(formattedPlaceholder, newValue)
+}
+
+private fun BinaryOperation.printableString() = when(this) {
+    AND, OR, XOR -> name.lowercase()
+    else -> "<unknown operation>"
 }

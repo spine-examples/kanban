@@ -13,17 +13,27 @@ import "spine/validation/value.proto";
 import "spine/protodata/ast.proto";
 import "google/protobuf/any.proto";
 
+// A simple validation rule.
+//
+// May be expressed as a comparison between two operands. The first operand is always a field value.
+// The second operand is the `other_value`. `other_value` is typically derived from the Protobuf
+// definition of the validation rule.
+//
 message Rule {
 
+    // The field which is being compared.
     protodata.Field field = 1;
 
     oneof operation {
 
+        // A simple comparison sign.
         Sign sign = 2;
 
+        // A custom comparison method, which cannot be covered by a combination of `Sign`s.
         UnknownOperation unknown_operation = 3;
     }
 
+    // The value to which the field is compared.
     Value other_value = 4;
 
     // A human-readable message explaining the error.
@@ -34,6 +44,10 @@ message Rule {
     string error_message = 5;
 }
 
+// A predefined comparison sign.
+//
+// Comparison between two values of the same type must always yield a boolean result.
+//
 enum Sign {
 
     OPERATION_UNKNOWN = 0;
@@ -53,8 +67,10 @@ enum Sign {
     DISTINCT = 7;
 }
 
+// A non-predefined comparison option.
 message UnknownOperation {
 
+    // Describes how the renderer should compare the values.
     string description = 1;
 }
 
@@ -68,12 +84,20 @@ message RuleOrComposite {
     }
 }
 
+// A validation rule which is a combination of two or more rules.
+//
+// For example, if a value must be less than 100 and greater than 0, the two simple rules are
+// combined into a composite rule with the `AND` operator.
+//
 message CompositeRule {
 
+    // First rule.
     RuleOrComposite left = 1;
 
+    // The operation which joins two rules.
     BinaryOperation operation = 2;
 
+    // Second rule.
     RuleOrComposite right = 3;
 
     // A human-readable message explaining the error.
@@ -85,13 +109,30 @@ message CompositeRule {
     string error_message = 4;
 }
 
+// A boolean operator.
 enum BinaryOperation {
 
     BO_UNKNOWN = 0;
 
+    // Joins two boolean values with the "and" operator.
+    //
+    // Whenever generating code for this operator, renderers should prefer using short-circuit
+    // evaluation, i.e. if the left operand evaluates to `false`, the right will not be evaluated
+    // at all. However, there is no guarantee renderers will adhere to this recommendation.
+    //
     AND = 1;
 
+    // Joins two boolean values with the "or" operator.
+    //
+    // Whenever generating code for this operator, renderers should prefer using short-circuit
+    // evaluation, i.e. if the left operand evaluates to `true`, the right will not be evaluated
+    // at all. However, there is no guarantee renderers will adhere to this recommendation.
+    //
     OR = 2;
 
+    // Joins two boolean values with the "exclusive or" operator.
+    //
+    // Lazy evaluation of "exclusive or" is impossible, so both operands will always be evaluated.
+    //
     XOR = 3;
 }
