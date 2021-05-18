@@ -38,6 +38,7 @@ import io.spine.protodata.Field.CardinalityCase.MAP
 import io.spine.protodata.Field.CardinalityCase.SINGLE
 import io.spine.protodata.FieldName
 import kotlin.reflect.KClass
+import io.spine.protodata.CamelCase
 
 private val immutableListClass = ClassName(ImmutableList::class)
 private val immutableMapClass = ClassName(ImmutableMap::class)
@@ -231,11 +232,6 @@ fun mapExpression(expressions: Map<Expression, Expression>,
 
 private fun List<ClassName>.genericTypes() =
     if (isNotEmpty()) "<${joinToString()}>" else ""
-
-private fun String.CamelCase() =
-    split("_")
-        .filter { it.isNotBlank() }
-        .joinToString(separator = "") { it.capitalize() }
 
 private fun List<Expression>.formatParams() =
     joinToString { it.toCode() }

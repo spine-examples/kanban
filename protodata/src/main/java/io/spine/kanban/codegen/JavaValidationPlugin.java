@@ -44,7 +44,7 @@ public class JavaValidationPlugin implements Plugin {
 
     @NotNull
     @Override
-    public Set<ViewRepository<?, ?, ?>> getViews() {
+    public Set<ViewRepository<?, ?, ?>> getViewRepositories() {
         return ImmutableSet.of(new MessageValidationRepository());
     }
 }
