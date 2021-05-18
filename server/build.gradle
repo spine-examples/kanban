@@ -26,7 +26,7 @@
 
 final requestFile = "$buildDir/protodata/types.bin"
 
-final protoDataVersion = "0.0.8"
+final protoDataVersion = rootProject.ext.protoDataVersion
 
 protobuf {
     plugins {

@@ -33,7 +33,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.spine.protodata:compiler:0.0.8")
+    implementation("io.spine.protodata:compiler:${rootProject.ext.protoDataVersion}")
     implementation("org.jboss.forge.roaster:roaster-api:2.21.2.Final")
     implementation("org.jboss.forge.roaster:roaster-jdt:2.21.2.Final")
     implementation("com.squareup:javapoet:1.13.0")
