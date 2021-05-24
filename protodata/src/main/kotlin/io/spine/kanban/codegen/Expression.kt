@@ -31,6 +31,8 @@ package io.spine.kanban.codegen
 import com.google.common.collect.ImmutableList
 import com.google.common.collect.ImmutableMap
 import com.google.protobuf.ByteString
+import io.spine.protobuf.TypeConverter
+import io.spine.protodata.camelCase
 import io.spine.protodata.Field
 import io.spine.protodata.Field.CardinalityCase
 import io.spine.protodata.Field.CardinalityCase.LIST
@@ -38,7 +40,6 @@ import io.spine.protodata.Field.CardinalityCase.MAP
 import io.spine.protodata.Field.CardinalityCase.SINGLE
 import io.spine.protodata.FieldName
 import kotlin.reflect.KClass
-import io.spine.protodata.CamelCase
 
 private val immutableListClass = ClassName(ImmutableList::class)
 private val immutableMapClass = ClassName(ImmutableMap::class)
@@ -48,6 +49,11 @@ sealed class Expression(private val code: String) {
     fun toCode(): String = code
 
     final override fun toString(): String = toCode()
+
+    fun packToAny(): Expression {
+        val type = ClassName(TypeConverter::class)
+        return type.call("toAny", arguments = listOf(this))
+    }
 }
 
 object Null : Expression("null")
@@ -131,10 +137,10 @@ internal constructor(
         }
 
     private val getListName: String
-        get() = "get${name.value.CamelCase()}List"
+        get() = "get${name.value.camelCase()}List"
 
     private val getMapName: String
-        get() = "get${name.value.CamelCase()}Map"
+        get() = "get${name.value.camelCase()}Map"
 
     private val setterName: String
         get() = when (cardinality) {
@@ -156,7 +162,7 @@ internal constructor(
         get() = prefixed("putAll")
 
     private fun prefixed(prefix: String) =
-        "$prefix${name.value.CamelCase()}"
+        "$prefix${name.value.camelCase()}"
 
     override fun toString(): String {
         return "FieldAccess[$message#${name.value}]"

@@ -30,8 +30,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.squareup.javapoet.CodeBlock;
-import io.spine.base.FieldPath;
-import io.spine.protobuf.TypeConverter;
 import io.spine.protodata.Field;
 import io.spine.protodata.File;
 import io.spine.protodata.FilePath;
@@ -42,6 +40,7 @@ import io.spine.protodata.language.CommonLanguages;
 import io.spine.protodata.renderer.Renderer;
 import io.spine.protodata.renderer.SourceSet;
 import io.spine.validate.ConstraintViolation;
+import io.spine.validate.ValidationException;
 import io.spine.validation.BinaryOperation;
 import io.spine.validation.CompositeRule;
 import io.spine.validation.MessageValidation;
@@ -49,17 +48,15 @@ import io.spine.validation.Rule;
 import io.spine.validation.RuleOrComposite;
 import io.spine.validation.Sign;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.function.BinaryOperator;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static io.spine.kanban.codegen.ErrorMessage.forComposite;
-import static io.spine.kanban.codegen.ErrorMessage.forRule;
+import static io.spine.kanban.codegen.Poet.lines;
 import static io.spine.protodata.Ast.javaFile;
-import static io.spine.protodata.Ast.typeUrl;
 import static io.spine.protodata.Type.KindCase.PRIMITIVE;
 import static io.spine.util.Exceptions.newIllegalArgumentException;
 import static io.spine.validation.BinaryOperation.AND;
@@ -73,6 +70,19 @@ import static io.spine.validation.Sign.LESS_THAN;
 import static io.spine.validation.Sign.NOT_EQUAL;
 import static java.lang.String.format;
 
+/**
+ * A {@link Renderer} for the validation code in Java.
+ *
+ * <p>Inserts code into the {@link Validate} insertion point.
+ *
+ * <p>The generated code assumes there is a variable called {@code result}. Its type is the type of
+ * the validated message. The variable holds the value of the message to validate.
+ *
+ * <p>The generated code is a number of code lines. It does not contain declarations (clsses,
+ * methods, etc.).
+ *
+ * <p>If the validation rules are broken, throws a {@link io.spine.validate.ValidationException}.
+ */
 @SuppressWarnings("unused") // Loaded by ProtoData via reflection.
 public final class JavaValidationRenderer extends Renderer {
 
@@ -110,7 +120,7 @@ public final class JavaValidationRenderer extends Renderer {
 
     @Override
     protected void doRender(SourceSet sources) {
-        bakeTypeSystem();
+        this.typeSystem = bakeTypeSystem();
         select(MessageValidation.class)
                 .all()
                 .stream()
@@ -133,29 +143,48 @@ public final class JavaValidationRenderer extends Renderer {
                 )).getFile();
     }
 
-    private void bakeTypeSystem() {
+    private TypeSystem bakeTypeSystem() {
         Set<ProtobufSourceFile> files = select(ProtobufSourceFile.class).all();
         TypeSystem.Builder types = TypeSystem.newBuilder();
         for (ProtobufSourceFile file : files) {
             file.getTypeMap().values().forEach(type -> types.put(file.getFile(), type));
             file.getEnumTypeMap().values().forEach(type -> types.put(file.getFile(), type));
         }
-        typeSystem = types.build();
+        return types.build();
     }
 
     private ImmutableList<String> rulesToCode(MessageValidation validation) {
         MessageReference result = new MessageReference("result");
-        ImmutableList.Builder<String> lines = ImmutableList.builder();
-        lines.add(CodeBlock.of("$T<$T> $N = $T.builder();",
-                               ImmutableList.Builder.class,
-                               ConstraintViolation.class,
-                               VIOLATIONS,
-                               ImmutableList.class).toString());
+        CodeBlock.Builder code = CodeBlock.builder();
+        code.add(prepareViolationAccumulator());
+        code.add(generateValidationCode(validation, result));
+        code.add(throwValidationException());
+        return lines(code.build());
+    }
+
+    private static CodeBlock prepareViolationAccumulator() {
+        return CodeBlock.of("$T<$T> $N = new $T<>();",
+                            ArrayList.class,
+                            ConstraintViolation.class,
+                            VIOLATIONS,
+                            ArrayList.class);
+    }
+
+    private CodeBlock generateValidationCode(MessageValidation validation, MessageReference result) {
+        CodeBlock.Builder code = CodeBlock.builder();
         for (RuleOrComposite rule : validation.getRuleList()) {
             CodeBlock block = codeFor(rule, result, validation.getName());
-            lines.add(block.toString());
+            code.add(block);
         }
-        return lines.build();
+        return code.build();
+    }
+
+    private static CodeBlock throwValidationException() {
+        CodeBlock.Builder code = CodeBlock.builder();
+        code.beginControlFlow("if (!$N.isEmpty())", VIOLATIONS);
+        code.addStatement("throw new $T($N)", ValidationException.class, VIOLATIONS);
+        code.endControlFlow();
+        return code.build();
     }
 
     private CodeBlock codeFor(RuleOrComposite rule,
@@ -174,46 +203,16 @@ public final class JavaValidationRenderer extends Renderer {
         }
     }
 
-    private ErrorMessage errorFor(RuleOrComposite rule, MessageReference result) {
-        switch (rule.getKindCase()) {
-            case RULE:
-                Rule simpleRule = rule.getRule();
-                String fieldValue = result.field(simpleRule.getField())
-                                          .getGetter()
-                                          .toCode();
-                String otherValue = typeSystem.valueToJava(simpleRule.getOtherValue()).toCode();
-                return forRule(simpleRule.getErrorMessage(), fieldValue, otherValue);
-            case COMPOSITE:
-                CompositeRule composite = rule.getComposite();
-                return errorFor(composite, result);
-            case KIND_NOT_SET:
-            default:
-                throw new IllegalArgumentException("Empty rule.");
-        }
-    }
-
-    private ErrorMessage errorFor(CompositeRule composite, MessageReference result) {
-        ErrorMessage leftError = errorFor(composite.getLeft(), result);
-        ErrorMessage rightError = errorFor(composite.getRight(), result);
-        return forComposite(composite.getErrorMessage(),
-                            leftError.toString(),
-                            rightError.toString(),
-                            composite.getOperation());
-    }
-
     private CodeBlock codeForRule(Rule rule, MessageReference msg) {
         Field field = rule.getField();
         Expression fieldValue = msg.field(field).getGetter();
         Expression otherValue = typeSystem.valueToJava(rule.getOtherValue());
-        String binaryCondition = conditionOf(rule, fieldValue, otherValue);
+        String binaryCondition = conditionOfRule(rule, fieldValue, otherValue);
         return CodeBlock
                 .builder()
                 .beginControlFlow("if (!($L))", binaryCondition)
-                .add(createViolation(forRule(rule.getErrorMessage(),
-                                             fieldValue.toCode(),
-                                             otherValue.toCode()),
-                                     field,
-                                     fieldValue))
+                .add(ErrorMessage.forRule(rule.getErrorMessage(), fieldValue.toCode(), otherValue.toCode())
+                                 .createViolation(field, fieldValue, VIOLATIONS))
                 .endControlFlow()
                 .build();
     }
@@ -221,13 +220,44 @@ public final class JavaValidationRenderer extends Renderer {
     private CodeBlock codeForComposite(CompositeRule rule,
                                        MessageReference msg,
                                        TypeName declaringType) {
-        String binaryCondition = conditionOf(rule, msg);
+        String binaryCondition = conditionOfComposite(rule, msg);
         return CodeBlock
                 .builder()
                 .beginControlFlow("if (!(%s))", binaryCondition)
-                .add(createCompositeViolation(errorFor(rule, msg), declaringType))
+                .add(errorForComposite(rule, msg).createCompositeViolation(declaringType, VIOLATIONS))
                 .endControlFlow()
                 .build();
+    }
+
+    private ErrorMessage errorFor(RuleOrComposite rule, MessageReference result) {
+        switch (rule.getKindCase()) {
+            case RULE:
+                Rule simpleRule = rule.getRule();
+                return errorForRule(result, simpleRule);
+            case COMPOSITE:
+                CompositeRule composite = rule.getComposite();
+                return errorForComposite(composite, result);
+            case KIND_NOT_SET:
+            default:
+                throw new IllegalArgumentException("Empty rule.");
+        }
+    }
+
+    private ErrorMessage errorForRule(MessageReference result, Rule simpleRule) {
+        String fieldValue = result.field(simpleRule.getField())
+                                  .getGetter()
+                                  .toCode();
+        String otherValue = typeSystem.valueToJava(simpleRule.getOtherValue()).toCode();
+        return ErrorMessage.forRule(simpleRule.getErrorMessage(), fieldValue, otherValue);
+    }
+
+    private ErrorMessage errorForComposite(CompositeRule composite, MessageReference result) {
+        ErrorMessage leftError = errorFor(composite.getLeft(), result);
+        ErrorMessage rightError = errorFor(composite.getRight(), result);
+        return ErrorMessage.forComposite(composite.getErrorMessage(),
+                                         leftError.toString(),
+                                         rightError.toString(),
+                                         composite.getOperation());
     }
 
     private String conditionOf(RuleOrComposite rule, MessageReference msg) {
@@ -236,15 +266,15 @@ public final class JavaValidationRenderer extends Renderer {
             Field field = simpleRule.getField();
             Expression fieldValue = msg.field(field).getGetter();
             Expression otherValue = typeSystem.valueToJava(simpleRule.getOtherValue());
-            return conditionOf(simpleRule, fieldValue, otherValue);
+            return conditionOfRule(simpleRule, fieldValue, otherValue);
         } else {
-            return conditionOf(rule.getComposite(), msg);
+            return conditionOfComposite(rule.getComposite(), msg);
         }
     }
 
-    private static String conditionOf(Rule rule,
-                                      Expression fieldValue,
-                                      Expression otherValue) {
+    private static String conditionOfRule(Rule rule,
+                                          Expression fieldValue,
+                                          Expression otherValue) {
         Field field = rule.getField();
         Type type = field.getType();
         ImmutableMap<Sign, BinaryOperator<String>> signs;
@@ -259,60 +289,12 @@ public final class JavaValidationRenderer extends Renderer {
         return binaryCondition;
     }
 
-    private String conditionOf(CompositeRule rule, MessageReference msg) {
+    private String conditionOfComposite(CompositeRule rule, MessageReference msg) {
         String left = conditionOf(rule.getLeft(), msg);
         String right = conditionOf(rule.getRight(), msg);
         BinaryOperator<String> binaryOp = BOOLEAN_OPERATIONS.get(rule.getOperation());
         checkNotNull(binaryOp);
         String condition = binaryOp.apply(left, right);
         return condition;
-    }
-
-    private static CodeBlock createViolation(ErrorMessage error,
-                                             Field field,
-                                             Expression fieldValue) {
-        TypeName type = field.getDeclaringType();
-        Expression violationBuilder = buildViolation(error, type, field, fieldValue);
-        return CodeBlock
-                .builder()
-                .addStatement("$N.add($L)", VIOLATIONS, violationBuilder)
-                .build();
-    }
-
-    private static CodeBlock createCompositeViolation(ErrorMessage error, TypeName type) {
-        Expression violationBuilder = buildViolation(error, type, null, null);
-        return CodeBlock
-                .builder()
-                .addStatement("$N.add($L)", VIOLATIONS, violationBuilder)
-                .build();
-    }
-
-    private static Expression pathFrom(Field field) {
-        ClassName type = new ClassName(FieldPath.class);
-        return type.newBuilder()
-                   .chainAdd("field_name", new LiteralString(field.getName().getValue()))
-                   .chainBuild();
-    }
-
-    private static Expression pack(Expression rawValue) {
-        ClassName type = new ClassName(TypeConverter.class);
-        return type.call("toAny", ImmutableList.of(rawValue), ImmutableList.of());
-    }
-
-    private static Expression buildViolation(ErrorMessage error,
-                                             TypeName type,
-                                             @Nullable Field field,
-                                             @Nullable Expression fieldValue) {
-        MethodCall violationBuilder = new ClassName(ConstraintViolation.class)
-                .newBuilder()
-                .chainSet("msg_format", new LiteralString(error.toString()))
-                .chainSet("type_name", new LiteralString(typeUrl(type)));
-        if (field != null) {
-            violationBuilder = violationBuilder.chainSet("field_path", pathFrom(field));
-        }
-        if (fieldValue != null) {
-            violationBuilder = violationBuilder.chainSet("field_value", pack(fieldValue));
-        }
-        return violationBuilder.chainBuild();
     }
 }

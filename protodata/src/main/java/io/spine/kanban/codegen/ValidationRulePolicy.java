@@ -42,16 +42,19 @@ import io.spine.server.tuple.EitherOf2;
 import io.spine.validation.RuleAdded;
 import io.spine.validation.Rule;
 import io.spine.validation.Value;
+import org.jetbrains.annotations.NotNull;
 
 import static io.spine.option.OptionsProto.required;
 import static io.spine.protodata.Ast.typeUrl;
 import static io.spine.util.Exceptions.newIllegalArgumentException;
 import static io.spine.validation.Sign.NOT_EQUAL;
 
-public final class ValidationRulePolicy extends Policy {
+public final class ValidationRulePolicy extends Policy<FieldOptionDiscovered> {
 
+    @NotNull
+    @Override
     @React
-    EitherOf2<RuleAdded, Nothing> on(@External FieldOptionDiscovered event) {
+    public EitherOf2<RuleAdded, Nothing> whenever(@External FieldOptionDiscovered event) {
         Option option = event.getOption();
         if (isOption(option, required)) {
             ProtobufSourceFile file = select(ProtobufSourceFile.class)

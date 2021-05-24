@@ -24,31 +24,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.kanban.codegen;
+@file:JvmName("Poet")
 
-import com.google.common.collect.ImmutableSet;
-import io.spine.protodata.plugin.Plugin;
-import io.spine.protodata.plugin.Policy;
-import io.spine.protodata.plugin.ViewRepository;
-import org.jetbrains.annotations.NotNull;
+package io.spine.kanban.codegen
 
-import java.util.Set;
+import com.google.common.collect.ImmutableList
+import com.squareup.javapoet.CodeBlock
 
 /**
- * A ProtoData plugin which attaches validation-related policies and views.
+ * Splits this `CodeBlock` into lines.
  */
-@SuppressWarnings("unused") // Loaded by ProtoData via reflection.
-public class ValidationPlugin implements Plugin {
-
-    @NotNull
-    @Override
-    public Set<Policy<?>> getPolicies() {
-        return ImmutableSet.of(new ValidationRulePolicy());
-    }
-
-    @NotNull
-    @Override
-    public Set<ViewRepository<?, ?, ?>> getViewRepositories() {
-        return ImmutableSet.of(new MessageValidationRepository());
-    }
+fun CodeBlock.lines(): ImmutableList<String> {
+    val code = this.toString()
+    val lines = code.split(System.lineSeparator())
+    return ImmutableList.copyOf(lines)
 }

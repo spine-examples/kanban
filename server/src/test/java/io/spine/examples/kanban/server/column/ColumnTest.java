@@ -78,9 +78,9 @@ class ColumnTest extends KanbanContextTest {
                     .newBuilder()
                     .setBoard(board())
                     .setColumn(column())
-                    // We call `build()` instead of `vBuild()` to be able to omit the `name` field,
+                    // We call `buildPartial()` instead of `vBuild()` to be able to omit the `name` field,
                     // which is `required` in the event.
-                    .build();
+                    .buildPartial();
             assertEvents.message(0)
                         .ignoringFields(3 /* name */)
                         .isEqualTo(expected);

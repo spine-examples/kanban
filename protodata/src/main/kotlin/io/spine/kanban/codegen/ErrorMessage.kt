@@ -26,6 +26,12 @@
 
 package io.spine.kanban.codegen
 
+import com.squareup.javapoet.CodeBlock
+import io.spine.base.FieldPath
+import io.spine.protodata.Field
+import io.spine.protodata.TypeName
+import io.spine.protodata.typeUrl
+import io.spine.validate.ConstraintViolation
 import io.spine.validation.BinaryOperation
 import io.spine.validation.BinaryOperation.AND
 import io.spine.validation.BinaryOperation.BO_UNKNOWN
@@ -41,7 +47,7 @@ private const val OPERATION = "operation"
 /**
  * A human-readable error message, describing a validation constraint violation.
  */
-class ErrorMessage
+internal class ErrorMessage
 private constructor(private val value: String) {
 
     companion object {
@@ -85,6 +91,47 @@ private constructor(private val value: String) {
     }
 
     override fun toString() = value
+
+    fun createViolation(field: Field,
+                                fieldValue: Expression,
+                                violationsList: String): CodeBlock {
+        val type = field.declaringType
+        val violation = buildViolation(type, field, fieldValue)
+        return addViolation(violation, violationsList)
+    }
+
+    fun createCompositeViolation(type: TypeName, violationsList: String): CodeBlock {
+        val violation = buildViolation(type, null, null)
+        return addViolation(violation, violationsList)
+    }
+
+    private fun addViolation(violation: Expression, violationsList: String): CodeBlock =
+        CodeBlock
+            .builder()
+            .addStatement("\$N.add(\$L)", violationsList, violation)
+            .build()
+
+
+    private fun buildViolation(type: TypeName, field: Field?, fieldValue: Expression?): Expression {
+        var violationBuilder = ClassName(ConstraintViolation::class.java)
+            .newBuilder()
+            .chainSet("msg_format", LiteralString(value))
+            .chainSet("type_name", LiteralString(type.typeUrl()))
+        if (field != null) {
+            violationBuilder = violationBuilder.chainSet("field_path", pathFrom(field)!!)
+        }
+        if (fieldValue != null) {
+            violationBuilder = violationBuilder.chainSet("field_value", fieldValue.packToAny())
+        }
+        return violationBuilder.chainBuild()
+    }
+
+    private fun pathFrom(field: Field): Expression? {
+        val type = ClassName(FieldPath::class.java)
+        return type.newBuilder()
+            .chainAdd("field_name", LiteralString(field.name.value))
+            .chainBuild()
+    }
 }
 
 private fun String.replacePlaceholder(placeholder: String, newValue: String): String {
