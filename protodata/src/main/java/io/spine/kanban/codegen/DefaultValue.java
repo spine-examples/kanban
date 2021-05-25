@@ -48,12 +48,12 @@ import static io.spine.util.Exceptions.newIllegalStateException;
 /**
  * A factory of default values of Protobuf message fields.
  */
-public final class NotSetValue {
+public final class DefaultValue {
 
     /**
      * Prevents the utility class instantiation.
      */
-    private NotSetValue() {
+    private DefaultValue() {
     }
 
     /**

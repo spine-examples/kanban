@@ -85,7 +85,7 @@ public final class RequiredRulePolicy extends Policy<FieldOptionDiscovered> {
     }
 
     private static RuleAdded requiredRule(Field field) {
-        Value defaultValue = NotSetValue.forField(field);
+        Value defaultValue = DefaultValue.forField(field);
         @SuppressWarnings("DuplicateStringLiteralInspection") // Duplication in generated code.
         Rule rule = Rule.newBuilder()
                         .setErrorMessage("Field must be set.")
