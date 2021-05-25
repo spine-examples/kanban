@@ -27,48 +27,27 @@
 package io.spine.kanban.codegen;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.squareup.javapoet.CodeBlock;
-import io.spine.protodata.Field;
 import io.spine.protodata.File;
 import io.spine.protodata.FilePath;
 import io.spine.protodata.ProtobufSourceFile;
-import io.spine.protodata.Type;
-import io.spine.protodata.TypeName;
 import io.spine.protodata.language.CommonLanguages;
 import io.spine.protodata.renderer.Renderer;
 import io.spine.protodata.renderer.SourceSet;
 import io.spine.validate.ConstraintViolation;
 import io.spine.validate.ValidationException;
-import io.spine.validation.BinaryOperation;
-import io.spine.validation.CompositeRule;
 import io.spine.validation.MessageValidation;
-import io.spine.validation.Rule;
 import io.spine.validation.RuleOrComposite;
-import io.spine.validation.Sign;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Set;
-import java.util.function.BinaryOperator;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static io.spine.kanban.codegen.Poet.lines;
 import static io.spine.protodata.Ast.javaFile;
-import static io.spine.protodata.Type.KindCase.PRIMITIVE;
 import static io.spine.util.Exceptions.newIllegalArgumentException;
-import static io.spine.validation.BinaryOperation.AND;
-import static io.spine.validation.BinaryOperation.OR;
-import static io.spine.validation.BinaryOperation.XOR;
-import static io.spine.validation.Sign.EQUAL;
-import static io.spine.validation.Sign.GREATER_OR_EQUAL;
-import static io.spine.validation.Sign.GREATER_THAN;
-import static io.spine.validation.Sign.LESS_OR_EQUAL;
-import static io.spine.validation.Sign.LESS_THAN;
-import static io.spine.validation.Sign.NOT_EQUAL;
-import static java.lang.String.format;
 
 /**
  * A {@link Renderer} for the validation code in Java.
