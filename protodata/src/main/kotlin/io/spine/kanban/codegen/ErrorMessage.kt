@@ -79,27 +79,35 @@ private constructor(private val value: String) {
         @JvmStatic
         @JvmOverloads
         fun forComposite(format: String,
-                         left: String = "",
-                         right: String = "",
+                         left: ErrorMessage,
+                         right: ErrorMessage,
                          operation: BinaryOperation = BO_UNKNOWN) =
             ErrorMessage(
                 format
-                    .replacePlaceholder(LEFT, left)
-                    .replacePlaceholder(RIGHT, right)
+                    .replacePlaceholder(LEFT, left.value)
+                    .replacePlaceholder(RIGHT, right.value)
                     .replacePlaceholder(OPERATION, operation.printableString())
             )
     }
 
     override fun toString() = value
 
+    /**
+     * Constructs code which creates a [ConstraintViolation] of a simple validation rule and adds it
+     * to the given mutable [violationsList].
+     */
     fun createViolation(field: Field,
-                                fieldValue: Expression,
-                                violationsList: String): CodeBlock {
+                        fieldValue: Expression,
+                        violationsList: String): CodeBlock {
         val type = field.declaringType
         val violation = buildViolation(type, field, fieldValue)
         return addViolation(violation, violationsList)
     }
 
+    /**
+     * Constructs code which creates a [ConstraintViolation] of a composite validation rule and adds
+     * it to the given mutable [violationsList].
+     */
     fun createCompositeViolation(type: TypeName, violationsList: String): CodeBlock {
         val violation = buildViolation(type, null, null)
         return addViolation(violation, violationsList)
@@ -118,7 +126,7 @@ private constructor(private val value: String) {
             .chainSet("msg_format", LiteralString(value))
             .chainSet("type_name", LiteralString(type.typeUrl()))
         if (field != null) {
-            violationBuilder = violationBuilder.chainSet("field_path", pathFrom(field)!!)
+            violationBuilder = violationBuilder.chainSet("field_path", pathFrom(field))
         }
         if (fieldValue != null) {
             violationBuilder = violationBuilder.chainSet("field_value", fieldValue.packToAny())
@@ -126,7 +134,7 @@ private constructor(private val value: String) {
         return violationBuilder.chainBuild()
     }
 
-    private fun pathFrom(field: Field): Expression? {
+    private fun pathFrom(field: Field): Expression {
         val type = ClassName(FieldPath::class.java)
         return type.newBuilder()
             .chainAdd("field_name", LiteralString(field.name.value))

@@ -89,29 +89,6 @@ public final class JavaValidationRenderer extends Renderer {
     private static final int INDENT_LEVEL = 2;
     private static final String VIOLATIONS = "violations";
 
-    private static final ImmutableMap<Sign, BinaryOperator<String>> OBJECT_COMPARISON_SIGNS =
-            ImmutableMap.of(
-                    EQUAL, (left, right) -> format("%s.equals(%s)", left, right),
-                    NOT_EQUAL, (left, right) -> format("!%s.equals(%s)", left, right)
-            );
-
-    private static final ImmutableMap<Sign, BinaryOperator<String>> PRIMITIVE_COMPARISON_SIGNS =
-            ImmutableMap.<Sign, BinaryOperator<String>>builder()
-                        .put(EQUAL, (left, right) -> format("%s == %s", left, right))
-                        .put(NOT_EQUAL, (left, right) -> format("%s != %s", left, right))
-                        .put(GREATER_THAN, (left, right) -> format("%s > %s", left, right))
-                        .put(LESS_THAN, (left, right) -> format("%s < %s", left, right))
-                        .put(GREATER_OR_EQUAL, (left, right) -> format("%s < %s", left, right))
-                        .put(LESS_OR_EQUAL, (left, right) -> format("%s < %s", left, right))
-                        .build();
-
-    private static final ImmutableMap<BinaryOperation, BinaryOperator<String>> BOOLEAN_OPERATIONS =
-            ImmutableMap.of(
-                    AND, (left, right) -> format("(%s) && (%s)", left, right),
-                    OR, (left, right) -> format("(%s) || (%s)", left, right),
-                    XOR, (left, right) -> format("(%s) ^ (%s)", left, right)
-            );
-
     private @MonotonicNonNull TypeSystem typeSystem;
 
     public JavaValidationRenderer() {
@@ -170,10 +147,15 @@ public final class JavaValidationRenderer extends Renderer {
                             ArrayList.class);
     }
 
-    private CodeBlock generateValidationCode(MessageValidation validation, MessageReference result) {
+    private CodeBlock generateValidationCode(MessageValidation validation,
+                                             MessageReference result) {
         CodeBlock.Builder code = CodeBlock.builder();
         for (RuleOrComposite rule : validation.getRuleList()) {
-            CodeBlock block = codeFor(rule, result, validation.getName());
+            GenerationContext context = new GenerationContext(
+                    rule, result, typeSystem, validation.getType().getName(), VIOLATIONS
+            );
+            JavaCodeGenerator generator = JavaCodeGeneration.generatorFor(context);
+            CodeBlock block = generator.code();
             code.add(block);
         }
         return code.build();
@@ -185,116 +167,5 @@ public final class JavaValidationRenderer extends Renderer {
         code.addStatement("throw new $T($N)", ValidationException.class, VIOLATIONS);
         code.endControlFlow();
         return code.build();
-    }
-
-    private CodeBlock codeFor(RuleOrComposite rule,
-                              MessageReference result,
-                              TypeName declaringType) {
-        switch (rule.getKindCase()) {
-            case RULE:
-                Rule simpleRule = rule.getRule();
-                return codeForRule(simpleRule, result);
-            case COMPOSITE:
-                CompositeRule composite = rule.getComposite();
-                return codeForComposite(composite, result, declaringType);
-            case KIND_NOT_SET:
-            default:
-                return CodeBlock.of("");
-        }
-    }
-
-    private CodeBlock codeForRule(Rule rule, MessageReference msg) {
-        Field field = rule.getField();
-        Expression fieldValue = msg.field(field).getGetter();
-        Expression otherValue = typeSystem.valueToJava(rule.getOtherValue());
-        String binaryCondition = conditionOfRule(rule, fieldValue, otherValue);
-        return CodeBlock
-                .builder()
-                .beginControlFlow("if (!($L))", binaryCondition)
-                .add(ErrorMessage.forRule(rule.getErrorMessage(), fieldValue.toCode(), otherValue.toCode())
-                                 .createViolation(field, fieldValue, VIOLATIONS))
-                .endControlFlow()
-                .build();
-    }
-
-    private CodeBlock codeForComposite(CompositeRule rule,
-                                       MessageReference msg,
-                                       TypeName declaringType) {
-        String binaryCondition = conditionOfComposite(rule, msg);
-        return CodeBlock
-                .builder()
-                .beginControlFlow("if (!(%s))", binaryCondition)
-                .add(errorForComposite(rule, msg).createCompositeViolation(declaringType, VIOLATIONS))
-                .endControlFlow()
-                .build();
-    }
-
-    private ErrorMessage errorFor(RuleOrComposite rule, MessageReference result) {
-        switch (rule.getKindCase()) {
-            case RULE:
-                Rule simpleRule = rule.getRule();
-                return errorForRule(result, simpleRule);
-            case COMPOSITE:
-                CompositeRule composite = rule.getComposite();
-                return errorForComposite(composite, result);
-            case KIND_NOT_SET:
-            default:
-                throw new IllegalArgumentException("Empty rule.");
-        }
-    }
-
-    private ErrorMessage errorForRule(MessageReference result, Rule simpleRule) {
-        String fieldValue = result.field(simpleRule.getField())
-                                  .getGetter()
-                                  .toCode();
-        String otherValue = typeSystem.valueToJava(simpleRule.getOtherValue()).toCode();
-        return ErrorMessage.forRule(simpleRule.getErrorMessage(), fieldValue, otherValue);
-    }
-
-    private ErrorMessage errorForComposite(CompositeRule composite, MessageReference result) {
-        ErrorMessage leftError = errorFor(composite.getLeft(), result);
-        ErrorMessage rightError = errorFor(composite.getRight(), result);
-        return ErrorMessage.forComposite(composite.getErrorMessage(),
-                                         leftError.toString(),
-                                         rightError.toString(),
-                                         composite.getOperation());
-    }
-
-    private String conditionOf(RuleOrComposite rule, MessageReference msg) {
-        if (rule.hasRule()) {
-            Rule simpleRule = rule.getRule();
-            Field field = simpleRule.getField();
-            Expression fieldValue = msg.field(field).getGetter();
-            Expression otherValue = typeSystem.valueToJava(simpleRule.getOtherValue());
-            return conditionOfRule(simpleRule, fieldValue, otherValue);
-        } else {
-            return conditionOfComposite(rule.getComposite(), msg);
-        }
-    }
-
-    private static String conditionOfRule(Rule rule,
-                                          Expression fieldValue,
-                                          Expression otherValue) {
-        Field field = rule.getField();
-        Type type = field.getType();
-        ImmutableMap<Sign, BinaryOperator<String>> signs;
-        if (type.getKindCase() == PRIMITIVE) {
-            signs = PRIMITIVE_COMPARISON_SIGNS;
-        } else {
-            signs = OBJECT_COMPARISON_SIGNS;
-        }
-        BinaryOperator<String> comparison = signs.get(rule.getSign());
-        checkNotNull(comparison);
-        String binaryCondition = comparison.apply(fieldValue.toCode(), otherValue.toCode());
-        return binaryCondition;
-    }
-
-    private String conditionOfComposite(CompositeRule rule, MessageReference msg) {
-        String left = conditionOf(rule.getLeft(), msg);
-        String right = conditionOf(rule.getRight(), msg);
-        BinaryOperator<String> binaryOp = BOOLEAN_OPERATIONS.get(rule.getOperation());
-        checkNotNull(binaryOp);
-        String condition = binaryOp.apply(left, right);
-        return condition;
     }
 }

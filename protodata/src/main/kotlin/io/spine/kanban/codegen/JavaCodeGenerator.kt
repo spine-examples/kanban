@@ -24,18 +24,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+@file:JvmName("JavaCodeGeneration")
+
 package io.spine.kanban.codegen
 
 import com.squareup.javapoet.CodeBlock
-import io.spine.kanban.codegen.ErrorMessage.Companion.forRule
-import io.spine.protodata.Field
 import io.spine.protodata.Type.KindCase.PRIMITIVE
 import io.spine.protodata.TypeName
 import io.spine.validation.BinaryOperation.AND
 import io.spine.validation.BinaryOperation.OR
 import io.spine.validation.BinaryOperation.XOR
-import io.spine.validation.CompositeRule
-import io.spine.validation.Rule
 import io.spine.validation.RuleOrComposite
 import io.spine.validation.RuleOrComposite.KindCase.COMPOSITE
 import io.spine.validation.RuleOrComposite.KindCase.RULE
@@ -46,12 +44,18 @@ import io.spine.validation.Sign.LESS_OR_EQUAL
 import io.spine.validation.Sign.LESS_THAN
 import io.spine.validation.Sign.NOT_EQUAL
 
-private val OBJECT_COMPARISON_SIGNS = mapOf(
+/**
+ * Java code comparing two objects.
+ */
+private val OBJECT_COMPARISON_OPS = mapOf(
     EQUAL to { left: String, right: String -> "$left.equals($right)" },
     NOT_EQUAL to { left: String, right: String -> "!$left.equals($right)" }
 )
 
-private val PRIMITIVE_COMPARISON_SIGNS = mapOf(
+/**
+ * Java code comparing two primitive (numeric) types.
+ */
+private val PRIMITIVE_COMPARISON_OPS = mapOf(
     EQUAL to { left: String, right: String -> "$left == $right" },
     NOT_EQUAL to { left: String, right: String -> "$left != $right" },
     GREATER_THAN to { left: String, right: String -> "$left > $right" },
@@ -60,31 +64,52 @@ private val PRIMITIVE_COMPARISON_SIGNS = mapOf(
     LESS_OR_EQUAL to { left: String, right: String -> "$left < $right" }
 )
 
-private val BOOLEAN_OPERATIONS = mapOf(
+/**
+ * Java code comparing two boolean values.
+ */
+private val BOOLEAN_OPS = mapOf(
     AND to { left: String, right: String -> "($left) && ($right)" },
     OR to { left: String, right: String -> "($left) || ($right)" },
     XOR to { left: String, right: String -> "($left) ^ ($right)" }
 )
 
+/**
+ * A Java code generator for a validation rule.
+ */
 internal sealed interface JavaCodeGenerator {
 
+    /**
+     * Obtains the code checking the rule.
+     *
+     * Implementations report any found violations.
+     */
     fun code(): CodeBlock
 
+    /**
+     * Obtains an expression checking if the rule is violated.
+     *
+     * The expression evaluates to `true` if there is a violation and to `false` otherwise.
+     */
     fun condition(): Expression
 
+    /**
+     * Forms an error message for the found violation.
+     */
     fun error(): ErrorMessage
 }
 
-internal class SimpleRuleGenerator(
-    private val rule: Rule,
-    private val msg: MessageReference,
-    private val typeSystem: TypeSystem,
-    private val violationsList: String
+/**
+ * A generator for code which checks a simple one field rule.
+ */
+private class SimpleRuleGenerator(
+    private val ctx: GenerationContext
 ) : JavaCodeGenerator {
 
-    private val field: Field by lazy { rule.getField() }
-    private val fieldValue: Expression by lazy { msg.field(field).getter }
-    private val otherValue: Expression by lazy {  typeSystem.valueToJava(rule.getOtherValue()) }
+    private val rule = ctx.rule.rule
+    private val field = rule.field
+
+    private val fieldValue: Expression by lazy { ctx.msg.field(field).getter }
+    private val otherValue: Expression by lazy {  ctx.typeSystem.valueToJava(rule.otherValue) }
 
     override fun code(): CodeBlock {
         val binaryCondition = condition()
@@ -92,7 +117,7 @@ internal class SimpleRuleGenerator(
         return CodeBlock
             .builder()
             .beginControlFlow("if (!(\$L))", binaryCondition)
-            .add(errorMsg.createViolation(field, fieldValue, violationsList))
+            .add(errorMsg.createViolation(field, fieldValue, ctx.violationsList))
             .endControlFlow()
             .build()
     }
@@ -101,26 +126,30 @@ internal class SimpleRuleGenerator(
         val field = rule.field
         val type = field.type
         val signs = if (type.kindCase == PRIMITIVE) {
-            PRIMITIVE_COMPARISON_SIGNS
+            PRIMITIVE_COMPARISON_OPS
         } else {
-            OBJECT_COMPARISON_SIGNS
+            OBJECT_COMPARISON_OPS
         }
         val compare = signs[rule.sign]!!
         return Literal(compare(fieldValue.toCode(), otherValue.toCode()))
     }
 
     override fun error(): ErrorMessage {
-        return forRule(rule.errorMessage, fieldValue.toCode(), otherValue.toCode())
+        return ErrorMessage.forRule(rule.errorMessage, fieldValue.toCode(), otherValue.toCode())
     }
 }
 
-internal class CompositeRuleGenerator(
-    private val rule: CompositeRule,
-    private val msg: MessageReference,
-    private val declaringType: TypeName,
-    private val typeSystem: TypeSystem,
-    private val violationsList: String
+/**
+ * A generator for code which checks a composite rule.
+ *
+ * A composite rule may consist of several simple rules applied to one or many fields.
+ */
+private class CompositeRuleGenerator(
+    private val ctx: GenerationContext,
 ) : JavaCodeGenerator {
+
+    private val left = generatorFor(ctx.withRule(ctx.rule.composite.left))
+    private val right = generatorFor(ctx.withRule(ctx.rule.composite.right))
 
     override fun code(): CodeBlock {
         val binaryCondition = condition()
@@ -128,28 +157,70 @@ internal class CompositeRuleGenerator(
         return CodeBlock
             .builder()
             .beginControlFlow("if (!(%s))", binaryCondition)
-            .add(error.createCompositeViolation(declaringType, violationsList))
+            .add(error.createCompositeViolation(ctx.declaringType, ctx.violationsList))
             .endControlFlow()
             .build()
     }
 
-    override fun condition(): Expression {
-        val left = generatorFor(rule.left, msg, typeSystem, declaringType, violationsList)
-            .condition()
-        val right = generatorFor(rule.right, msg, typeSystem, declaringType, violationsList)
-            .condition()
-        val binaryOp = BOOLEAN_OPERATIONS[rule.operation]!!
+    override fun condition(): Expression = with(ctx) {
+        val composite = rule.composite
+        val left = left.condition()
+        val right = right.condition()
+        val binaryOp = BOOLEAN_OPS[composite.operation]!!
         return Literal(binaryOp(left.toCode(), right.toCode()))
     }
 
     override fun error(): ErrorMessage {
-        TODO("Not yet implemented")
+        val composite = ctx.rule.composite
+        val format = composite.errorMessage
+        val operation = composite.operation
+        return ErrorMessage.forComposite(format, left.error(), right.error(), operation)
     }
 }
 
-internal fun generatorFor(rule: RuleOrComposite, msg: MessageReference, typeSystem: TypeSystem, declaringType: TypeName, violationsList: String): JavaCodeGenerator =
-    when(rule.kindCase) {
-        RULE -> SimpleRuleGenerator(rule.rule, msg, typeSystem, violationsList)
-        COMPOSITE -> CompositeRuleGenerator(rule.composite, msg, declaringType, typeSystem, violationsList)
+/**
+ * Creates a code generator for a validation rule.
+ */
+internal fun generatorFor(ctx: GenerationContext): JavaCodeGenerator = with(ctx) {
+    when (rule.kindCase) {
+        RULE -> SimpleRuleGenerator(ctx)
+        COMPOSITE -> CompositeRuleGenerator(ctx)
         else -> throw IllegalArgumentException("Empty rule.")
     }
+}
+
+/**
+ * Context of a [JavaCodeGenerator].
+ */
+internal data class GenerationContext(
+    /**
+     * The rule for which the code is generated.
+     */
+    val rule: RuleOrComposite,
+
+    /**
+     * A reference to the validated message.
+     */
+    val msg: MessageReference,
+
+    /**
+     * The Protobuf types known to the application.
+     */
+    val typeSystem: TypeSystem,
+
+    /**
+     * The type of the validated message.
+     */
+    val declaringType: TypeName,
+
+    /**
+     * A reference to the mutable violations list, which accumulates all the constraint violations.
+     */
+    val violationsList: String
+) {
+
+    /**
+     * Obtains the same context but with the given validation [rule].
+     */
+    fun withRule(rule: RuleOrComposite): GenerationContext = copy(rule = rule)
+}
