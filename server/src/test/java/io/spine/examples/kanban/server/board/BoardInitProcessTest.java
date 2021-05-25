@@ -63,11 +63,12 @@ class BoardInitProcessTest extends KanbanContextTest {
                 // Call `buildPartial()` instead of `vBuild()` in order to be able to omit setting
                 // the `name` name field which is required.
                 .buildPartial();
-        IntStream.range(0, defaultColumnCount())
-                 .forEach(i -> commands.message(i)
-                                       .comparingExpectedFieldsOnly()
-                                       .isEqualTo(commandForBoardInit)
-                 );
+        int columnCount = defaultColumnCount();
+        for (int i = 0; i < columnCount; i++) {
+            commands.message(i)
+                    .comparingExpectedFieldsOnly()
+                    .isEqualTo(commandForBoardInit);
+        }
     }
 
     @Test
