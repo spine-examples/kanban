@@ -316,12 +316,16 @@ constructor(
 
 /**
  * Constructs an expression of a list of the given [expressions].
+ *
+ * The resulting expression always yields an instance of Guava `ImmutableList`.
  */
 fun listExpression(expressions: List<Expression>): MethodCall =
     immutableListClass.call("of", expressions)
 
 /**
  * Constructs an expression of a map of the given [expressions].
+ *
+ * The resulting expression always yields an instance of Guava `ImmutableMap`.
  *
  * @param expressions the expressions representing the entries
  * @param keyType the type of the keys of the map;
