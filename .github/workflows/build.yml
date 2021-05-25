@@ -19,10 +19,16 @@ jobs:
 
     - name: Install ProtoData from Maven to local env
       run: ./gradlew installProtoData
+      shell: bash
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+    - name: Update env
+      run: source ~/.bash_profile
+      shell: bash
+
     - name: Run tests with Gradle
       run: ./gradlew build
+      shell: bash
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
