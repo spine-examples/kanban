@@ -39,8 +39,8 @@ import io.spine.protodata.plugin.Policy;
 import io.spine.server.event.React;
 import io.spine.server.model.Nothing;
 import io.spine.server.tuple.EitherOf2;
-import io.spine.validation.RuleAdded;
 import io.spine.validation.Rule;
+import io.spine.validation.RuleAdded;
 import io.spine.validation.Value;
 import org.jetbrains.annotations.NotNull;
 
@@ -49,7 +49,14 @@ import static io.spine.protodata.Ast.typeUrl;
 import static io.spine.util.Exceptions.newIllegalArgumentException;
 import static io.spine.validation.Sign.NOT_EQUAL;
 
-public final class ValidationRulePolicy extends Policy<FieldOptionDiscovered> {
+/**
+ * A {@link Policy} which controls whether or not a field should be validated as {@code required}.
+ *
+ * <p>Whenever a field option is discovered, if that option is the {@code required} option, and
+ * the value is {@code true}, and the field type supports such validation, a validation rule
+ * is added. If any of these conditions are not met, nothing happens.
+ */
+public final class RequiredRulePolicy extends Policy<FieldOptionDiscovered> {
 
     @NotNull
     @Override
@@ -79,6 +86,7 @@ public final class ValidationRulePolicy extends Policy<FieldOptionDiscovered> {
 
     private static RuleAdded requiredRule(Field field) {
         Value defaultValue = NotSetValue.forField(field);
+        @SuppressWarnings("DuplicateStringLiteralInspection") // Duplication in generated code.
         Rule rule = Rule.newBuilder()
                         .setErrorMessage("Field must be set.")
                         .setField(field)

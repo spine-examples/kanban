@@ -36,6 +36,11 @@ import java.util.Set;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
+/**
+ * An {@link InsertionPointPrinter} which adds the {@link Validate} point to all the message types
+ * which have an associated {@link MessageValidation} view.
+ */
+@SuppressWarnings("unused") // Accessed via reflection by ProtoData.
 public final class ValidateInsertionPointPrinter extends InsertionPointPrinter {
 
     public ValidateInsertionPointPrinter() {

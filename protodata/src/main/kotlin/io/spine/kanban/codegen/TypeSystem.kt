@@ -72,7 +72,7 @@ import io.spine.validation.Value.KindCase.STRING_VALUE
  *
  * Includes all the types known to the app at runtime.
  */
-class TypeSystem
+internal class TypeSystem
 private constructor(
     private val knownTypes: Map<String, ClassName>
 ) {
@@ -94,37 +94,43 @@ private constructor(
             NUMBER_VALUE -> Literal(value.numberValue)
             STRING_VALUE -> LiteralString(value.stringValue)
             BYTES_VALUE -> LiteralBytes(value.bytesValue)
-            MESSAGE_VALUE -> {
-                val messageValue = value.messageValue
-                val className: ClassName = knownTypes.getValue(messageValue.type.typeUrl())
-                if (messageValue.fieldsMap.isEmpty()) {
-                    className.getDefaultInstance()
-                } else {
-                    var builder = className.newBuilder()
-                    messageValue.fieldsMap.forEach { k, v ->
-                        val name = FieldName.newBuilder()
-                            .setValue(k)
-                            .build()
-                        builder = builder.chainSet(name, valueToJava(v))
-                    }
-                    builder.chainBuild()
-                }
-            }
-            ENUM_VALUE -> {
-                val enumValue = value.enumValue
-                val enumClassName: ClassName = knownTypes.getValue(enumValue.type.typeUrl())
-                enumClassName.enumValue(enumValue.constNumber)
-            }
+            MESSAGE_VALUE -> messageValueToJava(value)
+            ENUM_VALUE -> enumValueToJava(value)
             LIST_VALUE -> listExpression(listValuesToJava(value))
-            MAP_VALUE -> {
-                val firstEntry = value.mapValue.valueList.firstOrNull()
-                val firstKey = firstEntry?.key
-                val keyClass = firstKey?.type?.let(this::toClass)
-                val firstValue = firstEntry?.value
-                val valueClass = firstValue?.type?.let(this::toClass)
-                mapExpression(mapValuesToJava(value), keyClass, valueClass)
-            }
+            MAP_VALUE -> mapValueToJava(value)
             else -> throw IllegalArgumentException("Empty value")
+        }
+    }
+
+    private fun mapValueToJava(value: Value): MethodCall {
+        val firstEntry = value.mapValue.valueList.firstOrNull()
+        val firstKey = firstEntry?.key
+        val keyClass = firstKey?.type?.let(this::toClass)
+        val firstValue = firstEntry?.value
+        val valueClass = firstValue?.type?.let(this::toClass)
+        return mapExpression(mapValuesToJava(value), keyClass, valueClass)
+    }
+
+    private fun enumValueToJava(value: Value): MethodCall {
+        val enumValue = value.enumValue
+        val enumClassName: ClassName = knownTypes.getValue(enumValue.type.typeUrl())
+        return enumClassName.enumValue(enumValue.constNumber)
+    }
+
+    private fun messageValueToJava(value: Value): Expression {
+        val messageValue = value.messageValue
+        val className: ClassName = knownTypes.getValue(messageValue.type.typeUrl())
+        return if (messageValue.fieldsMap.isEmpty()) {
+            className.getDefaultInstance()
+        } else {
+            var builder = className.newBuilder()
+            messageValue.fieldsMap.forEach { k, v ->
+                val name = FieldName.newBuilder()
+                    .setValue(k)
+                    .build()
+                builder = builder.chainSet(name, valueToJava(v))
+            }
+            builder.chainBuild()
         }
     }
 
@@ -207,7 +213,3 @@ private constructor(
         fun build() = TypeSystem(knownTypes)
     }
 }
-
-
-
-

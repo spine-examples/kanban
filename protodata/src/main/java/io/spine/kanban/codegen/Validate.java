@@ -48,14 +48,18 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static io.spine.protodata.Ast.typeUrl;
 import static java.lang.String.format;
 
-class Validate implements InsertionPoint {
+/**
+ * An insertion point at the place where Java validation code should be inserted.
+ *
+ * <p>Points at a line in the {@code Builder.build()} method right before the return statement.
+ */
+final class Validate implements InsertionPoint {
 
     private static final Splitter LINE_SPLITTER = Splitter.on(System.lineSeparator());
     private static final Joiner LINE_JOINER = Joiner.on(System.lineSeparator());
     private static final Pattern RETURN_LINE = Pattern.compile("\\s*return .+;\\s*");
     private static final String BUILDER_CLASS = "Builder";
     private static final String BUILD_METHOD = "build";
-
 
     private final TypeName type;
 

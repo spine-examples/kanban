@@ -31,6 +31,10 @@ import io.spine.option.OptionsProto;
 import io.spine.protodata.option.OptionsProvider;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * An {@link OptionsProvider} which registers Spine options from {@code options.proto}.
+ */
+@SuppressWarnings("unused") // Accessed via reflection by ProtoData.
 public final class SpineOptionsProvider implements OptionsProvider {
 
     @Override
