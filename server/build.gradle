@@ -55,23 +55,32 @@ protobuf {
     }
 }
 
+File protoDataInstallationLocation = null
+if (rootProject.hasProperty("protoDataLocation")) {
+    protoDataInstallationLocation = rootProject.file(rootProject.getProperty("protoDataLocation"))
+}
+
 task launchProtoData(type: Exec) {
     dependsOn(':protodata:jar', 'generateProto')
     tasks.getByName('compileJava').dependsOn(it)
 
-    final projectProtodata = project(':protodata')
+    final projectProtoData = project(':protodata')
+
+    final protoDataExecutable = protoDataInstallationLocation != null ?
+            "$protoDataInstallationLocation/protodata/bin/protodata" :
+            'protodata'
 
     commandLine(
-            'protodata',
+            protoDataExecutable,
             '--plugin', 'io.spine.kanban.codegen.ValidationPlugin',
             '--renderer', 'io.spine.kanban.codegen.ValidateInsertionPointPrinter',
             '--renderer', 'io.spine.kanban.codegen.JavaValidationRenderer',
             '--options', 'io.spine.kanban.codegen.SpineOptionsProvider',
             '--request', requestFile,
             '--src', "$projectDir/generated/main/java",
-            '--user-classpath', projectProtodata.configurations.runtimeClasspath.asPath +
+            '--user-classpath', projectProtoData.configurations.runtimeClasspath.asPath +
                     File.pathSeparator +
-                    projectProtodata.tasks.jar.outputs.files.asPath
+                    projectProtoData.tasks.jar.outputs.files.asPath
     )
 }
 
@@ -92,7 +101,11 @@ tasks.register('stageProtoData', Copy) {
 }
 
 tasks.register('installProtoData', Exec) {
-    commandLine("$protoDataStaging/install.sh")
+    final command = ["$protoDataStaging/install.sh"]
+    if (protoDataInstallationLocation != null) {
+        command.add(protoDataInstallationLocation.absolutePath)
+    }
+    commandLine(command)
 
     dependsOn('stageProtoData')
 }
