@@ -18,17 +18,11 @@ jobs:
         java-version: 1.8
 
     - name: Install ProtoData from Maven to local env
-      run: ./gradlew installProtoData
-      shell: bash
+      run: ./gradlew installProtoData  --stacktrace
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Update env
-      run: source ~/.bash_profile
-      shell: bash
-
     - name: Run tests with Gradle
-      run: ./gradlew build
-      shell: bash
+      run: source ~/.bash_profile & ./gradlew build --stacktrace
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
