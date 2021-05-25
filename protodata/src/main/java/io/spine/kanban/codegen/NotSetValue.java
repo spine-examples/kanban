@@ -45,6 +45,9 @@ import static io.spine.protodata.PrimitiveType.UNRECOGNIZED;
 import static io.spine.util.Exceptions.newIllegalArgumentException;
 import static io.spine.util.Exceptions.newIllegalStateException;
 
+/**
+ * A factory of default values of Protobuf message fields.
+ */
 public final class NotSetValue {
 
     /**
@@ -53,6 +56,9 @@ public final class NotSetValue {
     private NotSetValue() {
     }
 
+    /**
+     * Obtains a default value for the given field.
+     */
     @SuppressWarnings("EnumSwitchStatementWhichMissesCases") // Covered by `default`.
     public static Value forField(Field field) {
         switch (field.getCardinalityCase()) {
