@@ -30,7 +30,7 @@ message SimpleRule {
         ComparisonOperator sign = 2;
 
         // A custom comparison method, which cannot be covered by a combination of `Sign`s.
-        UnknownOperation unknown_operation = 3;
+        CustomOperator unknown_operation = 3;
     }
 
     // The value to which the field is compared.
@@ -44,7 +44,7 @@ message SimpleRule {
     string error_message = 5;
 }
 
-// A predefined comparison sign.
+// A predefined comparison operator.
 //
 // Comparison between two values of the same type must always yield a boolean result.
 //
@@ -67,8 +67,8 @@ enum ComparisonOperator {
     DISTINCT = 7;
 }
 
-// A non-predefined comparison option.
-message UnknownOperation {
+// A non-predefined comparison operator.
+message CustomOperator {
 
     // Describes how the renderer should compare the values.
     string description = 1;
