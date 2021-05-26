@@ -32,8 +32,6 @@ import io.spine.protodata.plugin.Policy;
 import io.spine.protodata.plugin.ViewRepository;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Set;
-
 /**
  * A ProtoData plugin which attaches validation-related policies and views.
  */
@@ -42,13 +40,13 @@ public class ValidationPlugin implements Plugin {
 
     @NotNull
     @Override
-    public Set<Policy<?>> policies() {
+    public ImmutableSet<Policy<?>> policies() {
         return ImmutableSet.of(new RequiredRulePolicy());
     }
 
     @NotNull
     @Override
-    public Set<ViewRepository<?, ?, ?>> viewRepositories() {
+    public ImmutableSet<ViewRepository<?, ?, ?>> viewRepositories() {
         return ImmutableSet.of(new MessageValidationRepository());
     }
 }

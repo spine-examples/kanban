@@ -26,6 +26,7 @@
 
 package io.spine.kanban.codegen;
 
+import com.google.common.collect.ImmutableSet;
 import io.spine.protodata.language.CommonLanguages;
 import io.spine.protodata.renderer.InsertionPoint;
 import io.spine.protodata.renderer.InsertionPointPrinter;
@@ -49,7 +50,7 @@ public final class PrintValidationInsertionPoints extends InsertionPointPrinter 
 
     @NotNull
     @Override
-    protected Set<InsertionPoint> supportedInsertionPoints() {
+    protected ImmutableSet<InsertionPoint> supportedInsertionPoints() {
         Set<MessageValidation> types = select(MessageValidation.class).all();
         return types.stream()
                     .map(validation -> new Validate(validation.getName()))
