@@ -73,7 +73,7 @@ task launchProtoData(type: Exec) {
     commandLine(
             protoDataExecutable,
             '--plugin', 'io.spine.kanban.codegen.ValidationPlugin',
-            '--renderer', 'io.spine.kanban.codegen.ValidateInsertionPointPrinter',
+            '--renderer', 'io.spine.kanban.codegen.PrintValidationInsertionPoints',
             '--renderer', 'io.spine.kanban.codegen.JavaValidationRenderer',
             '--options', 'io.spine.kanban.codegen.SpineOptionsProvider',
             '--request', requestFile,
