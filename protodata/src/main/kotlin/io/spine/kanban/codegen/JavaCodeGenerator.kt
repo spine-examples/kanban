@@ -99,7 +99,7 @@ internal sealed interface JavaCodeGenerator {
 }
 
 /**
- * A generator for code which checks a simple one field rule.
+ * A generator for code which checks a simple one-field rule.
  */
 private class SimpleRuleGenerator(
     private val ctx: GenerationContext

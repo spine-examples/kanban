@@ -263,7 +263,7 @@ internal constructor(
 /**
  * An expression of a Java method call.
  *
- * Might be a static or an instance method. In the case of the former, the receiver expression
+ * Can be a static or an instance method. In the case of the former, the receiver expression
  * is a class name. In the case of the latter — the receiver object.
  */
 class MethodCall
