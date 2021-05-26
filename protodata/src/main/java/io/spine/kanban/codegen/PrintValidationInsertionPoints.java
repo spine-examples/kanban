@@ -49,7 +49,7 @@ public final class PrintValidationInsertionPoints extends InsertionPointPrinter 
 
     @NotNull
     @Override
-    protected Set<InsertionPoint> getSupportedInsertionPoints() {
+    protected Set<InsertionPoint> supportedInsertionPoints() {
         Set<MessageValidation> types = select(MessageValidation.class).all();
         return types.stream()
                     .map(validation -> new Validate(validation.getName()))

@@ -29,7 +29,7 @@ plugins {
     id 'idea'
 }
 
-ext.protoDataVersion = '0.0.9'
+ext.protoDataVersion = '0.0.10'
 
 //noinspection GroovyAssignabilityCheck
 subprojects {
@@ -80,7 +80,10 @@ subprojects {
     configurations.all {
         resolutionStrategy {
             force(
-                    "com.google.guava:guava:$deps.versions.guava"
+                    "com.google.guava:guava:$deps.versions.guava",
+                    "com.google.truth:truth:1.1.3",
+                    "com.google.truth.extensions:truth-java8-extension:1.1.3",
+                    "com.google.truth.extensions:truth-proto-extension:1.1.3"
             )
         }
     }

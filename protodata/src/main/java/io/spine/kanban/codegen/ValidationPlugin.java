@@ -42,13 +42,13 @@ public class ValidationPlugin implements Plugin {
 
     @NotNull
     @Override
-    public Set<Policy<?>> getPolicies() {
+    public Set<Policy<?>> policies() {
         return ImmutableSet.of(new RequiredRulePolicy());
     }
 
     @NotNull
     @Override
-    public Set<ViewRepository<?, ?, ?>> getViewRepositories() {
+    public Set<ViewRepository<?, ?, ?>> viewRepositories() {
         return ImmutableSet.of(new MessageValidationRepository());
     }
 }
