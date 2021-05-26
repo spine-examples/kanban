@@ -37,6 +37,7 @@ import io.spine.validation.MessageValue;
 import io.spine.validation.Value;
 import org.jetbrains.annotations.NotNull;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.protobuf.ByteString.EMPTY;
 import static io.spine.protodata.PrimitiveType.PT_UNKNOWN;
 import static io.spine.protodata.PrimitiveType.TYPE_BYTES;
@@ -61,6 +62,7 @@ public final class DefaultValue {
      */
     @SuppressWarnings("EnumSwitchStatementWhichMissesCases") // Covered by `default`.
     public static Value forField(Field field) {
+        checkNotNull(field);
         switch (field.getCardinalityCase()) {
             case LIST:
                 return Value.newBuilder()
