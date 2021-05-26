@@ -126,7 +126,7 @@ private constructor(private val value: String) {
             .chainSet("msg_format", LiteralString(value))
             .chainSet("type_name", LiteralString(type.typeUrl()))
         if (field != null) {
-            violationBuilder = violationBuilder.chainSet("field_path", pathFrom(field))
+            violationBuilder = violationBuilder.chainSet("field_path", pathOf(field))
         }
         if (fieldValue != null) {
             violationBuilder = violationBuilder.chainSet("field_value", fieldValue.packToAny())
@@ -134,7 +134,7 @@ private constructor(private val value: String) {
         return violationBuilder.chainBuild()
     }
 
-    private fun pathFrom(field: Field): Expression {
+    private fun pathOf(field: Field): Expression {
         val type = ClassName(FieldPath::class.java)
         return type.newBuilder()
             .chainAdd("field_name", LiteralString(field.name.value))
