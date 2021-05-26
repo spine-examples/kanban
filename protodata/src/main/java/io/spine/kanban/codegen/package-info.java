@@ -27,7 +27,6 @@
 /**
  * Contains the ProtoData validation plugin which generates Java code.
  */
-
 @CheckReturnValue
 @ParametersAreNonnullByDefault
 package io.spine.kanban.codegen;
