@@ -32,13 +32,11 @@ import io.spine.examples.kanban.command.CreateColumn;
 import io.spine.examples.kanban.server.KanbanContextTest;
 import io.spine.testing.server.CommandSubject;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import static io.spine.examples.kanban.server.board.BoardInitProcess.defaultColumnCount;
 import static io.spine.protobuf.AnyPacker.unpack;
@@ -52,7 +50,6 @@ class BoardInitProcessTest extends KanbanContextTest {
         context().receivesCommand(createBoard());
     }
 
-    @Disabled("validation in `build()` breaks `comparingExpectedFieldsOnly()`")
     @Test
     @DisplayName("issue creation commands for all default columns")
     void issuesCreationCommands() {

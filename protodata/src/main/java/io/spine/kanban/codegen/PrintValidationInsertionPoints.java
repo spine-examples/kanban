@@ -41,9 +41,9 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
  * which have an associated {@link MessageValidation} view.
  */
 @SuppressWarnings("unused") // Accessed via reflection by ProtoData.
-public final class ValidateInsertionPointPrinter extends InsertionPointPrinter {
+public final class PrintValidationInsertionPoints extends InsertionPointPrinter {
 
-    public ValidateInsertionPointPrinter() {
+    public PrintValidationInsertionPoints() {
         super(CommonLanguages.getJava());
     }
 
