@@ -38,7 +38,7 @@ import io.spine.protodata.renderer.SourceSet;
 import io.spine.validate.ConstraintViolation;
 import io.spine.validate.ValidationException;
 import io.spine.validation.MessageValidation;
-import io.spine.validation.RuleOrComposite;
+import io.spine.validation.Rule;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 import java.nio.file.Path;
@@ -129,7 +129,7 @@ public final class JavaValidationRenderer extends Renderer {
     private CodeBlock generateValidationCode(MessageValidation validation,
                                              MessageReference result) {
         CodeBlock.Builder code = CodeBlock.builder();
-        for (RuleOrComposite rule : validation.getRuleList()) {
+        for (Rule rule : validation.getRuleList()) {
             GenerationContext context = new GenerationContext(
                     rule, result, typeSystem, validation.getType().getName(), VIOLATIONS
             );

@@ -17,7 +17,7 @@ message RuleAdded {
 
     protodata.TypeName type = 1;
 
-    Rule rule = 2;
+    SimpleRule rule = 2;
 }
 
 // The event emitted whenever a composite validation rule is attached to a message type.

@@ -34,8 +34,8 @@ import io.spine.protodata.TypeName;
 import io.spine.protodata.plugin.View;
 import io.spine.validation.CompositeRuleAdded;
 import io.spine.validation.MessageValidation;
+import io.spine.validation.Rule;
 import io.spine.validation.RuleAdded;
-import io.spine.validation.RuleOrComposite;
 
 /**
  * A view which accumulates validation data for a message type.
@@ -55,16 +55,16 @@ class MessageValidationView
 
     @Subscribe
     void on(RuleAdded event) {
-        RuleOrComposite roc = RuleOrComposite
+        Rule roc = Rule
                 .newBuilder()
-                .setRule(event.getRule())
+                .setSimple(event.getRule())
                 .buildPartial();
         builder().addRule(roc);
     }
 
     @Subscribe
     void on(CompositeRuleAdded event) {
-        RuleOrComposite roc = RuleOrComposite
+        Rule roc = Rule
                 .newBuilder()
                 .setComposite(event.getRule())
                 .buildPartial();

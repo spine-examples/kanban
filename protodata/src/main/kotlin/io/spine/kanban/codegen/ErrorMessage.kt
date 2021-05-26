@@ -32,11 +32,11 @@ import io.spine.protodata.Field
 import io.spine.protodata.TypeName
 import io.spine.protodata.typeUrl
 import io.spine.validate.ConstraintViolation
-import io.spine.validation.BinaryOperation
-import io.spine.validation.BinaryOperation.AND
-import io.spine.validation.BinaryOperation.BO_UNKNOWN
-import io.spine.validation.BinaryOperation.OR
-import io.spine.validation.BinaryOperation.XOR
+import io.spine.validation.LogicalOperator
+import io.spine.validation.LogicalOperator.AND
+import io.spine.validation.LogicalOperator.BO_UNKNOWN
+import io.spine.validation.LogicalOperator.OR
+import io.spine.validation.LogicalOperator.XOR
 
 private const val VALUE = "value"
 private const val OTHER = "other"
@@ -81,7 +81,7 @@ private constructor(private val value: String) {
         fun forComposite(format: String,
                          left: ErrorMessage,
                          right: ErrorMessage,
-                         operation: BinaryOperation = BO_UNKNOWN) =
+                         operation: LogicalOperator = BO_UNKNOWN) =
             ErrorMessage(
                 format
                     .replacePlaceholder(LEFT, left.value)
@@ -147,7 +147,7 @@ private fun String.replacePlaceholder(placeholder: String, newValue: String): St
     return replace(formattedPlaceholder, newValue)
 }
 
-private fun BinaryOperation.printableString() = when(this) {
+private fun LogicalOperator.printableString() = when(this) {
     AND, OR, XOR -> name.lowercase()
     else -> "<unknown operation>"
 }

@@ -30,5 +30,5 @@ message MessageValidation {
     //
     // All these rules must be met in order for a message to be regarded as valid.
     //
-    repeated RuleOrComposite rule = 3;
+    repeated Rule rule = 3;
 }

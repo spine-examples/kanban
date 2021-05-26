@@ -39,15 +39,15 @@ import io.spine.protodata.plugin.Policy;
 import io.spine.server.event.React;
 import io.spine.server.model.Nothing;
 import io.spine.server.tuple.EitherOf2;
-import io.spine.validation.Rule;
 import io.spine.validation.RuleAdded;
+import io.spine.validation.SimpleRule;
 import io.spine.validation.Value;
 import org.jetbrains.annotations.NotNull;
 
 import static io.spine.option.OptionsProto.required;
 import static io.spine.protodata.Ast.typeUrl;
 import static io.spine.util.Exceptions.newIllegalArgumentException;
-import static io.spine.validation.Sign.NOT_EQUAL;
+import static io.spine.validation.ComparisonOperator.NOT_EQUAL;
 
 /**
  * A {@link Policy} which controls whether or not a field should be validated as {@code required}.
@@ -87,12 +87,12 @@ public final class RequiredRulePolicy extends Policy<FieldOptionDiscovered> {
     private static RuleAdded requiredRule(Field field) {
         Value defaultValue = DefaultValue.forField(field);
         @SuppressWarnings("DuplicateStringLiteralInspection") // Duplication in generated code.
-        Rule rule = Rule.newBuilder()
-                        .setErrorMessage("Field must be set.")
-                        .setField(field)
-                        .setSign(NOT_EQUAL)
-                        .setOtherValue(defaultValue)
-                        .vBuild();
+        SimpleRule rule = SimpleRule.newBuilder()
+                                    .setErrorMessage("Field must be set.")
+                                    .setField(field)
+                                    .setSign(NOT_EQUAL)
+                                    .setOtherValue(defaultValue)
+                                    .vBuild();
         return RuleAdded.newBuilder()
                         .setType(field.getDeclaringType())
                         .setRule(rule)

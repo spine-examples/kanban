@@ -31,18 +31,18 @@ package io.spine.kanban.codegen
 import com.squareup.javapoet.CodeBlock
 import io.spine.protodata.Type.KindCase.PRIMITIVE
 import io.spine.protodata.TypeName
-import io.spine.validation.BinaryOperation.AND
-import io.spine.validation.BinaryOperation.OR
-import io.spine.validation.BinaryOperation.XOR
-import io.spine.validation.RuleOrComposite
-import io.spine.validation.RuleOrComposite.KindCase.COMPOSITE
-import io.spine.validation.RuleOrComposite.KindCase.RULE
-import io.spine.validation.Sign.EQUAL
-import io.spine.validation.Sign.GREATER_OR_EQUAL
-import io.spine.validation.Sign.GREATER_THAN
-import io.spine.validation.Sign.LESS_OR_EQUAL
-import io.spine.validation.Sign.LESS_THAN
-import io.spine.validation.Sign.NOT_EQUAL
+import io.spine.validation.ComparisonOperator.EQUAL
+import io.spine.validation.ComparisonOperator.GREATER_OR_EQUAL
+import io.spine.validation.ComparisonOperator.GREATER_THAN
+import io.spine.validation.ComparisonOperator.LESS_OR_EQUAL
+import io.spine.validation.ComparisonOperator.LESS_THAN
+import io.spine.validation.ComparisonOperator.NOT_EQUAL
+import io.spine.validation.LogicalOperator.AND
+import io.spine.validation.LogicalOperator.OR
+import io.spine.validation.LogicalOperator.XOR
+import io.spine.validation.Rule
+import io.spine.validation.Rule.KindCase.COMPOSITE
+import io.spine.validation.Rule.KindCase.SIMPLE
 
 /**
  * Java code comparing two objects.
@@ -105,7 +105,7 @@ private class SimpleRuleGenerator(
     private val ctx: GenerationContext
 ) : JavaCodeGenerator {
 
-    private val rule = ctx.rule.rule
+    private val rule = ctx.rule.simple
     private val field = rule.field
 
     private val fieldValue: Expression by lazy { ctx.msg.field(field).getter }
@@ -183,7 +183,7 @@ private class CompositeRuleGenerator(
  */
 internal fun generatorFor(ctx: GenerationContext): JavaCodeGenerator = with(ctx) {
     when (rule.kindCase) {
-        RULE -> SimpleRuleGenerator(ctx)
+        SIMPLE -> SimpleRuleGenerator(ctx)
         COMPOSITE -> CompositeRuleGenerator(ctx)
         else -> throw IllegalArgumentException("Empty rule.")
     }
@@ -196,7 +196,7 @@ internal data class GenerationContext(
     /**
      * The rule for which the code is generated.
      */
-    val rule: RuleOrComposite,
+    val rule: Rule,
 
     /**
      * A reference to the validated message.
@@ -222,5 +222,5 @@ internal data class GenerationContext(
     /**
      * Obtains the same context but with the given validation [rule].
      */
-    fun withRule(rule: RuleOrComposite): GenerationContext = copy(rule = rule)
+    fun withRule(rule: Rule): GenerationContext = copy(rule = rule)
 }

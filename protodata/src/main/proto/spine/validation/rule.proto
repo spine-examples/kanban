@@ -19,7 +19,7 @@ import "google/protobuf/any.proto";
 // The second operand is the `other_value`. `other_value` is typically derived from the Protobuf
 // definition of the validation rule.
 //
-message Rule {
+message SimpleRule {
 
     // The field which is being compared.
     protodata.Field field = 1;
@@ -27,7 +27,7 @@ message Rule {
     oneof operation {
 
         // A simple comparison sign.
-        Sign sign = 2;
+        ComparisonOperator sign = 2;
 
         // A custom comparison method, which cannot be covered by a combination of `Sign`s.
         UnknownOperation unknown_operation = 3;
@@ -48,7 +48,7 @@ message Rule {
 //
 // Comparison between two values of the same type must always yield a boolean result.
 //
-enum Sign {
+enum ComparisonOperator {
 
     OPERATION_UNKNOWN = 0;
 
@@ -74,11 +74,11 @@ message UnknownOperation {
     string description = 1;
 }
 
-message RuleOrComposite {
+message Rule {
 
     oneof kind {
 
-        Rule rule = 1;
+        SimpleRule simple = 1;
 
         CompositeRule composite = 2;
     }
@@ -92,13 +92,13 @@ message RuleOrComposite {
 message CompositeRule {
 
     // First rule.
-    RuleOrComposite left = 1;
+    Rule left = 1;
 
     // The operation which joins two rules.
-    BinaryOperation operation = 2;
+    LogicalOperator operation = 2;
 
     // Second rule.
-    RuleOrComposite right = 3;
+    Rule right = 3;
 
     // A human-readable message explaining the error.
     //
@@ -110,7 +110,7 @@ message CompositeRule {
 }
 
 // A boolean operator.
-enum BinaryOperation {
+enum LogicalOperator {
 
     BO_UNKNOWN = 0;
 
