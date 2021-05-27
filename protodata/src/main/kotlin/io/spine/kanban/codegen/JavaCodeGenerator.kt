@@ -166,14 +166,14 @@ private class CompositeRuleGenerator(
         val composite = rule.composite
         val left = left.condition()
         val right = right.condition()
-        val binaryOp = BOOLEAN_OPS[composite.operation]!!
+        val binaryOp = BOOLEAN_OPS[composite.operator]!!
         return Literal(binaryOp(left.toCode(), right.toCode()))
     }
 
     override fun error(): ErrorMessage {
         val composite = ctx.rule.composite
         val format = composite.errorMessage
-        val operation = composite.operation
+        val operation = composite.operator
         return ErrorMessage.forComposite(format, left.error(), right.error(), operation)
     }
 }

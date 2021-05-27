@@ -30,7 +30,7 @@ message SimpleRule {
         ComparisonOperator sign = 2;
 
         // A custom comparison method, which cannot be covered by a combination of `Sign`s.
-        CustomOperator unknown_operation = 3;
+        CustomOperator custom_operator = 3;
     }
 
     // The value to which the field is compared.
@@ -95,7 +95,7 @@ message CompositeRule {
     Rule left = 1;
 
     // The operation which joins two rules.
-    LogicalOperator operation = 2;
+    LogicalOperator operator = 2;
 
     // Second rule.
     Rule right = 3;
