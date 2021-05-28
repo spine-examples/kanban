@@ -70,9 +70,9 @@ class CardTest extends KanbanContextTest {
                     .newBuilder()
                     .setBoard(board())
                     .setCard(card())
-                    // We call `build()` instead of `vBuild()` to be able to omit
+                    // We call `buildPartial()` instead of `vBuild()` to be able to omit
                     // the `name` and `description` fields that are `required` in the event.
-                    .build();
+                    .buildPartial();
             assertEvents.message(0)
                         .ignoringFields(3 /* name */, 4 /* description */)
                         .isEqualTo(expected);

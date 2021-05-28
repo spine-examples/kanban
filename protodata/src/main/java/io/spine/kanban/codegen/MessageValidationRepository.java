@@ -24,7 +24,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = 'kanban'
+package io.spine.kanban.codegen;
 
-include 'server'
-include 'protodata'
+import io.spine.protodata.TypeEntered;
+import io.spine.protodata.TypeName;
+import io.spine.protodata.plugin.ViewRepository;
+import io.spine.server.route.EventRouting;
+import io.spine.validation.MessageValidation;
+import org.jetbrains.annotations.NotNull;
+
+import static io.spine.server.route.EventRoute.withId;
+
+/**
+ * A repository for the {@link MessageValidationView}.
+ *
+ * <p>Routes the {@code TypeEntered} events to the view by the type name.
+ */
+class MessageValidationRepository
+        extends ViewRepository<TypeName, MessageValidationView, MessageValidation> {
+
+    @Override
+    protected void setupEventRouting(@NotNull EventRouting<TypeName> routing) {
+        super.setupEventRouting(routing);
+        routing.route(TypeEntered.class,
+                      (message, context) -> withId(message.getType().getName()));
+    }
+}

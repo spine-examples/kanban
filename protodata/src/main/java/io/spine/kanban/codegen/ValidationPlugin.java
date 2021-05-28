@@ -24,7 +24,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = 'kanban'
+package io.spine.kanban.codegen;
 
-include 'server'
-include 'protodata'
+import com.google.common.collect.ImmutableSet;
+import io.spine.protodata.plugin.Plugin;
+import io.spine.protodata.plugin.Policy;
+import io.spine.protodata.plugin.ViewRepository;
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * A ProtoData plugin which attaches validation-related policies and views.
+ */
+@SuppressWarnings("unused") // Loaded by ProtoData via reflection.
+public class ValidationPlugin implements Plugin {
+
+    @NotNull
+    @Override
+    public ImmutableSet<Policy<?>> policies() {
+        return ImmutableSet.of(new RequiredRulePolicy());
+    }
+
+    @NotNull
+    @Override
+    public ImmutableSet<ViewRepository<?, ?, ?>> viewRepositories() {
+        return ImmutableSet.of(new MessageValidationRepository());
+    }
+}

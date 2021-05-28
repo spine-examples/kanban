@@ -27,7 +27,6 @@
 /**
  * This package contains basic data types of the Kanban example application.
  */
-
 @BoundedContext("Kanban")
 @CheckReturnValue
 @ParametersAreNonnullByDefault

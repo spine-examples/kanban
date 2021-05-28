@@ -24,7 +24,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = 'kanban'
+@file:JvmName("Poet")
 
-include 'server'
-include 'protodata'
+package io.spine.kanban.codegen
+
+import com.google.common.collect.ImmutableList
+import com.squareup.javapoet.CodeBlock
+
+/**
+ * Splits this `CodeBlock` into lines.
+ */
+fun CodeBlock.lines(): ImmutableList<String> {
+    val code = this.toString()
+    val lines = code.split(System.lineSeparator())
+    return ImmutableList.copyOf(lines)
+}

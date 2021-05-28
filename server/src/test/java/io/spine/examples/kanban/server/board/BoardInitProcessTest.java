@@ -37,7 +37,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import static io.spine.examples.kanban.server.board.BoardInitProcess.defaultColumnCount;
 import static io.spine.protobuf.AnyPacker.unpack;
@@ -58,14 +57,15 @@ class BoardInitProcessTest extends KanbanContextTest {
         CreateColumn commandForBoardInit = CreateColumn
                 .newBuilder()
                 .setBoardInit(true)
-                // Call `build()` instead of `vBuild()` in order to be able to omit setting
+                // Call `buildPartial()` instead of `vBuild()` in order to be able to omit setting
                 // the `name` name field which is required.
-                .build();
-        IntStream.range(0, defaultColumnCount())
-                 .forEach(i -> commands.message(i)
-                                       .comparingExpectedFieldsOnly()
-                                       .isEqualTo(commandForBoardInit)
-                 );
+                .buildPartial();
+        int columnCount = defaultColumnCount();
+        for (int i = 0; i < columnCount; i++) {
+            commands.message(i)
+                    .comparingExpectedFieldsOnly()
+                    .isEqualTo(commandForBoardInit);
+        }
     }
 
     @Test

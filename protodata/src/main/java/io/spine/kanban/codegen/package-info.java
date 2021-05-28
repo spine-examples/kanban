@@ -24,7 +24,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = 'kanban'
+/**
+ * Contains the ProtoData validation plugin which generates Java code.
+ */
+@CheckReturnValue
+@ParametersAreNonnullByDefault
+package io.spine.kanban.codegen;
 
-include 'server'
-include 'protodata'
+import com.google.errorprone.annotations.CheckReturnValue;
+
+import javax.annotation.ParametersAreNonnullByDefault;

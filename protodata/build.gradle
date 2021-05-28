@@ -24,7 +24,40 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = 'kanban'
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven {
+            url = "https://spine.mycloudrepo.io/public/repositories/snapshots"
+        }
+    }
 
-include 'server'
-include 'protodata'
+    dependencies {
+        classpath("io.spine.tools:spine-mc-java:2.0.0-SNAPSHOT.29")
+        classpath("com.google.protobuf:protobuf-gradle-plugin:0.8.16")
+    }
+}
+
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.5.0"
+}
+
+apply(plugin: "io.spine.mc-java")
+apply(plugin: "com.google.protobuf")
+
+dependencies {
+    implementation("io.spine:spine-server:2.0.0-SNAPSHOT.22")
+    implementation("io.spine.protodata:compiler:${rootProject.ext.protoDataVersion}")
+    implementation("org.jboss.forge.roaster:roaster-api:2.21.2.Final")
+    implementation("org.jboss.forge.roaster:roaster-jdt:2.21.2.Final")
+    implementation("com.squareup:javapoet:1.13.0")
+}
+
+modelCompiler {
+
+    interfaces {
+        mark messages().inFiles(suffix: "events.proto"), asType("io.spine.base.EventMessage")
+        mark messages().entityState(), asType("io.spine.base.EntityState")
+    }
+}

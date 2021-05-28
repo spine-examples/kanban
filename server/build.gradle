@@ -24,4 +24,88 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// No additional configuration required.
+plugins {
+    id 'io.spine.tools.gradle.bootstrap' version '1.7.0'
+}
+
+spine {
+    enableJava().server()
+    forceDependencies = true
+}
+
+final requestFile = "$buildDir/protodata/types.bin"
+
+final protoDataVersion = rootProject.ext.protoDataVersion
+
+protobuf {
+    plugins {
+        protodata {
+            artifact = "io.spine.protodata:protoc:$protoDataVersion:exe@jar"
+        }
+    }
+
+    generateProtoTasks {
+        all().each { final task ->
+            task.plugins {
+                protodata {
+                    option requestFile
+                }
+            }
+        }
+    }
+}
+
+File protoDataInstallationLocation = null
+if (rootProject.hasProperty("protoDataLocation")) {
+    protoDataInstallationLocation = rootProject.file(rootProject.getProperty("protoDataLocation"))
+}
+
+task launchProtoData(type: Exec) {
+    dependsOn(':protodata:jar', 'generateProto')
+    tasks.getByName('compileJava').dependsOn(it)
+
+    final projectProtoData = project(':protodata')
+
+    final protoDataExecutable = protoDataInstallationLocation != null ?
+            "$protoDataInstallationLocation/protodata/bin/protodata" :
+            'protodata'
+
+    commandLine(
+            protoDataExecutable,
+            '--plugin', 'io.spine.kanban.codegen.ValidationPlugin',
+            '--renderer', 'io.spine.kanban.codegen.PrintValidationInsertionPoints',
+            '--renderer', 'io.spine.kanban.codegen.JavaValidationRenderer',
+            '--options', 'io.spine.kanban.codegen.SpineOptionsProvider',
+            '--request', requestFile,
+            '--src', "$projectDir/generated/main/java",
+            '--user-classpath', projectProtoData.configurations.runtimeClasspath.asPath +
+                    File.pathSeparator +
+                    projectProtoData.tasks.jar.outputs.files.asPath
+    )
+}
+
+configurations {
+    protoDataExecutable
+}
+
+Dependency executable = null
+dependencies {
+    executable = protoDataExecutable "io.spine.protodata:executable:$protoDataVersion"
+}
+
+final File protoDataStaging = file("$buildDir/protodata/staging")
+
+tasks.register('stageProtoData', Copy) {
+    from(zipTree(configurations.protoDataExecutable.files(executable)[0].getAbsoluteFile()))
+    into(protoDataStaging)
+}
+
+tasks.register('installProtoData', Exec) {
+    final command = ["$protoDataStaging/install.sh"]
+    if (protoDataInstallationLocation != null) {
+        command.add(protoDataInstallationLocation.absolutePath)
+    }
+    commandLine(command)
+
+    dependsOn('stageProtoData')
+}
