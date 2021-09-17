@@ -49,7 +49,7 @@ apply(plugin: "com.google.protobuf")
 dependencies {
     implementation("io.spine:spine-server:2.0.0-SNAPSHOT.22")
     implementation("io.spine.protodata:compiler:${rootProject.ext.protoDataVersion}")
-    implementation("org.jboss.forge.roaster:roaster-api:2.21.2.Final")
+    implementation("org.jboss.forge.roaster:roaster-api:2.23.2.Final")
     implementation("org.jboss.forge.roaster:roaster-jdt:2.21.2.Final")
     implementation("com.squareup:javapoet:1.13.0")
 }
