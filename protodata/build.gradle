@@ -34,7 +34,7 @@ buildscript {
     }
 
     dependencies {
-        classpath("io.spine.tools:spine-mc-java:2.0.0-SNAPSHOT.30")
+        classpath("io.spine.tools:spine-mc-java:2.0.0-SNAPSHOT.87")
         classpath("com.google.protobuf:protobuf-gradle-plugin:0.8.17")
     }
 }
