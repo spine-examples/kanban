@@ -27,4 +27,3 @@
 rootProject.name = 'kanban'
 
 include 'server'
-include 'protodata'
