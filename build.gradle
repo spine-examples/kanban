@@ -41,17 +41,10 @@ subprojects {
         mavenLocal()
         mavenCentral()
         maven {
-            url = "https://maven.pkg.github.com/SpineEventEngine/ProtoData"
-            credentials(PasswordCredentials) {
-                it.username = System.getenv('GITHUB_ACTOR')
-                it.password = System.getenv('GITHUB_TOKEN')
-            }
+            url = "https://europe-maven.pkg.dev/spine-event-engine/releases"
         }
         maven {
-            url = "https://spine.mycloudrepo.io/public/repositories/releases"
-        }
-        maven {
-            url = "https://spine.mycloudrepo.io/public/repositories/snapshots"
+            url = "https://europe-maven.pkg.dev/spine-event-engine/snapshots"
         }
     }
 
