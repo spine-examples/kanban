@@ -29,8 +29,6 @@ plugins {
     id 'idea'
 }
 
-ext.protoDataVersion = '0.0.10'
-
 //noinspection GroovyAssignabilityCheck
 subprojects {
     apply plugin: 'java'
