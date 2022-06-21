@@ -134,7 +134,7 @@ subprojects {
         ruleSets = listOf()
 
         // Load PMD rules.
-        val pmdSettings = file("$rootDir/buildSrc/resources/pmd.xml")
+        val pmdSettings = file("$rootDir/gradle/pmd.xml")
         val textResource: TextResource = resources.text.fromFile(pmdSettings)
         ruleSetConfig = textResource
 
