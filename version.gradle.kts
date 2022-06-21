@@ -24,6 +24,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = 'kanban'
+val guavaVersion: String by extra("31.0.1-jre")
+val grpcVersion: String by extra("1.28.1")
 
-include 'server'
+val errorProneCoreVersion: String by extra("2.4.0")
+val errorProneJavacVersion: String by extra("9+181-r4173-1")
+val checkerFrameworkVersion: String by extra("3.21.0")
+
+val pmdVersion: String by extra("6.41.0")
+
+val apiGuardianVersion: String by extra("1.1.0")
+val junit5Version: String by extra("5.8.2")

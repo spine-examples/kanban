@@ -24,19 +24,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-final def versions = [
-        errorProne      : "2.4.0",
-        errorProneJavac : "9+181-r4173-1", // taken from here: https://github.com/tbroyer/gradle-errorprone-plugin/blob/v0.8/build.gradle.kts
-        guava           : "31.0.1-jre",
-        checkerFramework: "3.21.0",
-        grpc            : "1.28.1",
-        pmd             : "6.41.0",
+plugins {
+    id("io.spine.tools.gradle.bootstrap") version("1.8.0")
+}
 
-        junit5          : "5.8.2"
-]
+spine {
+    enableJava().server()
+    forceDependencies = true
+}
 
-ext {
-    deps = [
-            "versions": versions
-    ]
+dependencies {
+    implementation("javax.annotation:javax.annotation-api:1.3.2")
 }

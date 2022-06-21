@@ -24,15 +24,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-plugins {
-    id 'io.spine.tools.gradle.bootstrap' version '1.8.0'
-}
+rootProject.name = "kanban"
 
-spine {
-    enableJava().server()
-    forceDependencies = true
-}
-
-dependencies {
-    implementation("javax.annotation:javax.annotation-api:1.3.2")
-}
+include("server")
