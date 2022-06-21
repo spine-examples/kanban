@@ -31,7 +31,7 @@ plugins {
     idea
     java
     pmd
-    id("net.ltgt.errorprone") version("2.0.2")
+    id("net.ltgt.errorprone") version ("2.0.2")
 }
 
 subprojects {
@@ -71,27 +71,29 @@ subprojects {
     val junit5Version: String by extra
 
     dependencies {
-        implementation ("com.google.guava:guava:$guavaVersion")
+        implementation("com.google.guava:guava:$guavaVersion")
         runtimeOnly("io.grpc:grpc-netty:$grpcVersion")
 
         errorprone("com.google.errorprone:error_prone_core:$errorProneCoreVersion")
         errorproneJavac("com.google.errorprone:javac:$errorProneJavacVersion")
         implementation("org.checkerframework:checker-qual:$checkerFrameworkVersion")
 
-        testImplementation ("org.junit.jupiter:junit-jupiter-api:$junit5Version")
-        testImplementation ("org.junit.jupiter:junit-jupiter-params:$junit5Version")
-        testImplementation ("org.apiguardian:apiguardian-api:$apiGuardianVersion")
+        testImplementation("org.junit.jupiter:junit-jupiter-api:$junit5Version")
+        testImplementation("org.junit.jupiter:junit-jupiter-params:$junit5Version")
+        testImplementation("org.apiguardian:apiguardian-api:$apiGuardianVersion")
         testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junit5Version")
     }
 
-    configurations.all {
-        resolutionStrategy {
-            force(
+    configurations {
+        all {
+            resolutionStrategy {
+                force(
                     "com.google.guava:guava:$guavaVersion",
                     "com.google.truth:truth:1.1.3",
                     "com.google.truth.extensions:truth-java8-extension:1.1.3",
                     "com.google.truth.extensions:truth-proto-extension:1.1.3"
-            )
+                )
+            }
         }
     }
 
@@ -122,12 +124,6 @@ subprojects {
         }
     }
 
-    tasks.withType<Test> {
-        useJUnitPlatform {
-            includeEngines("junit-jupiter")
-        }
-    }
-
     val pmdVersion: String by extra
     pmd {
         toolVersion = pmdVersion
@@ -138,7 +134,7 @@ subprojects {
         ruleSets = listOf()
 
         // Load PMD rules.
-        val pmdSettings = file("$rootDir/gradle/pmd.xml")
+        val pmdSettings = file("$rootDir/buildSrc/resources/pmd.xml")
         val textResource: TextResource = resources.text.fromFile(pmdSettings)
         ruleSetConfig = textResource
 
@@ -149,5 +145,11 @@ subprojects {
             it.name == "main"
         }
         sourceSets = listOf(mainSourceSet)
+    }
+
+    tasks.withType<Test> {
+        useJUnitPlatform {
+            includeEngines("junit-jupiter")
+        }
     }
 }
