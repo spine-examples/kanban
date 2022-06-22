@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, TeamDev. All rights reserved.
+ * Copyright 2022, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,17 +24,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.examples.kanban.dependency.JavaX
+package io.spine.examples.kanban.dependency
 
-plugins {
-    id("io.spine.tools.gradle.bootstrap") version("1.8.0")
-}
-
-spine {
-    enableJava().server()
-    forceDependencies = true
-}
-
-dependencies {
-    implementation(JavaX.annotations)
+object JavaX {
+    const val annotations = "javax.annotation:javax.annotation-api:1.3.2"
 }
