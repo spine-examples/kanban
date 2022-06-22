@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, TeamDev. All rights reserved.
+ * Copyright 2022, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,12 +24,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val guavaVersion: String by extra("31.0.1-jre")
-val grpcVersion: String by extra("1.28.1")
+package io.spine.examples.kanban.dependency;
 
-val checkerFrameworkVersion: String by extra("3.21.0")
+// https://github.com/google/error-prone
+object ErrorProne {
+    private const val group = "com.google.errorprone"
 
-val pmdVersion: String by extra("6.41.0")
+    object CorePlugin {
+        const val version = "2.4.0"
+        const val lib = "${group}:error_prone_core:${version}"
+    }
 
-val apiGuardianVersion: String by extra("1.1.0")
-val junit5Version: String by extra("5.8.2")
+    object JavacPlugin {
+        const val version = "9+181-r4173-1"
+        const val lib  = "${group}:javac:${version}"
+    }
+
+    // https://github.com/tbroyer/gradle-errorprone-plugin
+    object GradlePlugin {
+        const val id = "net.ltgt.errorprone"
+
+        /**
+         * The version of this plugin is already specified in `buildSrc/build.gradle.kts` file.
+         * Thus, when applying the plugin in projects build files, only the [id] should be used.
+         */
+        const val version = "2.0.2"
+        const val lib = "net.ltgt.gradle:gradle-errorprone-plugin:${version}"
+    }
+}

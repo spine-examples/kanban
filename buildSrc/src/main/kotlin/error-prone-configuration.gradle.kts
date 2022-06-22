@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, TeamDev. All rights reserved.
+ * Copyright 2022, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,12 +24,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val guavaVersion: String by extra("31.0.1-jre")
-val grpcVersion: String by extra("1.28.1")
+import io.spine.examples.kanban.dependency.ErrorProne
+import net.ltgt.gradle.errorprone.errorprone
+import org.gradle.api.tasks.compile.JavaCompile
+import org.gradle.kotlin.dsl.withType
 
-val checkerFrameworkVersion: String by extra("3.21.0")
+plugins {
+    java
+    id("net.ltgt.errorprone")
+}
 
-val pmdVersion: String by extra("6.41.0")
+dependencies {
+    errorprone(ErrorProne.CorePlugin.lib)
+    errorproneJavac(ErrorProne.JavacPlugin.lib)
+}
 
-val apiGuardianVersion: String by extra("1.1.0")
-val junit5Version: String by extra("5.8.2")
+tasks.withType<JavaCompile> {
+    with(options) {
+        errorprone {
+            errorproneArgs.addAll(
+
+                // Exclude generated sources from being analyzed by Error Prone.
+                "-XepExcludedPaths:.*/generated/.*",
+
+                // Turn the check off until Error Prone can handle `@Nested` JUnit classes.
+                // See issue: https://github.com/google/error-prone/issues/956
+                "-Xep:ClassCanBeStatic:OFF",
+
+                // Turn off checks which report unused methods and unused method parameters.
+                // See issue: https://github.com/SpineEventEngine/config/issues/61
+                "-Xep:UnusedMethod:OFF",
+                "-Xep:UnusedVariable:OFF",
+                "-Xep:CheckReturnValue:OFF"
+            )
+        }
+    }
+}

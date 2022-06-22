@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, TeamDev. All rights reserved.
+ * Copyright 2022, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,12 +24,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val guavaVersion: String by extra("31.0.1-jre")
-val grpcVersion: String by extra("1.28.1")
+plugins {
+    `kotlin-dsl`
+}
 
-val checkerFrameworkVersion: String by extra("3.21.0")
+repositories {
+    mavenLocal()
+    gradlePluginPortal()
+    mavenCentral()
+}
 
-val pmdVersion: String by extra("6.41.0")
+/**
+ * The version of ErrorProne Gradle plugin.
+ *
+ * Please keep in sync. with [io.spine.examples.kanban.dependency.ErrorProne.GradlePlugin.version].
+ */
+val errorProneVersion = "2.0.2"
 
-val apiGuardianVersion: String by extra("1.1.0")
-val junit5Version: String by extra("5.8.2")
+dependencies {
+    implementation("net.ltgt.gradle:gradle-errorprone-plugin:${errorProneVersion}")
+}

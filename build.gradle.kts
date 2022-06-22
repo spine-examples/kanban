@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, TeamDev. All rights reserved.
+ * Copyright 2022, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,20 +25,19 @@
  */
 
 import java.net.URI
-import net.ltgt.gradle.errorprone.errorprone
 
 plugins {
     idea
     java
     pmd
-    id("net.ltgt.errorprone") version ("2.0.2")
 }
 
 subprojects {
     apply {
+        plugin("idea")
         plugin("java")
         plugin("pmd")
-        plugin("net.ltgt.errorprone")
+        plugin("error-prone")
 
         from("$rootDir/version.gradle.kts")
     }
@@ -63,8 +62,6 @@ subprojects {
     val guavaVersion: String by extra
     val grpcVersion: String by extra
 
-    val errorProneCoreVersion: String by extra
-    val errorProneJavacVersion: String by extra
     val checkerFrameworkVersion: String by extra
 
     val apiGuardianVersion: String by extra
@@ -74,8 +71,6 @@ subprojects {
         implementation("com.google.guava:guava:$guavaVersion")
         runtimeOnly("io.grpc:grpc-netty:$grpcVersion")
 
-        errorprone("com.google.errorprone:error_prone_core:$errorProneCoreVersion")
-        errorproneJavac("com.google.errorprone:javac:$errorProneJavacVersion")
         implementation("org.checkerframework:checker-qual:$checkerFrameworkVersion")
 
         testImplementation("org.junit.jupiter:junit-jupiter-api:$junit5Version")
@@ -98,29 +93,13 @@ subprojects {
     }
 
     tasks.withType<JavaCompile> {
-        // Explicitly states the encoding of the source and test source files, ensuring
-        // correct execution of the `javac` task.
         with(options) {
+            /**
+             * Explicitly states the encoding of the source and test source files, ensuring
+             * correct execution of the `javac` task.
+             */
             encoding = "UTF-8"
             compilerArgs.addAll(listOf("-Xlint:unchecked", "-Xlint:deprecation"))
-
-            errorprone {
-                errorproneArgs.addAll(
-
-                    // 1. Exclude generated sources from being analyzed by Error Prone.
-                    "-XepExcludedPaths:.*/generated/.*",
-
-                    // 2. Turn the check off until Error Prone can handle `@Nested` JUnit classes.
-                    //    See issue: https://github.com/google/error-prone/issues/956
-                    "-Xep:ClassCanBeStatic:OFF",
-
-                    // 3. Turn off checks which report unused methods and unused method parameters.
-                    //    See issue: https://github.com/SpineEventEngine/config/issues/61
-                    "-Xep:UnusedMethod:OFF",
-                    "-Xep:UnusedVariable:OFF",
-                    "-Xep:CheckReturnValue:OFF"
-                )
-            }
         }
     }
 
