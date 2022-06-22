@@ -43,7 +43,6 @@ tasks.withType<JavaCompile> {
     with(options) {
         errorprone {
             errorproneArgs.addAll(
-
                 // Exclude generated sources from being analyzed by Error Prone.
                 "-XepExcludedPaths:.*/generated/.*",
 
