@@ -24,9 +24,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.net.URI
-import io.spine.examples.kanban.dependency.*
-
 allprojects {
     apply<IdeaPlugin>()
 }
@@ -34,32 +31,9 @@ allprojects {
 subprojects {
     apply<JavaPlugin>()
     apply<Java8ConfigurationPlugin>()
-    apply<DependencyEnforcementPlugin>()
+    apply<DependencyManagementPlugin>()
     apply<ErrorProneConfigurationPlugin>()
     apply<PmdConfigurationPlugin>()
-
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        maven {
-            url = URI("https://europe-maven.pkg.dev/spine-event-engine/releases")
-        }
-        maven {
-            url = URI("https://europe-maven.pkg.dev/spine-event-engine/snapshots")
-        }
-    }
-
-    dependencies {
-        implementation(Guava.lib)
-        runtimeOnly(Grpc.lib)
-
-        implementation(CheckerFramework.lib)
-
-        testImplementation(ApiGuardian.lib)
-        testImplementation(JUnit.Params.lib)
-        testImplementation(JUnit.Api.lib)
-        testRuntimeOnly(JUnit.Runner.lib)
-    }
 
     tasks.withType<Test> {
         useJUnitPlatform {

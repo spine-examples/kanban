@@ -24,8 +24,42 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.examples.kanban.dependency.Truth
-import io.spine.examples.kanban.dependency.Guava
+import gradle.kotlin.dsl.accessors._1e45eae12047fc2ad4d6e1ec9b70a640.implementation
+import gradle.kotlin.dsl.accessors._1e45eae12047fc2ad4d6e1ec9b70a640.runtimeOnly
+import gradle.kotlin.dsl.accessors._1e45eae12047fc2ad4d6e1ec9b70a640.testImplementation
+import gradle.kotlin.dsl.accessors._1e45eae12047fc2ad4d6e1ec9b70a640.testRuntimeOnly
+import org.gradle.kotlin.dsl.dependencies
+import io.spine.examples.kanban.dependency.*
+
+repositories {
+    mavenLocal()
+    gradlePluginPortal()
+    mavenCentral()
+    maven {
+        url = uri("https://spine.mycloudrepo.io/public/repositories/releases")
+        mavenContent {
+            releasesOnly()
+        }
+    }
+    maven {
+        url = uri("https://spine.mycloudrepo.io/public/repositories/snapshots")
+        mavenContent {
+            snapshotsOnly()
+        }
+    }
+}
+
+dependencies {
+    implementation(Guava.lib)
+    runtimeOnly(Grpc.lib)
+
+    implementation(CheckerFramework.lib)
+
+    testImplementation(ApiGuardian.lib)
+    testImplementation(JUnit.Params.lib)
+    testImplementation(JUnit.Api.lib)
+    testRuntimeOnly(JUnit.Runner.lib)
+}
 
 configurations {
     all {
