@@ -1,3 +1,7 @@
+import org.gradle.api.JavaVersion
+import org.gradle.api.tasks.compile.JavaCompile
+import org.gradle.kotlin.dsl.withType
+
 /*
  * Copyright 2022, TeamDev. All rights reserved.
  *
@@ -24,50 +28,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.net.URI
-import io.spine.examples.kanban.dependency.*
-
 plugins {
-    idea
+    java
 }
 
-subprojects {
-    apply {
-        plugin("idea")
-        plugin("java")
-        plugin("pmd-configuration")
-        plugin("error-prone-configuration")
-        plugin("dependency-enforcement")
+val javaVersion = JavaVersion.VERSION_1_8
+java {
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+}
 
-        from("$rootDir/version.gradle.kts")
-    }
-
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        maven {
-            url = URI("https://europe-maven.pkg.dev/spine-event-engine/releases")
-        }
-        maven {
-            url = URI("https://europe-maven.pkg.dev/spine-event-engine/snapshots")
-        }
-    }
-
-    dependencies {
-        implementation(Guava.lib)
-        runtimeOnly(Grpc.lib)
-
-        implementation(CheckerFramework.lib)
-
-        testImplementation(ApiGuardian.lib)
-        testImplementation(JUnit.Params.lib)
-        testImplementation(JUnit.Api.lib)
-        testRuntimeOnly(JUnit.Runner.lib)
-    }
-
-    tasks.withType<Test> {
-        useJUnitPlatform {
-            includeEngines("junit-jupiter")
-        }
+tasks.withType<JavaCompile> {
+    with(options) {
+        /**
+         * Explicitly states the encoding of the source and test source files, ensuring
+         * correct execution of the `javac` task.
+         */
+        encoding = "UTF-8"
+        compilerArgs.addAll(listOf("-Xlint:unchecked", "-Xlint:deprecation"))
     }
 }
