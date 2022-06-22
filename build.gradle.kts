@@ -38,7 +38,7 @@ subprojects {
         plugin("idea")
         plugin("java")
         plugin("pmd-configuration")
-        plugin("error-prone")
+        plugin("error-prone-configuration")
         plugin("dependency-enforcement")
 
         from("$rootDir/version.gradle.kts")
