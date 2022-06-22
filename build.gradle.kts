@@ -38,6 +38,7 @@ subprojects {
         plugin("java")
         plugin("pmd-configuration")
         plugin("error-prone")
+        plugin("dependency-enforcement")
 
         from("$rootDir/version.gradle.kts")
     }
@@ -76,19 +77,6 @@ subprojects {
         testImplementation("org.junit.jupiter:junit-jupiter-params:$junit5Version")
         testImplementation("org.apiguardian:apiguardian-api:$apiGuardianVersion")
         testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junit5Version")
-    }
-
-    configurations {
-        all {
-            resolutionStrategy {
-                force(
-                    "com.google.guava:guava:$guavaVersion",
-                    "com.google.truth:truth:1.1.3",
-                    "com.google.truth.extensions:truth-java8-extension:1.1.3",
-                    "com.google.truth.extensions:truth-proto-extension:1.1.3"
-                )
-            }
-        }
     }
 
     tasks.withType<JavaCompile> {
