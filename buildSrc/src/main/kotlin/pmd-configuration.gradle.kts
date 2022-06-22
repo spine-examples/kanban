@@ -1,5 +1,7 @@
+import org.gradle.api.resources.TextResource
+
 /*
- * Copyright 2021, TeamDev. All rights reserved.
+ * Copyright 2022, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +25,28 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import io.spine.examples.kanban.dependency.Pmd
 
-val guavaVersion: String by extra("31.0.1-jre")
-val grpcVersion: String by extra("1.28.1")
+plugins {
+    java
+    pmd
+}
 
-val checkerFrameworkVersion: String by extra("3.21.0")
+pmd {
+    toolVersion = Pmd.version
+    isConsoleOutput = true
+    isIgnoreFailures = false
 
-val apiGuardianVersion: String by extra("1.1.0")
-val junit5Version: String by extra("5.8.2")
+    // Disable the default rule set to use the custom rules (see below).
+    ruleSets = listOf()
+
+    // Load PMD rules.
+    val pmdSettings = file("$rootDir/buildSrc/src/main/resources/pmd.xml")
+    val textResource: TextResource = resources.text.fromFile(pmdSettings)
+    ruleSetConfig = textResource
+
+    reportsDir = file("$projectDir/build/reports/pmd")
+
+    // Analyze only the main source set(i.e. do not analyze tests).
+    sourceSets = listOf(project.sourceSets.named("main").get())
+}

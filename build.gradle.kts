@@ -36,7 +36,7 @@ subprojects {
     apply {
         plugin("idea")
         plugin("java")
-        plugin("pmd")
+        plugin("pmd-configuration")
         plugin("error-prone")
 
         from("$rootDir/version.gradle.kts")
@@ -101,29 +101,6 @@ subprojects {
             encoding = "UTF-8"
             compilerArgs.addAll(listOf("-Xlint:unchecked", "-Xlint:deprecation"))
         }
-    }
-
-    val pmdVersion: String by extra
-    pmd {
-        toolVersion = pmdVersion
-        isConsoleOutput = true
-        isIgnoreFailures = false
-
-        // Disable the default rule set to use the custom rules (see below).
-        ruleSets = listOf()
-
-        // Load PMD rules.
-        val pmdSettings = file("$rootDir/gradle/pmd.xml")
-        val textResource: TextResource = resources.text.fromFile(pmdSettings)
-        ruleSetConfig = textResource
-
-        reportsDir = file("$projectDir/build/reports/pmd")
-
-        // Analyze only the main source set(i.e. do not analyze tests).
-        val mainSourceSet = sourceSets.find {
-            it.name == "main"
-        }
-        sourceSets = listOf(mainSourceSet)
     }
 
     tasks.withType<Test> {
