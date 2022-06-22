@@ -59,7 +59,6 @@ subprojects {
         targetCompatibility = javaVersion
     }
 
-    val guavaVersion: String by extra
     val grpcVersion: String by extra
 
     val checkerFrameworkVersion: String by extra
@@ -68,7 +67,7 @@ subprojects {
     val junit5Version: String by extra
 
     dependencies {
-        implementation("com.google.guava:guava:$guavaVersion")
+        implementation(io.spine.examples.kanban.dependency.Guava.lib)
         runtimeOnly("io.grpc:grpc-netty:$grpcVersion")
 
         implementation("org.checkerframework:checker-qual:$checkerFrameworkVersion")
