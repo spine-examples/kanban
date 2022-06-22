@@ -27,20 +27,16 @@
 import java.net.URI
 import io.spine.examples.kanban.dependency.*
 
-plugins {
-    idea
+allprojects {
+    apply<IdeaPlugin>()
 }
 
 subprojects {
-    apply {
-        plugin("idea")
-        plugin("java")
-        plugin("pmd-configuration")
-        plugin("error-prone-configuration")
-        plugin("dependency-enforcement")
-
-        from("$rootDir/version.gradle.kts")
-    }
+    apply<JavaPlugin>()
+    apply<Java8ConfigurationPlugin>()
+    apply<DependencyEnforcementPlugin>()
+    apply<ErrorProneConfigurationPlugin>()
+    apply<PmdConfigurationPlugin>()
 
     repositories {
         mavenLocal()
