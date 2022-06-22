@@ -25,6 +25,7 @@
  */
 
 import java.net.URI
+import io.spine.examples.kanban.dependency.*
 
 plugins {
     idea
@@ -60,23 +61,16 @@ subprojects {
         targetCompatibility = javaVersion
     }
 
-    val grpcVersion: String by extra
-
-    val checkerFrameworkVersion: String by extra
-
-    val apiGuardianVersion: String by extra
-    val junit5Version: String by extra
-
     dependencies {
-        implementation(io.spine.examples.kanban.dependency.Guava.lib)
-        runtimeOnly("io.grpc:grpc-netty:$grpcVersion")
+        implementation(Guava.lib)
+        runtimeOnly(Grpc.lib)
 
-        implementation("org.checkerframework:checker-qual:$checkerFrameworkVersion")
+        implementation(CheckerFramework.lib)
 
-        testImplementation("org.junit.jupiter:junit-jupiter-api:$junit5Version")
-        testImplementation("org.junit.jupiter:junit-jupiter-params:$junit5Version")
-        testImplementation("org.apiguardian:apiguardian-api:$apiGuardianVersion")
-        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junit5Version")
+        testImplementation(ApiGuardian.lib)
+        testImplementation(JUnit.Params.lib)
+        testImplementation(JUnit.Api.lib)
+        testRuntimeOnly(JUnit.Runner.lib)
     }
 
     tasks.withType<JavaCompile> {

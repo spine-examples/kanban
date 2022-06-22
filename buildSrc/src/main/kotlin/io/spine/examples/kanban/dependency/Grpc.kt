@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, TeamDev. All rights reserved.
+ * Copyright 2022, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val grpcVersion: String by extra("1.28.1")
+package io.spine.examples.kanban.dependency
 
-val checkerFrameworkVersion: String by extra("3.21.0")
-
-val apiGuardianVersion: String by extra("1.1.0")
-val junit5Version: String by extra("5.8.2")
+// https://github.com/grpc/grpc-java
+object Grpc {
+    const val version = "1.28.1"
+    const val lib = "io.grpc:grpc-netty:${version}"
+}
