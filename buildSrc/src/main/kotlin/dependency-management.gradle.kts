@@ -24,12 +24,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import gradle.kotlin.dsl.accessors._1e45eae12047fc2ad4d6e1ec9b70a640.implementation
-import gradle.kotlin.dsl.accessors._1e45eae12047fc2ad4d6e1ec9b70a640.runtimeOnly
-import gradle.kotlin.dsl.accessors._1e45eae12047fc2ad4d6e1ec9b70a640.testImplementation
-import gradle.kotlin.dsl.accessors._1e45eae12047fc2ad4d6e1ec9b70a640.testRuntimeOnly
 import org.gradle.kotlin.dsl.dependencies
 import io.spine.examples.kanban.dependency.*
+
+plugins {
+    java
+}
 
 repositories {
     mavenLocal()
