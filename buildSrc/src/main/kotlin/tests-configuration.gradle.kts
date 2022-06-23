@@ -24,15 +24,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-allprojects {
-    apply<IdeaPlugin>()
-}
+import org.gradle.api.tasks.testing.Test
+import org.gradle.kotlin.dsl.withType
 
-subprojects {
-    apply<JavaPlugin>()
-    apply<Java8ConfigurationPlugin>()
-    apply<DependencyManagementPlugin>()
-    apply<ErrorProneConfigurationPlugin>()
-    apply<PmdConfigurationPlugin>()
-    apply<TestsConfigurationPlugin>()
+tasks.withType<Test> {
+    useJUnitPlatform {
+        includeEngines("junit-jupiter")
+    }
 }
