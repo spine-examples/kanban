@@ -41,12 +41,6 @@ repositories {
             releasesOnly()
         }
     }
-    maven {
-        url = uri("https://spine.mycloudrepo.io/public/repositories/snapshots")
-        mavenContent {
-            snapshotsOnly()
-        }
-    }
 }
 
 dependencies {
