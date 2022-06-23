@@ -41,8 +41,8 @@ java {
 tasks.withType<JavaCompile> {
     with(options) {
         /**
-         * Explicitly states the encoding of the source and test source files, ensuring
-         * correct execution of the `javac` task.
+         * Explicitly state the encoding of the source files, ensuring the correct
+         * execution of the `javac` task.
          */
         encoding = "UTF-8"
         compilerArgs.addAll(listOf("-Xlint:unchecked", "-Xlint:deprecation"))

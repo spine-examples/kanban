@@ -1,5 +1,3 @@
-import org.gradle.api.resources.TextResource
-
 /*
  * Copyright 2022, TeamDev. All rights reserved.
  *
@@ -25,6 +23,8 @@ import org.gradle.api.resources.TextResource
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+import org.gradle.api.resources.TextResource
 import io.spine.examples.kanban.dependency.Pmd
 
 plugins {
@@ -37,10 +37,10 @@ pmd {
     isConsoleOutput = true
     isIgnoreFailures = false
 
-    // Disable the default rule set to use the custom rules (see below).
+    // Disable default rules to use custom rules.
     ruleSets = listOf()
 
-    // Load PMD rules.
+    // Load custom PMD rules.
     val pmdSettings = file("$rootDir/buildSrc/src/main/resources/pmd.xml")
     val textResource: TextResource = resources.text.fromFile(pmdSettings)
     ruleSetConfig = textResource
