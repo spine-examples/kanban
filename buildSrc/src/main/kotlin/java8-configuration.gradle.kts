@@ -24,10 +24,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.gradle.api.JavaVersion
-import org.gradle.api.tasks.compile.JavaCompile
-import org.gradle.kotlin.dsl.withType
-
 plugins {
     java
 }

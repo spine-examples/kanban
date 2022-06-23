@@ -24,7 +24,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.gradle.api.resources.TextResource
 import io.spine.examples.kanban.dependency.Pmd
 
 plugins {
@@ -37,13 +36,12 @@ pmd {
     isConsoleOutput = true
     isIgnoreFailures = false
 
-    // Disable default rules to use custom rules.
+    // Remove default rules.
     ruleSets = listOf()
 
-    // Load custom PMD rules.
+    // Load custom rules.
     val pmdSettings = file("$rootDir/buildSrc/src/main/resources/pmd.xml")
-    val textResource: TextResource = resources.text.fromFile(pmdSettings)
-    ruleSetConfig = textResource
+    ruleSetConfig = resources.text.fromFile(pmdSettings)
 
     reportsDir = file("$projectDir/build/reports/pmd")
 

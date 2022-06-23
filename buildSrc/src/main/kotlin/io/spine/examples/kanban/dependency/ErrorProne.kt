@@ -24,7 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.examples.kanban.dependency;
+package io.spine.examples.kanban.dependency
 
 // https://github.com/google/error-prone
 object ErrorProne {
@@ -37,7 +37,7 @@ object ErrorProne {
 
     object JavacPlugin {
         const val version = "9+181-r4173-1"
-        const val lib  = "${group}:javac:${version}"
+        const val lib = "${group}:javac:${version}"
     }
 
     // https://github.com/tbroyer/gradle-errorprone-plugin

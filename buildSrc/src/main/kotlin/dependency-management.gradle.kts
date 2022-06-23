@@ -24,8 +24,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.gradle.kotlin.dsl.dependencies
-import io.spine.examples.kanban.dependency.*
+import io.spine.examples.kanban.dependency.ApiGuardian
+import io.spine.examples.kanban.dependency.CheckerFramework
+import io.spine.examples.kanban.dependency.Grpc
+import io.spine.examples.kanban.dependency.Guava
+import io.spine.examples.kanban.dependency.JUnit
+import io.spine.examples.kanban.dependency.Truth
 
 plugins {
     java
