@@ -27,7 +27,7 @@
 /**
  * Configures a `Java 8` project.
  *
- * This plugin performs the following configuration on `Javac`:
+ * This plugin performs the following configuration on the `Javac`:
  * - Sets source and target compatibility to Java 8.
  * - States the encoding of source files.
  * - Enables warnings about deprecated and unchecked code.
