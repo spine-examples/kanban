@@ -39,13 +39,19 @@ allprojects {
 subprojects {
     apply<JavaPlugin>()
 
-    // Configure the `Javac`.
+    /*
+     * Configure the `Javac`. The main configuration is instructing the `Javac` that
+     * project uses JDK 8.
+     */
     apply<JavacConfigurationPlugin>()
 
     // Configure repositories, add dependencies and force transitive dependencies.
     apply<DependencyManagementPlugin>()
 
-    // Apply the Error Prone plugin and configure the `Javac` to avoid known issues with Error Prone.
+    /*
+     * Apply the Error Prone plugin. Also, configures the `Javac` to avoid known
+     * issues with Error Prone.
+     */
     apply<ErrorProneConfigurationPlugin>()
 
     // Apply and configure the PMD plugin.
