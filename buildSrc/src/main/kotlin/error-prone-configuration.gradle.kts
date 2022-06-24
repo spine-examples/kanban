@@ -30,8 +30,8 @@ import net.ltgt.gradle.errorprone.errorprone
 /**
  * Adds the Error Prone code analyzer to a project and configures it.
  *
- * Excludes the generated code from being analyzed and deals with a few known issues
- * of Error Prone.
+ * Also, configures the `Javac` to exclude the generated code from being analyzed
+ * and to deal with a few known issues of Error Prone.
  */
 
 plugins {

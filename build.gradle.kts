@@ -41,7 +41,7 @@ subprojects {
 
     /*
      * Configure the `Javac`. The main configuration is instructing the `Javac` that
-     * project uses JDK 8.
+     * the project uses JDK 8.
      */
     apply<JavacConfigurationPlugin>()
 
@@ -49,8 +49,9 @@ subprojects {
     apply<DependencyManagementPlugin>()
 
     /*
-     * Apply the Error Prone plugin. Also, configures the `Javac` to avoid known
-     * issues with Error Prone.
+     * Apply the Error Prone plugin. This plugin also instructs the `Javac` to
+     * exclude the generated code from being analyzed and to deal with a few known
+     * issues of Error Prone.
      */
     apply<ErrorProneConfigurationPlugin>()
 
