@@ -24,6 +24,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/**
+ * Configures test-running tasks in a project.
+ *
+ * Explicitly instructs to discover and execute JUnit tests.
+ */
+
 tasks.withType<Test> {
     useJUnitPlatform {
         includeEngines("junit-jupiter")

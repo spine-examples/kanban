@@ -28,11 +28,24 @@ allprojects {
     apply<IdeaPlugin>()
 }
 
+// The configuration is divided in multiple script plugins located in `buildSrc/src/kotlin`.
+// Only a brief description is provided when applying a plugin. However, each of
+// these plugins contains a more detailed description in their source file.
 subprojects {
     apply<JavaPlugin>()
+
+    // Configure subprojects as Java 8 projects.
     apply<Java8ConfigurationPlugin>()
+
+    // Configure repositories, add dependencies and force transitive dependencies.
     apply<DependencyManagementPlugin>()
+
+    // Add preconfigured Error Prone analysis.
     apply<ErrorProneConfigurationPlugin>()
+
+    //Add preconfigured PMD analysis.
     apply<PmdConfigurationPlugin>()
+
+    //Configure test-running tasks.
     apply<TestsConfigurationPlugin>()
 }

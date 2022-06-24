@@ -31,6 +31,14 @@ import io.spine.examples.kanban.dependency.Guava
 import io.spine.examples.kanban.dependency.JUnit
 import io.spine.examples.kanban.dependency.Truth
 
+/**
+ * Configures repositories, adds dependencies and forces transitive dependencies.
+ *
+ * Dependencies are contained within dependency objects in the
+ * [io.spine.examples.kanban.dependency] package. Dependency properties(e.g. version)
+ * can be changed in these objects.
+ */
+
 plugins {
     java
 }

@@ -27,6 +27,12 @@
 import io.spine.examples.kanban.dependency.ErrorProne
 import net.ltgt.gradle.errorprone.errorprone
 
+/**
+ * Adds the Error Prone code analyzer to a project and configures it.
+ *
+ * Excludes the generated code from being analyzed and deals with a few known issues.
+ */
+
 plugins {
     java
     id("net.ltgt.errorprone")
@@ -41,7 +47,9 @@ tasks.withType<JavaCompile> {
     with(options) {
         errorprone {
             errorproneArgs.addAll(
-                // Exclude generated sources from being analyzed by Error Prone.
+                /**
+                 * Exclude generated sources from being analyzed by Error Prone.
+                 */
                 "-XepExcludedPaths:.*/generated/.*",
 
                 /**

@@ -24,6 +24,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/**
+ * Configures a `Java 8` project.
+ *
+ * This plugin performs the following configuration on `Javac`:
+ * - Sets source and target compatibility to Java 8.
+ * - States the encoding of source files.
+ * - Enables warnings about deprecated and unchecked code.
+ */
+
 plugins {
     java
 }
@@ -36,10 +45,8 @@ java {
 
 tasks.withType<JavaCompile> {
     with(options) {
-        /**
-         * Explicitly state the encoding of the source files, ensuring the correct
-         * execution of the `javac` task.
-         */
+        // Explicitly state the encoding of the source files, ensuring the correct
+        // execution of the `javac` task.
         encoding = "UTF-8"
         compilerArgs.addAll(listOf("-Xlint:unchecked", "-Xlint:deprecation"))
     }

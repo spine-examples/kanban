@@ -26,6 +26,16 @@
 
 import io.spine.examples.kanban.dependency.Pmd
 
+/**
+ * Adds the PMD code analyzer to a project and configures it.
+ *
+ * - Configures project compilation to fail in case the analyzer finds issues.
+ * - Removes the default set of rules used by PMD and loads custom rules
+ *   specified in the `buildSrc/src/main/resources/pmd.xml`.
+ * - Configures PMD to analyze only the main source set and avoid analyzing
+ *   tests.
+ */
+
 plugins {
     java
     pmd
