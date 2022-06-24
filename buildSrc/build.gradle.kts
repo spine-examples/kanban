@@ -37,7 +37,7 @@ repositories {
 /**
  * The version of ErrorProne Gradle plugin.
  *
- * Please keep in sync. with [io.spine.examples.kanban.dependency.ErrorProne.GradlePlugin.version].
+ * Please keep in sync with [io.spine.examples.kanban.dependency.ErrorProne.GradlePlugin.version].
  */
 val errorProneVersion = "2.0.2"
 

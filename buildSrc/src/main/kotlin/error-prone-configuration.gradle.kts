@@ -48,18 +48,16 @@ tasks.withType<JavaCompile> {
     with(options) {
         errorprone {
             errorproneArgs.addAll(
-                /**
-                 * Exclude generated sources from being analyzed by Error Prone.
-                 */
+                // Exclude generated sources from being analyzed by Error Prone.
                 "-XepExcludedPaths:.*/generated/.*",
 
-                /**
+                /*
                  * Turn the check off until Error Prone can handle `@Nested` JUnit classes.
                  * See issue: https://github.com/google/error-prone/issues/956
                  */
                 "-Xep:ClassCanBeStatic:OFF",
 
-                /**
+                /*
                  * Turn off checks which report unused methods and unused method parameters.
                  * See issue: https://github.com/SpineEventEngine/config/issues/61
                  */

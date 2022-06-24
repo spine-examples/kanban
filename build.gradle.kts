@@ -24,26 +24,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/**
+ * Gradle configuration for the whole project.
+ *
+ * The configuration is divided in multiple script plugins located in `buildSrc/src/kotlin`.
+ * Only a brief description is provided when applying a plugin. However, each of these
+ * plugins contains a more detailed description in their source file.
+ */
+
 allprojects {
     apply<IdeaPlugin>()
 }
 
-// The configuration is divided in multiple script plugins located in `buildSrc/src/kotlin`.
-// Only a brief description is provided when applying a plugin. However, each of these
-// plugins contains a more detailed description in their source file.
 subprojects {
     apply<JavaPlugin>()
 
-    // Configure subprojects as Java 8 projects.
-    apply<Java8ConfigurationPlugin>()
+    // Configure the `Javac`.
+    apply<JavacConfigurationPlugin>()
 
     // Configure repositories, add dependencies and force transitive dependencies.
     apply<DependencyManagementPlugin>()
 
-    // Add preconfigured Error Prone analysis.
+    // Apply the Error Prone plugin and configure the `Javac` to avoid known issues with Error Prone.
     apply<ErrorProneConfigurationPlugin>()
 
-    // Add preconfigured PMD analysis.
+    // Apply and configure the PMD plugin.
     apply<PmdConfigurationPlugin>()
 
     // Configure test-running tasks.

@@ -32,8 +32,7 @@ import io.spine.examples.kanban.dependency.Pmd
  * - Configures project compilation to fail in case the analyzer finds issues.
  * - Removes the default set of rules and loads custom rules specified in
  *   the `buildSrc/src/main/resources/pmd.xml`.
- * - Configures PMD to analyze only the main source set and avoid analyzing
- *   tests.
+ * - Configures PMD to analyze only the main source set and avoid analyzing tests.
  */
 
 plugins {
@@ -55,6 +54,6 @@ pmd {
 
     reportsDir = file("$projectDir/build/reports/pmd")
 
-    // Analyze only the main source set(i.e. do not analyze tests).
+    // Analyze only the main source set (i.e. do not analyze tests).
     sourceSets = listOf(project.sourceSets.named("main").get())
 }

@@ -36,7 +36,7 @@ import io.spine.examples.kanban.dependency.Truth
  *
  * Dependencies are contained within dependency objects in the
  * [io.spine.examples.kanban.dependency] package. These objects allow configuration of
- * dependency properties(e.g. version).
+ * dependency properties (e.g. version).
  */
 
 plugins {
