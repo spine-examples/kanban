@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, TeamDev. All rights reserved.
+ * Copyright 2022, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,19 +24,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-final def versions = [
-        errorProne      : "2.4.0",
-        errorProneJavac : "9+181-r4173-1", // taken from here: https://github.com/tbroyer/gradle-errorprone-plugin/blob/v0.8/build.gradle.kts
-        guava           : "31.0.1-jre",
-        checkerFramework: "3.21.0",
-        grpc            : "1.28.1",
-        pmd             : "6.41.0",
+package io.spine.examples.kanban.dependency
 
-        junit5          : "5.8.2"
-]
-
-ext {
-    deps = [
-            "versions": versions
-    ]
+// https://github.com/google/guava
+object Guava {
+    const val version = "31.0.1-jre"
+    const val lib = "com.google.guava:guava:${version}"
 }

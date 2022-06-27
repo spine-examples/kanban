@@ -138,7 +138,7 @@ message CardRemovedFromColumn {
     // The ID of the column.
     ColumnId column = 2 [(required) = true];
 
-    // Is `true` if the card was added because of the move operation.
+    // Is `true` if the card was removed because of the move operation.
     bool moving = 3;
 
     // Contains ID of the column to which the card moved during the move operation.
