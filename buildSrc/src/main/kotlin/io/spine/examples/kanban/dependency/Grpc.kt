@@ -28,6 +28,6 @@ package io.spine.examples.kanban.dependency
 
 // https://github.com/grpc/grpc-java
 object Grpc {
-    const val version = "1.28.1"
+    const val version = "1.47.0"
     const val lib = "io.grpc:grpc-netty:${version}"
 }

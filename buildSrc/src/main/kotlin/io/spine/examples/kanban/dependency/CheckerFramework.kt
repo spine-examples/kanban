@@ -28,6 +28,6 @@ package io.spine.examples.kanban.dependency
 
 // https://checkerframework.org/
 object CheckerFramework {
-    const val version = "3.21.0"
+    const val version = "3.22.2"
     const val lib = "org.checkerframework:checker-qual:${version}"
 }

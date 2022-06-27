@@ -28,6 +28,6 @@ package io.spine.examples.kanban.dependency
 
 // https://github.com/google/guava
 object Guava {
-    const val version = "31.0.1-jre"
+    const val version = "31.1-jre"
     const val lib = "com.google.guava:guava:${version}"
 }

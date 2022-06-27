@@ -31,7 +31,7 @@ object ErrorProne {
     private const val group = "com.google.errorprone"
 
     object CorePlugin {
-        const val version = "2.4.0"
+        const val version = "2.10.0"
         const val lib = "${group}:error_prone_core:${version}"
     }
 
