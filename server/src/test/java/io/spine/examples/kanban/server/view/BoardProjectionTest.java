@@ -46,6 +46,7 @@ import java.util.stream.Stream;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static io.spine.protobuf.AnyPacker.unpack;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @DisplayName("BoardProjection should")
 class BoardProjectionTest extends KanbanContextTest {
@@ -67,7 +68,7 @@ class BoardProjectionTest extends KanbanContextTest {
     }
 
     @Test
-    @DisplayName("has the state with the ID of the board")
+    @DisplayName("have the state with the ID of the board")
     void id() {
         entityState.isInstanceOf(BoardView.class);
         entityState.comparingExpectedFieldsOnly()
@@ -77,7 +78,7 @@ class BoardProjectionTest extends KanbanContextTest {
     }
 
     @Test
-    @DisplayName("has columns")
+    @DisplayName("have columns")
     void columns() {
         List<Column> expectedColumns =
                 columns.stream()
@@ -85,6 +86,9 @@ class BoardProjectionTest extends KanbanContextTest {
                                        .setId(c)
                                        .build())
                        .collect(toImmutableList());
+
+        assertFalse(expectedColumns.isEmpty());
+
         BoardView expected = BoardView
                 .newBuilder()
                 .setId(board())
@@ -96,7 +100,7 @@ class BoardProjectionTest extends KanbanContextTest {
     }
 
     @Test
-    @DisplayName("has cards")
+    @DisplayName("have cards")
     void cards() {
         List<Card> expectedCards =
                 cards.stream()
@@ -124,7 +128,7 @@ class BoardProjectionTest extends KanbanContextTest {
                 .assertCommands()
                 .actual()
                 .stream()
-                .filter(commandClass::isInstance)
+                .filter(c -> c.is(commandClass))
                 .map(c -> unpack(c.getMessage(), commandClass));
     }
 }

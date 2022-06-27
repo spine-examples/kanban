@@ -28,5 +28,5 @@ package io.spine.examples.kanban.dependency
 
 // https://pmd.github.io/
 object Pmd {
-    const val version = "6.41.0"
+    const val version = "6.47.0"
 }
