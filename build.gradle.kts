@@ -45,7 +45,9 @@ subprojects {
      */
     apply<JavacConfigurationPlugin>()
 
-    // Configure repositories, add dependencies and force transitive dependencies.
+    /*
+     * Configure repositories, add dependencies and force transitive dependencies.
+     */
     apply<DependencyManagementPlugin>()
 
     /*
@@ -55,9 +57,13 @@ subprojects {
      */
     apply<ErrorProneConfigurationPlugin>()
 
-    // Apply and configure the PMD plugin.
+    /*
+     * Apply and configure the PMD plugin.
+     */
     apply<PmdConfigurationPlugin>()
 
-    // Configure test-running tasks.
+    /*
+     * Configure test-running tasks.
+     */
     apply<TestsConfigurationPlugin>()
 }

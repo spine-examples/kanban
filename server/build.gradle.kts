@@ -26,7 +26,9 @@
 
 import io.spine.examples.kanban.dependency.JavaX
 
-// Add the Gradle plugin for bootstrapping projects built with Spine.
+/*
+ * Add the Gradle plugin for bootstrapping projects built with Spine.
+ */
 plugins {
     id("io.spine.tools.gradle.bootstrap") version("1.8.0")
 }
