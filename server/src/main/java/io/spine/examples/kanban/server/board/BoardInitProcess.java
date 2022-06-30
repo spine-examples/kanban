@@ -34,7 +34,7 @@ import io.spine.examples.kanban.ColumnId;
 import io.spine.examples.kanban.command.CreateColumn;
 import io.spine.examples.kanban.event.BoardCreated;
 import io.spine.examples.kanban.event.BoardInitialized;
-import io.spine.examples.kanban.event.ColumnAdded;
+import io.spine.examples.kanban.event.ColumnPlaced;
 import io.spine.server.command.Command;
 import io.spine.server.event.React;
 import io.spine.server.model.Nothing;
@@ -73,13 +73,13 @@ final class BoardInitProcess extends ProcessManager<BoardId, BoardInit, BoardIni
     }
 
     /**
-     * Whenever all default columns are created and added to the board, terminate the process.
+     * Whenever all default columns are created and placed on the board, terminate the process.
      */
     @React
-    EitherOf2<BoardInitialized, Nothing> terminationPolicy(ColumnAdded e) {
-        builder().addAddedColumn(e.getColumn());
+    EitherOf2<BoardInitialized, Nothing> terminationPolicy(ColumnPlaced e) {
+        builder().addPlacedColumn(e.getColumn());
 
-        if (builder().getAddedColumnCount() == defaultColumnCount()) {
+        if (builder().getPlacedColumnCount() == defaultColumnCount()) {
             setDeleted(true);
 
             BoardInit s = state();
@@ -87,7 +87,7 @@ final class BoardInitProcess extends ProcessManager<BoardId, BoardInit, BoardIni
                     BoardInitialized
                             .newBuilder()
                             .setBoard(s.getId())
-                            .addAllColumns(s.getAddedColumnList())
+                            .addAllColumns(s.getPlacedColumnList())
                             .vBuild()
             );
         }

@@ -57,7 +57,7 @@ message Board {
 
 // After a board is created it is initialized with the default set of columns.
 //
-// The board is initialized once these columns are created and added to the board.
+// The board is initialized once these columns are created and placed on the board.
 //
 message BoardInit {
 
@@ -66,8 +66,8 @@ message BoardInit {
     // The ID of the board we initialize.
     BoardId id = 1 [(required) = true];
 
-    // Columns already added.
-    repeated ColumnId added_column = 3;
+    // Columns already placed.
+    repeated ColumnId placed_column = 3;
 
     enum DefaultColumn {
         TO_DO = 0;

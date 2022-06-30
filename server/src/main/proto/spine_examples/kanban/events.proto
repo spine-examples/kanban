@@ -47,7 +47,7 @@ message BoardCreated {
     BoardId board = 1 [(required) = true];
 }
 
-// Default set of columns has been added to the board.
+// Default set of columns has been placed on the board.
 //
 // After this event the board is ready for placing cards.
 //
@@ -58,13 +58,13 @@ message BoardInitialized {
     repeated ColumnId columns = 2 [(required) = true];
 }
 
-// A column added to the board.
-message ColumnAdded {
+// A column placed on the board.
+message ColumnPlaced {
 
     // The ID of the board.
     BoardId board = 1 [(required) = true];
 
-    // The ID of the added column.
+    // The ID of the placed column.
     ColumnId column = 2 [(required) = true];
 }
 

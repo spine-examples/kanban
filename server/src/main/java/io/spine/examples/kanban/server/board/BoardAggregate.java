@@ -33,8 +33,8 @@ import io.spine.examples.kanban.command.CreateBoard;
 import io.spine.examples.kanban.event.BoardCreated;
 import io.spine.examples.kanban.event.CardCreated;
 import io.spine.examples.kanban.event.CardWaitingPlacement;
-import io.spine.examples.kanban.event.ColumnAdded;
 import io.spine.examples.kanban.event.ColumnCreated;
+import io.spine.examples.kanban.event.ColumnPlaced;
 import io.spine.server.aggregate.Aggregate;
 import io.spine.server.aggregate.Apply;
 import io.spine.server.command.Assign;
@@ -63,8 +63,8 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
      * Whenever a new column is created, it is added next to existing columns.
      */
     @React
-    ColumnAdded columnPlacementPolicy(ColumnCreated event) {
-        return ColumnAdded
+    ColumnPlaced columnPlacementPolicy(ColumnCreated event) {
+        return ColumnPlaced
                 .newBuilder()
                 .setBoard(event.getBoard())
                 .setColumn(event.getColumn())
@@ -72,7 +72,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     }
 
     @Apply
-    private void event(ColumnAdded e) {
+    private void event(ColumnPlaced e) {
         builder().setId(e.getBoard())
                  .addColumn(e.getColumn());
     }
