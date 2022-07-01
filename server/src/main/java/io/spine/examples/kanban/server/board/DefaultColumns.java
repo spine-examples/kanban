@@ -72,10 +72,6 @@ final class DefaultColumns {
         return titleCase.toString();
     }
 
-    static DefaultColumn first() {
-        return DefaultColumn.values()[0];
-    }
-
     static List<DefaultColumn> all() {
         List<DefaultColumn> all = new ArrayList<>();
 
