@@ -72,7 +72,8 @@ final class BoardInitProcess extends ProcessManager<BoardId, BoardInit, BoardIni
     }
 
     /**
-     * Whenever all default columns are created and placed on the board, terminate the process.
+     * Whenever all default columns are created and placed on the board,
+     * terminate the process.
      */
     @React
     EitherOf2<BoardInitialized, Nothing> terminationPolicy(ColumnPlaced e) {
