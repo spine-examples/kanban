@@ -28,27 +28,22 @@ package io.spine.examples.kanban.server.board;
 
 import io.spine.examples.kanban.BoardInit.DefaultColumn;
 
-/**
- * Provides default values for initializing columns.
- */
-final class Defaults {
+import java.util.ArrayList;
+import java.util.List;
+
+/** Provides utility methods for dealing with default columns. */
+final class DefaultColumns {
 
     /** Prevents instantiation of this utility class. */
-    private Defaults() {
+    private DefaultColumns() {
     }
 
-    /**
-     * Transforms the enum value into a column title.
-     */
+    /** Transforms the enum value into a column title. */
     static String nameFor(DefaultColumn column) {
         String lowerCase = column.name()
                                  .replace('_', ' ')
                                  .toLowerCase();
         return toTitleCase(lowerCase);
-    }
-
-    static DefaultColumn first() {
-        return DefaultColumn.values()[0];
     }
 
     /**
@@ -75,5 +70,40 @@ final class Defaults {
             titleCase.append(c);
         }
         return titleCase.toString();
+    }
+
+    static DefaultColumn first() {
+        return DefaultColumn.values()[0];
+    }
+
+    static List<DefaultColumn> all() {
+        List<DefaultColumn> all = new ArrayList<>();
+
+        for(DefaultColumn column: DefaultColumn.values()) {
+            if(isDomainValue(column)) {
+                all.add(column);
+            }
+        }
+
+        return all;
+    }
+
+    /**
+     * Tells whether provided enum entry is domain-related value.
+     *
+     * Protobuf generates one more entry for enum definitions, which is used for
+     * deserializing unknown values. This method helps to find out if a enum entry
+     * is actually declared in .proto and is a domain value.
+     */
+    private static boolean isDomainValue(DefaultColumn column) {
+        return column != DefaultColumn.UNRECOGNIZED;
+    }
+
+
+    /**
+     * Obtains the number of default columns.
+     */
+    static int count() {
+        return DefaultColumn.values().length - 1;
     }
 }

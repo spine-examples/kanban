@@ -26,7 +26,6 @@
 
 package io.spine.examples.kanban.server.board;
 
-import com.google.common.annotations.VisibleForTesting;
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.BoardInit;
 import io.spine.examples.kanban.BoardInit.DefaultColumn;
@@ -57,7 +56,7 @@ final class BoardInitProcess extends ProcessManager<BoardId, BoardInit, BoardIni
         BoardId board = e.getBoard();
         List<CreateColumn> commands = new ArrayList<>();
 
-        for (DefaultColumn column : DefaultColumn.values()) {
+        for (DefaultColumn column : DefaultColumns.all()) {
             commands.add(
                     CreateColumn
                             .newBuilder()
@@ -79,7 +78,7 @@ final class BoardInitProcess extends ProcessManager<BoardId, BoardInit, BoardIni
     EitherOf2<BoardInitialized, Nothing> terminationPolicy(ColumnPlaced e) {
         builder().addPlacedColumn(e.getColumn());
 
-        if (builder().getPlacedColumnCount() == defaultColumnCount()) {
+        if (builder().getPlacedColumnCount() == DefaultColumns.count()) {
             setDeleted(true);
 
             BoardInit s = state();
@@ -92,16 +91,6 @@ final class BoardInitProcess extends ProcessManager<BoardId, BoardInit, BoardIni
             );
         }
 
-        return EitherOf2.withB(Nothing.newBuilder()
-                                      .vBuild());
-    }
-
-    /**
-     * Obtains the number of default columns that are to be created by the process.
-     */
-    @VisibleForTesting
-    static int defaultColumnCount() {
-        int result = BoardInit.DefaultColumn.values().length - 1;
-        return result;
+        return EitherOf2.withB(Nothing.newBuilder().vBuild());
     }
 }
