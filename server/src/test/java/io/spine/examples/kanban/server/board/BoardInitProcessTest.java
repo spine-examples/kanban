@@ -26,16 +26,18 @@
 
 package io.spine.examples.kanban.server.board;
 
+import io.spine.examples.kanban.BoardInit;
 import io.spine.examples.kanban.Column;
-import io.spine.examples.kanban.ColumnId;
 import io.spine.examples.kanban.command.CreateColumn;
+import io.spine.examples.kanban.event.BoardInitialized;
 import io.spine.examples.kanban.server.KanbanContextTest;
 import io.spine.testing.server.CommandSubject;
+import io.spine.testing.server.EventSubject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 
 import static io.spine.protobuf.AnyPacker.unpack;
@@ -51,48 +53,89 @@ class BoardInitProcessTest extends KanbanContextTest {
 
     @Test
     @DisplayName("issue creation commands for all default columns")
-    void issuesCreationCommands() {
-        CommandSubject commands = context().assertCommands();
-        CreateColumn commandForBoardInit = CreateColumn
-                .newBuilder()
-                .setBoardInit(true)
-                // Call `buildPartial()` instead of `vBuild()` in order to be able to omit setting
-                // the `name` name field which is required.
-                .buildPartial();
-        int columnCount = DefaultColumns.count();
-        for (int i = 0; i < columnCount; i++) {
-            commands.message(i)
-                    .comparingExpectedFieldsOnly()
-                    .isEqualTo(commandForBoardInit);
+    void issuesCommands() {
+        CommandSubject issuedCommands = context().assertCommands()
+                                                 .withType(CreateColumn.class);
+        int expectedCount = DefaultColumns.count();
+        issuedCommands.hasSize(expectedCount);
+
+        List<CreateColumn> expectedCommands = expectedCommands();
+        for (int i = 0; i < expectedCount; i++) {
+            issuedCommands.message(i)
+                          .comparingExpectedFieldsOnly()
+                          .isEqualTo(expectedCommands.get(i));
         }
+    }
+
+    private List<CreateColumn> expectedCommands() {
+        List<CreateColumn> commands = new ArrayList<>();
+
+        for (BoardInit.DefaultColumn c : DefaultColumns.all()) {
+            commands.add(
+                    CreateColumn.newBuilder()
+                                .setBoard(board())
+                                .setBoardInit(true)
+                                .setName(c.name())
+                                .buildPartial()
+            );
+        }
+
+        return commands;
     }
 
     @Test
     @DisplayName("create default columns")
     void createsColumns() {
-        Collection<ColumnId> defaultColumns = createdColumns();
-        defaultColumns.forEach(
-                c -> context().assertEntityWithState(c, Column.class)
-                              .exists()
+        List<Column> expected = expectedColumns();
+        expected.forEach(
+                c -> context().assertEntityWithState(c.getId(), Column.class)
+                              .hasStateThat()
+                              .isEqualTo(c)
         );
+    }
+
+    private List<Column> expectedColumns() {
+        return context().assertCommands()
+                        .withType(CreateColumn.class)
+                        .actual()
+                        .stream()
+                        .map(c -> {
+                            CreateColumn command = unpack(
+                                    c.getMessage(),
+                                    CreateColumn.class
+                            );
+
+                            return Column.newBuilder()
+                                        .setId(command.getColumn())
+                                        .setBoard(command.getBoard())
+                                        .setName(command.getName())
+                                        .vBuild();
+                        })
+                        .collect(toList());
+    }
+
+    @Test
+    @DisplayName("emit the `BoardInitialized` event when terminated")
+    void emitsEvent() {
+        EventSubject events = context().assertEvents()
+                                       .withType(BoardInitialized.class);
+
+        events.hasSize(1);
+
+        BoardInitialized expected = BoardInitialized.newBuilder()
+                                                    .setBoard(board())
+                                                    .vBuild();
+
+        events.message(0)
+              .comparingExpectedFieldsOnly()
+              .isEqualTo(expected);
     }
 
     @Test
     @DisplayName("delete itself when finished")
-    void isDeletedWhenFinished() {
+    void deletesItself() {
         context().assertEntity(board(), BoardInitProcess.class)
                  .deletedFlag()
                  .isTrue();
-    }
-
-    private Collection<ColumnId> createdColumns() {
-        List<ColumnId> collect = context().assertCommands()
-                .withType(CreateColumn.class)
-                .actual()
-                .stream()
-                .map(c -> unpack(c.getMessage(), CreateColumn.class))
-                .map(CreateColumn::getColumn)
-                .collect(toList());
-        return collect;
     }
 }
