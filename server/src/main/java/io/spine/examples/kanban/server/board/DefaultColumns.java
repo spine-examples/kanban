@@ -85,11 +85,11 @@ final class DefaultColumns {
     }
 
     /**
-     * Tells whether provided enum entry is domain-related value.
+     * Tells whether the provided enum entry is a domain-related value.
      *
-     * Protobuf generates one more entry for enum definitions, which is used for
-     * deserializing unknown values. This method helps to find out if a enum entry
-     * is actually declared in .proto and is a domain value.
+     * Protoc generates one more entry, which is used for deserializing unknown values, for enum
+     * definitions. This method helps to find out if an enum entry is actually declared in .proto
+     * and is a domain value.
      */
     private static boolean isDomainValue(DefaultColumn column) {
         return column != DefaultColumn.UNRECOGNIZED;
