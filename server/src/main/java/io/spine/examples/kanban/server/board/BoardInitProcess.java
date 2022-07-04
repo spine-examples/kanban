@@ -82,12 +82,10 @@ final class BoardInitProcess extends ProcessManager<BoardId, BoardInit, BoardIni
         if (builder().getPlacedColumnCount() == DefaultColumns.count()) {
             setDeleted(true);
 
-            BoardInit s = state();
             return EitherOf2.withA(
                     BoardInitialized
                             .newBuilder()
-                            .setBoard(s.getId())
-                            .addAllColumns(s.getPlacedColumnList())
+                            .setBoard(state().getId())
                             .vBuild()
             );
         }

@@ -54,8 +54,6 @@ message BoardCreated {
 message BoardInitialized {
 
     BoardId board = 1 [(required) = true];
-
-    repeated ColumnId columns = 2 [(required) = true];
 }
 
 // A column placed on the board.
