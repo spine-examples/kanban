@@ -60,7 +60,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     }
 
     /**
-     * Whenever a new column is created, it is added next to existing columns.
+     * Whenever a new column is created, it is placed next to existing columns.
      */
     @React
     ColumnPlaced columnPlacementPolicy(ColumnCreated event) {
