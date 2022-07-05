@@ -86,8 +86,8 @@ class BoardInitProcessTest extends KanbanContextTest {
     @Test
     @DisplayName("create default columns")
     void createsColumns() {
-        List<Column> expected = expectedColumns();
-        expected.forEach(
+        List<Column> expectedColumns = expectedColumns();
+        expectedColumns.forEach(
                 c -> context().assertEntityWithState(c.getId(), Column.class)
                               .hasStateThat()
                               .isEqualTo(c)
@@ -100,10 +100,7 @@ class BoardInitProcessTest extends KanbanContextTest {
                         .actual()
                         .stream()
                         .map(c -> {
-                            CreateColumn command = unpack(
-                                    c.getMessage(),
-                                    CreateColumn.class
-                            );
+                            CreateColumn command = unpack(c.getMessage(), CreateColumn.class);
 
                             return Column.newBuilder()
                                         .setId(command.getColumn())
