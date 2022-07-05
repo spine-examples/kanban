@@ -129,7 +129,7 @@ class BoardInitProcessTest extends KanbanContextTest {
     }
 
     @Test
-    @DisplayName("delete itself when finished")
+    @DisplayName("delete itself when terminated")
     void deletesItself() {
         context().assertEntity(board(), BoardInitProcess.class)
                  .deletedFlag()
