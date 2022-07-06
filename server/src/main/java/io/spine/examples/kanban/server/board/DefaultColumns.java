@@ -37,6 +37,40 @@ final class DefaultColumns {
     /** Prevents instantiation of this utility class. */
     private DefaultColumns() {
     }
+    
+    /** Transforms the enum value into a column title. */
+    static String titleFor(DefaultColumn column) {
+        String lowerCase = column.name()
+                                 .replace('_', ' ')
+                                 .toLowerCase();
+        return toTitleCase(lowerCase);
+    }
+
+    /**
+     * Transforms the passed string to the Title Case.
+     *
+     * <p>Examples of transformations:
+     * <ul>
+     *   <li>"lorem" -> "Lorem"
+     *   <li>"ipsum dolor" -> "Ipsum Dolor"
+     *   <li>"SIT AMET" -> "SIT AMET"
+     * </ul>
+     */
+    private static String toTitleCase(String input) {
+        StringBuilder titleCase = new StringBuilder();
+        boolean nextTitleCase = true;
+
+        for (char c : input.toCharArray()) {
+            if (Character.isSpaceChar(c)) {
+                nextTitleCase = true;
+            } else if (nextTitleCase) {
+                c = Character.toTitleCase(c);
+                nextTitleCase = false;
+            }
+            titleCase.append(c);
+        }
+        return titleCase.toString();
+    }
 
     /**
      * Returns an ordered list of default columns.

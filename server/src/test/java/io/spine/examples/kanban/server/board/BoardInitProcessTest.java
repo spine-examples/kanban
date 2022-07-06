@@ -75,7 +75,7 @@ class BoardInitProcessTest extends KanbanContextTest {
                     CreateColumn.newBuilder()
                                 .setBoard(board())
                                 .setBoardInit(true)
-                                .setName(c.name())
+                                .setName(DefaultColumns.titleFor(c))
                                 .buildPartial()
             );
         }
