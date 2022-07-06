@@ -47,12 +47,10 @@ message BoardCreated {
     BoardId board = 1 [(required) = true];
 }
 
-// Default set of columns has been placed on the board.
-//
-// After this event the board is ready for placing cards.
-//
+// The board is initialized and ready for use.
 message BoardInitialized {
 
+    // The ID of the initialized board.
     BoardId board = 1 [(required) = true];
 }
 
