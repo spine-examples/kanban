@@ -27,9 +27,14 @@
 package io.spine.examples.kanban.server.board;
 
 import com.google.common.collect.ImmutableList;
+import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.BoardInit.DefaultColumn;
+import io.spine.examples.kanban.ColumnId;
+import io.spine.examples.kanban.command.CreateColumn;
 
 import java.util.Arrays;
+
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /** Provides utility methods for dealing with default columns. */
 final class DefaultColumns {
@@ -37,9 +42,26 @@ final class DefaultColumns {
     /** Prevents instantiation of this utility class. */
     private DefaultColumns() {
     }
-    
+
+    /**
+     * Returns an ordered list of commands for creating default columns for
+     * the specific board.
+     */
+    static ImmutableList<CreateColumn> createAll(BoardId board) {
+        return Arrays.stream(DefaultColumn.values())
+                     .filter(c -> c != DefaultColumn.UNRECOGNIZED)
+                     .map(c -> CreateColumn.newBuilder()
+                                           .setColumn(ColumnId.generate())
+                                           .setName(titleFor(c))
+                                           .setBoard(board)
+                                           .setBoardInit(true)
+                                           .vBuild()
+                     )
+                     .collect(toImmutableList());
+    }
+
     /** Transforms the enum value into a column title. */
-    static String titleFor(DefaultColumn column) {
+    private static String titleFor(DefaultColumn column) {
         String lowerCase = column.name()
                                  .replace('_', ' ')
                                  .toLowerCase();
@@ -70,15 +92,6 @@ final class DefaultColumns {
             titleCase.append(c);
         }
         return titleCase.toString();
-    }
-
-    /**
-     * Returns an ordered list of default columns.
-     */
-    static ImmutableList<DefaultColumn> all() {
-        return Arrays.stream(DefaultColumn.values())
-                     .filter(c -> c != DefaultColumn.UNRECOGNIZED)
-                     .collect(ImmutableList.toImmutableList());
     }
 
     /**

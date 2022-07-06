@@ -28,8 +28,6 @@ package io.spine.examples.kanban.server.board;
 
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.BoardInit;
-import io.spine.examples.kanban.BoardInit.DefaultColumn;
-import io.spine.examples.kanban.ColumnId;
 import io.spine.examples.kanban.command.CreateColumn;
 import io.spine.examples.kanban.event.BoardCreated;
 import io.spine.examples.kanban.event.BoardInitialized;
@@ -39,9 +37,6 @@ import io.spine.server.event.React;
 import io.spine.server.model.Nothing;
 import io.spine.server.procman.ProcessManager;
 import io.spine.server.tuple.EitherOf2;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Creates default columns on a newly created board.
@@ -53,22 +48,7 @@ final class BoardInitProcess extends ProcessManager<BoardId, BoardInit, BoardIni
      */
     @Command
     Iterable<CreateColumn> startPolicy(BoardCreated e) {
-        BoardId board = e.getBoard();
-        List<CreateColumn> commands = new ArrayList<>();
-
-        for (DefaultColumn column : DefaultColumns.all()) {
-            commands.add(
-                    CreateColumn
-                            .newBuilder()
-                            .setBoard(board)
-                            .setBoardInit(true)
-                            .setColumn(ColumnId.generate())
-                            .setName(DefaultColumns.titleFor(column))
-                            .vBuild()
-            );
-        }
-
-        return commands;
+        return DefaultColumns.createAll(e.getBoard());
     }
 
     /**

@@ -28,6 +28,7 @@ package io.spine.examples.kanban.server.board;
 
 import io.spine.examples.kanban.BoardInit;
 import io.spine.examples.kanban.Column;
+import io.spine.examples.kanban.ColumnId;
 import io.spine.examples.kanban.command.CreateColumn;
 import io.spine.examples.kanban.event.BoardInitialized;
 import io.spine.examples.kanban.server.KanbanContextTest;
@@ -59,7 +60,10 @@ class BoardInitProcessTest extends KanbanContextTest {
         int expectedCount = DefaultColumns.count();
         issuedCommands.hasSize(expectedCount);
 
-        List<CreateColumn> expectedCommands = expectedCommands();
+        List<CreateColumn> expectedCommands = DefaultColumns.createAll(board())
+                                                            .stream()
+                                                            .map(this::removeColumnId)
+                                                            .collect(toImmutableList());
         for (int i = 0; i < expectedCount; i++) {
             issuedCommands.message(i)
                           .comparingExpectedFieldsOnly()
@@ -67,20 +71,11 @@ class BoardInitProcessTest extends KanbanContextTest {
         }
     }
 
-    private List<CreateColumn> expectedCommands() {
-        List<CreateColumn> commands = new ArrayList<>();
-
-        for (BoardInit.DefaultColumn c : DefaultColumns.all()) {
-            commands.add(
-                    CreateColumn.newBuilder()
-                                .setBoard(board())
-                                .setBoardInit(true)
-                                .setName(DefaultColumns.titleFor(c))
-                                .buildPartial()
-            );
-        }
-
-        return commands;
+    private CreateColumn removeColumnId(CreateColumn c) {
+        return c.toBuilder()
+                .setColumn(ColumnId.newBuilder()
+                                   .build())
+                .buildPartial();
     }
 
     @Test
