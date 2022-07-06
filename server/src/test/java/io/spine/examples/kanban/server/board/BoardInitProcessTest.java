@@ -26,7 +26,7 @@
 
 package io.spine.examples.kanban.server.board;
 
-import io.spine.examples.kanban.BoardInit;
+import com.google.common.collect.ImmutableList;
 import io.spine.examples.kanban.Column;
 import io.spine.examples.kanban.ColumnId;
 import io.spine.examples.kanban.command.CreateColumn;
@@ -38,11 +38,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static io.spine.protobuf.AnyPacker.unpack;
-import static java.util.stream.Collectors.toList;
 
 @DisplayName("BoardInitProcess should")
 class BoardInitProcessTest extends KanbanContextTest {
@@ -89,21 +88,22 @@ class BoardInitProcessTest extends KanbanContextTest {
         );
     }
 
-    private List<Column> expectedColumns() {
+    private ImmutableList<Column> expectedColumns() {
         return context().assertCommands()
                         .withType(CreateColumn.class)
                         .actual()
                         .stream()
-                        .map(c -> {
-                            CreateColumn command = unpack(c.getMessage(), CreateColumn.class);
+                        .map(c -> unpack(c.getMessage(), CreateColumn.class))
+                        .map(this::toColumn)
+                        .collect(toImmutableList());
+    }
 
-                            return Column.newBuilder()
-                                        .setId(command.getColumn())
-                                        .setBoard(command.getBoard())
-                                        .setName(command.getName())
-                                        .vBuild();
-                        })
-                        .collect(toList());
+    private Column toColumn(CreateColumn c) {
+        return Column.newBuilder()
+                     .setId(c.getColumn())
+                     .setBoard(c.getBoard())
+                     .setName(c.getName())
+                     .vBuild();
     }
 
     @Test
@@ -111,13 +111,10 @@ class BoardInitProcessTest extends KanbanContextTest {
     void emitsEvent() {
         EventSubject events = context().assertEvents()
                                        .withType(BoardInitialized.class);
-
         events.hasSize(1);
-
         BoardInitialized expected = BoardInitialized.newBuilder()
                                                     .setBoard(board())
                                                     .vBuild();
-
         events.message(0)
               .comparingExpectedFieldsOnly()
               .isEqualTo(expected);
