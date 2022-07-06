@@ -45,7 +45,7 @@ final class DefaultColumns {
 
     /**
      * Returns an ordered list of commands for creating default columns for
-     * the specific board.
+     * the provided board.
      */
     static ImmutableList<CreateColumn> creationCommands(BoardId board) {
         return Arrays.stream(DefaultColumn.values())
