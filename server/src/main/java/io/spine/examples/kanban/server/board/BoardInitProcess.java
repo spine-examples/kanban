@@ -48,7 +48,7 @@ final class BoardInitProcess extends ProcessManager<BoardId, BoardInit, BoardIni
      */
     @Command
     Iterable<CreateColumn> startPolicy(BoardCreated e) {
-        return DefaultColumns.createAll(e.getBoard());
+        return DefaultColumns.creationCommands(e.getBoard());
     }
 
     /**

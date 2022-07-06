@@ -59,7 +59,7 @@ class BoardInitProcessTest extends KanbanContextTest {
         int expectedCount = DefaultColumns.count();
         issuedCommands.hasSize(expectedCount);
 
-        List<CreateColumn> expectedCommands = DefaultColumns.createAll(board())
+        List<CreateColumn> expectedCommands = DefaultColumns.creationCommands(board())
                                                             .stream()
                                                             .map(this::removeColumnId)
                                                             .collect(toImmutableList());
@@ -72,8 +72,7 @@ class BoardInitProcessTest extends KanbanContextTest {
 
     private CreateColumn removeColumnId(CreateColumn c) {
         return c.toBuilder()
-                .setColumn(ColumnId.newBuilder()
-                                   .build())
+                .setColumn(ColumnId.newBuilder().build())
                 .buildPartial();
     }
 
