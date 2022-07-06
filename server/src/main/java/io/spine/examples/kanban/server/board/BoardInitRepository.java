@@ -28,12 +28,8 @@ package io.spine.examples.kanban.server.board;
 
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.BoardInit;
-import io.spine.examples.kanban.event.ColumnCreated;
 import io.spine.server.procman.ProcessManagerRepository;
 import io.spine.server.route.EventRouting;
-
-import static io.spine.server.route.EventRoute.noTargets;
-import static io.spine.server.route.EventRoute.withId;
 
 /**
  * Manages instances of {@link BoardInitProcess}.
@@ -44,9 +40,5 @@ public final class BoardInitRepository
     @Override
     protected void setupEventRouting(EventRouting<BoardId> routing) {
         super.setupEventRouting(routing);
-        routing.route(ColumnCreated.class, (event, context) ->
-                        event.getBoardInit()
-                                ? withId(event.getBoard())
-                                : noTargets());
     }
 }

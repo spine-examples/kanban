@@ -54,7 +54,6 @@ final class DefaultColumns {
                                            .setColumn(ColumnId.generate())
                                            .setName(titleFor(c))
                                            .setBoard(board)
-                                           .setBoardInit(true)
                                            .vBuild()
                      )
                      .collect(toImmutableList());

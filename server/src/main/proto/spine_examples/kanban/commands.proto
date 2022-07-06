@@ -56,8 +56,9 @@ message CreateColumn {
     // The name of the column.
     string name = 3 [(required) = true];
 
-    // If `true` the command is created for a board initialization column.
-    bool board_init = 4;
+    // Reservation of deleted field numbers and names.
+    reserved 4;
+    reserved "board_init";
 }
 
 // A command to create a new card on the specified board.

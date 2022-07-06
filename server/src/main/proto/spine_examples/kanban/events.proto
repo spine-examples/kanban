@@ -94,8 +94,9 @@ message ColumnCreated {
     // The name of the new column.
     string name = 3 [(required) = true];
 
-    // If `true` the column is created during the board initialization.
-    bool board_init = 4;
+    // Reservation of deleted field numbers and names.
+    reserved 4;
+    reserved "board_init";
 }
 
 // A new card is waiting to be placed to a column.
