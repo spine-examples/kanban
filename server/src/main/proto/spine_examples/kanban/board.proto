@@ -60,7 +60,6 @@ message Board {
 // The board is initialized once these columns are created and placed on the board.
 //
 message BoardInit {
-
     option (entity).kind = PROCESS_MANAGER;
 
     // The ID of the board we initialize.
@@ -68,6 +67,10 @@ message BoardInit {
 
     // Columns already placed.
     repeated ColumnId placed_column = 3;
+
+    // Reservation of deleted field numbers and names.
+    reserved 2;
+    reserved "step";
 
     enum DefaultColumn {
         TO_DO = 0;
