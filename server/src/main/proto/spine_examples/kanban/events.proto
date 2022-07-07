@@ -94,7 +94,7 @@ message ColumnCreated {
     // The name of the new column.
     string name = 3 [(required) = true];
 
-    // Reservation of deleted field numbers and names.
+    // Reservation of the deleted field's number and name.
     reserved 4;
     reserved "board_init";
 }

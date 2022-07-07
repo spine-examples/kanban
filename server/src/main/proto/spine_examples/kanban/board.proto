@@ -68,7 +68,7 @@ message BoardInit {
     // Columns already placed.
     repeated ColumnId placed_column = 3;
 
-    // Reservation of deleted field numbers and names.
+    // Reservation of the deleted field's number and name.
     reserved 2;
     reserved "step";
 
