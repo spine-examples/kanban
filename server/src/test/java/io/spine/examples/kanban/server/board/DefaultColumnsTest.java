@@ -40,7 +40,7 @@ class DefaultColumnsTest extends UtilityClassTest<DefaultColumns> {
     }
 
     @Test
-    @DisplayName("convert enum value to the Title Case")
+    @DisplayName("convert an enum value to the Title Case")
     void nameForConvertsTitleCase() {
         String expected = "To Do";
         String actual = DefaultColumns.nameFor(BoardInit.DefaultColumn.TO_DO);
