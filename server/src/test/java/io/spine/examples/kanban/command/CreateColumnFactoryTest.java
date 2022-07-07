@@ -30,9 +30,9 @@ import io.spine.testing.ClassTest;
 import org.junit.jupiter.api.DisplayName;
 
 @DisplayName("`CreateColumnFactory` should")
-public class CreateColumnFactoryTest extends ClassTest<CreateColumnFactory> {
+class CreateColumnFactoryTest extends ClassTest<CreateColumnFactory> {
 
-    protected CreateColumnFactoryTest() {
+    CreateColumnFactoryTest() {
         super(CreateColumnFactory.class);
     }
 }
