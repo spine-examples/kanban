@@ -30,6 +30,7 @@ import com.google.common.collect.ImmutableList;
 import io.spine.examples.kanban.Column;
 import io.spine.examples.kanban.ColumnId;
 import io.spine.examples.kanban.command.CreateColumn;
+import io.spine.examples.kanban.command.CreateColumnFactory;
 import io.spine.examples.kanban.event.BoardInitialized;
 import io.spine.examples.kanban.server.KanbanContextTest;
 import io.spine.testing.server.CommandSubject;
@@ -59,10 +60,10 @@ class BoardInitProcessTest extends KanbanContextTest {
         int expectedCount = DefaultColumns.count();
         issuedCommands.hasSize(expectedCount);
 
-        List<CreateColumn> expectedCommands = DefaultColumns.creationCommands(board())
-                                                            .stream()
-                                                            .map(this::removeColumnId)
-                                                            .collect(toImmutableList());
+        List<CreateColumn> expectedCommands = CreateColumnFactory.forDefaultColumns(board())
+                                                                 .stream()
+                                                                 .map(this::removeColumnId)
+                                                                 .collect(toImmutableList());
         for (int i = 0; i < expectedCount; i++) {
             issuedCommands.message(i)
                           .comparingExpectedFieldsOnly()

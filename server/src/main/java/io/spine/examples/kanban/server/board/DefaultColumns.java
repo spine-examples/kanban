@@ -27,40 +27,36 @@
 package io.spine.examples.kanban.server.board;
 
 import com.google.common.collect.ImmutableList;
-import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.BoardInit.DefaultColumn;
-import io.spine.examples.kanban.ColumnId;
-import io.spine.examples.kanban.command.CreateColumn;
 
 import java.util.Arrays;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static org.gradle.internal.impldep.com.google.common.base.Preconditions.checkNotNull;
 
 /** Provides utility methods for dealing with default columns. */
-final class DefaultColumns {
+public final class DefaultColumns {
 
     /** Prevents instantiation of this utility class. */
     private DefaultColumns() {
     }
 
-    /**
-     * Returns an ordered list of commands for creating default columns for
-     * the provided board.
-     */
-    static ImmutableList<CreateColumn> creationCommands(BoardId board) {
+    /** Returns an ordered list of default columns for the provided board. */
+    public static ImmutableList<DefaultColumn> all() {
         return Arrays.stream(DefaultColumn.values())
                      .filter(c -> c != DefaultColumn.UNRECOGNIZED)
-                     .map(c -> CreateColumn.newBuilder()
-                                           .setColumn(ColumnId.generate())
-                                           .setName(titleFor(c))
-                                           .setBoard(board)
-                                           .vBuild()
-                     )
                      .collect(toImmutableList());
     }
 
+    /** Obtains the number of default columns. */
+    public static int count() {
+        return DefaultColumn.values().length - 1;
+    }
+
     /** Transforms the enum value into a column title. */
-    private static String titleFor(DefaultColumn column) {
+    public static String nameFor(DefaultColumn column) {
+        checkNotNull(column);
+
         String lowerCase = column.name()
                                  .replace('_', ' ')
                                  .toLowerCase();
@@ -92,12 +88,5 @@ final class DefaultColumns {
         }
 
         return titleCase.toString();
-    }
-
-    /**
-     * Obtains the number of default columns.
-     */
-    static int count() {
-        return DefaultColumn.values().length - 1;
     }
 }
