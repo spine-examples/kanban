@@ -74,7 +74,7 @@ public final class DefaultColumns {
      * </ul>
      */
     private static String toTitleCase(String input) {
-        StringBuilder titleCase = new StringBuilder();
+        StringBuilder res = new StringBuilder(input.length());
         boolean nextTitleCase = true;
 
         for (char c : input.toCharArray()) {
@@ -84,9 +84,9 @@ public final class DefaultColumns {
                 c = Character.toTitleCase(c);
                 nextTitleCase = false;
             }
-            titleCase.append(c);
+            res.append(c);
         }
 
-        return titleCase.toString();
+        return res.toString();
     }
 }
