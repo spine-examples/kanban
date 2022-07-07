@@ -45,7 +45,7 @@ public final class CreateColumnFactory {
      * Returns an ordered list of commands for creating defaults columns for the
      * provided board.
      *
-     * The list is ordered, because columns should be created following the natural
+     * The list is ordered because columns should be created following the natural
      * order of work stages.
      */
     public static ImmutableList<CreateColumn> forDefaultColumns(BoardId board) {
