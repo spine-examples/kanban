@@ -34,7 +34,7 @@ import io.spine.examples.kanban.server.board.DefaultColumns;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
-/** A collection of factory methods for creating {@link CreateColumn} commands. */
+/** Factory methods for creating {@link CreateColumn} commands. */
 public final class CreateColumnFactory {
 
     /** Prevents instantiation of this factory class. */
@@ -44,6 +44,9 @@ public final class CreateColumnFactory {
     /**
      * Returns an ordered list of commands for creating defaults columns for the
      * provided board.
+     *
+     * The list is ordered, because columns should be created following the natural
+     * order of work stages.
      */
     public static ImmutableList<CreateColumn> forDefaultColumns(BoardId board) {
         checkNotNull(board);

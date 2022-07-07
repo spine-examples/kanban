@@ -41,7 +41,10 @@ public final class DefaultColumns {
     private DefaultColumns() {
     }
 
-    /** Returns an ordered list of default columns for the provided board. */
+    /**
+     * Returns an ordered list of default columns for the provided board. The list is ordered
+     * following the natural order of work stages.
+     */
     public static ImmutableList<DefaultColumn> all() {
         return Arrays.stream(DefaultColumn.values())
                      .filter(c -> c != DefaultColumn.UNRECOGNIZED)
@@ -56,7 +59,6 @@ public final class DefaultColumns {
     /** Transforms the enum value into a column title. */
     public static String nameFor(DefaultColumn column) {
         checkNotNull(column);
-
         String lowerCase = column.name()
                                  .replace('_', ' ')
                                  .toLowerCase();
