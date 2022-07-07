@@ -31,8 +31,8 @@ import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.ColumnId;
 import io.spine.examples.kanban.server.board.DefaultColumns;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static org.gradle.internal.impldep.com.google.common.base.Preconditions.checkNotNull;
 
 /** A collection of factory methods for creating {@link CreateColumn} commands. */
 public final class CreateColumnFactory {

@@ -31,8 +31,8 @@ import io.spine.examples.kanban.BoardInit.DefaultColumn;
 
 import java.util.Arrays;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static org.gradle.internal.impldep.com.google.common.base.Preconditions.checkNotNull;
 
 /** Provides utility methods for dealing with default columns. */
 public final class DefaultColumns {
