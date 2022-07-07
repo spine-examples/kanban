@@ -25,7 +25,7 @@
  */
 
 /**
- * Provides Kanban commands and command utils.
+ * Provides utils for Kanban commands.
  */
 
 @CheckReturnValue
