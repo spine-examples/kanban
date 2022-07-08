@@ -56,7 +56,8 @@ message CreateColumn {
     // The name of the column.
     string name = 3 [(required) = true];
 
-    // Reservation of the deleted field's number and name.
+    // This flag was used to indicate that a column was created during
+    // the board initialization process. Currently, it is considered rudimentary.
     reserved 4;
     reserved "board_init";
 }

@@ -69,7 +69,8 @@ message BoardInit {
     // Columns already placed.
     repeated ColumnId placed_column = 3;
 
-    // Reservation of the deleted field's number and name.
+    // The process manager used to create default columns one by one, "step by step".
+    // Currently, it creates them all at once.
     reserved 2;
     reserved "step";
 
