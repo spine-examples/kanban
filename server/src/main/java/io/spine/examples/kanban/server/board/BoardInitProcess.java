@@ -29,7 +29,6 @@ package io.spine.examples.kanban.server.board;
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.BoardInit;
 import io.spine.examples.kanban.command.CreateColumn;
-import io.spine.examples.kanban.command.CreateColumnFactory;
 import io.spine.examples.kanban.event.BoardCreated;
 import io.spine.examples.kanban.event.BoardInitialized;
 import io.spine.examples.kanban.event.ColumnPlaced;
@@ -49,7 +48,7 @@ final class BoardInitProcess extends ProcessManager<BoardId, BoardInit, BoardIni
      */
     @Command
     Iterable<CreateColumn> startPolicy(BoardCreated e) {
-        return CreateColumnFactory.forDefaultColumns(e.getBoard());
+        return DefaultColumns.creationCommands(e.getBoard());
     }
 
     /**

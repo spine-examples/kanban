@@ -28,9 +28,7 @@ package io.spine.examples.kanban.server.board;
 
 import com.google.common.collect.ImmutableList;
 import io.spine.examples.kanban.Column;
-import io.spine.examples.kanban.ColumnId;
 import io.spine.examples.kanban.command.CreateColumn;
-import io.spine.examples.kanban.command.CreateColumnFactory;
 import io.spine.examples.kanban.event.BoardInitialized;
 import io.spine.examples.kanban.server.KanbanContextTest;
 import io.spine.testing.server.CommandSubject;
@@ -60,10 +58,12 @@ class BoardInitProcessTest extends KanbanContextTest {
         int expectedCount = DefaultColumns.count();
         issuedCommands.hasSize(expectedCount);
 
-        List<CreateColumn> expectedCommands = CreateColumnFactory.forDefaultColumns(board())
-                                                                 .stream()
-                                                                 .map(this::removeColumnId)
-                                                                 .collect(toImmutableList());
+        ImmutableList<CreateColumn> expectedCommands =
+                DefaultColumns.creationCommands(board())
+                              .stream()
+                              .map(BoardInitProcessTest::clearId)
+                              .collect(toImmutableList());
+
         for (int i = 0; i < expectedCount; i++) {
             issuedCommands.message(i)
                           .comparingExpectedFieldsOnly()
@@ -71,16 +71,16 @@ class BoardInitProcessTest extends KanbanContextTest {
         }
     }
 
-    private CreateColumn removeColumnId(CreateColumn c) {
+    private static CreateColumn clearId(CreateColumn c) {
         return c.toBuilder()
-                .setColumn(ColumnId.newBuilder().build())
+                .clearColumn()
                 .buildPartial();
     }
 
     @Test
     @DisplayName("create default columns")
     void createsColumns() {
-        List<Column> expectedColumns = expectedColumns();
+        ImmutableList<Column> expectedColumns = expectedColumns();
         expectedColumns.forEach(
                 c -> context().assertEntityWithState(c.getId(), Column.class)
                               .hasStateThat()
@@ -94,16 +94,17 @@ class BoardInitProcessTest extends KanbanContextTest {
                         .actual()
                         .stream()
                         .map(c -> unpack(c.getMessage(), CreateColumn.class))
-                        .map(this::toColumn)
+                        .map(BoardInitProcessTest::toColumn)
                         .collect(toImmutableList());
     }
 
-    private Column toColumn(CreateColumn c) {
-        return Column.newBuilder()
-                     .setId(c.getColumn())
-                     .setBoard(c.getBoard())
-                     .setName(c.getName())
-                     .vBuild();
+    private static Column toColumn(CreateColumn c) {
+        return Column
+                .newBuilder()
+                .setId(c.getColumn())
+                .setBoard(c.getBoard())
+                .setName(c.getName())
+                .vBuild();
     }
 
     @Test
@@ -112,9 +113,10 @@ class BoardInitProcessTest extends KanbanContextTest {
         EventSubject events = context().assertEvents()
                                        .withType(BoardInitialized.class);
         events.hasSize(1);
-        BoardInitialized expected = BoardInitialized.newBuilder()
-                                                    .setBoard(board())
-                                                    .vBuild();
+        BoardInitialized expected = BoardInitialized
+                                            .newBuilder()
+                                            .setBoard(board())
+                                            .vBuild();
         events.message(0)
               .comparingExpectedFieldsOnly()
               .isEqualTo(expected);

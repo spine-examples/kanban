@@ -26,8 +26,12 @@
 
 package io.spine.examples.kanban.server.board;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
+import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.BoardInit.DefaultColumn;
+import io.spine.examples.kanban.ColumnId;
+import io.spine.examples.kanban.command.CreateColumn;
 
 import java.util.Arrays;
 
@@ -35,29 +39,44 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /** Provides utility methods for dealing with default columns. */
-public final class DefaultColumns {
+final class DefaultColumns {
 
     /** Prevents instantiation of this utility class. */
     private DefaultColumns() {
     }
 
-    /**
-     * Returns an ordered list of default columns for the provided board. The list is ordered
-     * following the natural order of work stages.
-     */
-    public static ImmutableList<DefaultColumn> all() {
-        return Arrays.stream(DefaultColumn.values())
-                     .filter(c -> c != DefaultColumn.UNRECOGNIZED)
-                     .collect(toImmutableList());
-    }
-
     /** Obtains the number of default columns. */
-    public static int count() {
+    static int count() {
         return DefaultColumn.values().length - 1;
     }
 
+    /**
+     * Returns an ordered list of commands for creating defaults columns for the
+     * provided board.
+     *
+     * <p> The list is ordered following the natural order of Kanban columns. This order
+     * corresponds to the declaration order of entries in the {@link DefaultColumn}.
+     */
+    static ImmutableList<CreateColumn> creationCommands(BoardId board) {
+        checkNotNull(board);
+        return Arrays.stream(DefaultColumn.values())
+                     .filter(c -> c != DefaultColumn.UNRECOGNIZED)
+                     .map(c -> creationCommand(board, c))
+                     .collect(toImmutableList());
+    }
+
+    private static CreateColumn creationCommand(BoardId board, DefaultColumn column) {
+        return CreateColumn
+                .newBuilder()
+                .setBoard(board)
+                .setColumn(ColumnId.generate())
+                .setName(nameFor(column))
+                .vBuild();
+    }
+
     /** Transforms the enum value into a column title. */
-    public static String nameFor(DefaultColumn column) {
+    @VisibleForTesting
+    static String nameFor(DefaultColumn column) {
         checkNotNull(column);
         String lowerCase = column.name()
                                  .replace('_', ' ')
