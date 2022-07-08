@@ -37,8 +37,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static io.spine.protobuf.AnyPacker.unpack;
 
@@ -114,9 +112,9 @@ class BoardInitProcessTest extends KanbanContextTest {
                                        .withType(BoardInitialized.class);
         events.hasSize(1);
         BoardInitialized expected = BoardInitialized
-                                            .newBuilder()
-                                            .setBoard(board())
-                                            .vBuild();
+                .newBuilder()
+                .setBoard(board())
+                .vBuild();
         events.message(0)
               .comparingExpectedFieldsOnly()
               .isEqualTo(expected);
