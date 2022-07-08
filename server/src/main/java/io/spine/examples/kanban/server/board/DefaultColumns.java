@@ -107,7 +107,6 @@ final class DefaultColumns {
             }
             res.append(c);
         }
-
         return res.toString();
     }
 }
