@@ -70,6 +70,6 @@ final class BoardInitProcess extends ProcessManager<BoardId, BoardInit, BoardIni
             );
         }
 
-        return EitherOf2.withB(Nothing.newBuilder().vBuild());
+        return EitherOf2.withB(nothing());
     }
 }
