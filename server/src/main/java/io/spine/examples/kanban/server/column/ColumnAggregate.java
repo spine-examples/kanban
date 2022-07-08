@@ -138,10 +138,10 @@ final class ColumnAggregate extends Aggregate<ColumnId, Column, Column.Builder> 
      * Updates the WIP limit value for a column.
      *
      * @return <ul>
-     *         <li>{@code WipLimitSet} — if the column did not have a limit before;
-     *         <li>{@code WipLimitChanged} — if a non-zero limit value changes to another
-     *         non-zero value;
-     *         <li>{@code WipLimitRemoved} — if the column had a limit before this command.
+     *             <li>{@code WipLimitSet} — if the column did not have a limit before;
+     *             <li>{@code WipLimitChanged} — if a non-zero limit value changes to another
+     *                 non-zero value;
+     *             <li>{@code WipLimitRemoved} — if the column had a limit before this command.
      *         </ul>
      * @throws WipLimitAlreadySet
      *         if the command attempts to change the limit to the value (zero or non-zero)
