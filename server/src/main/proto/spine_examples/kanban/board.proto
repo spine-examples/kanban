@@ -55,9 +55,10 @@ message Board {
     repeated ColumnId column = 5;
 }
 
-// After a board is created it is initialized with the default set of columns.
+// The board initialization process manager.
 //
-// The board is initialized once these columns are created and placed on the board.
+// A board requires initial setup before a user can use it. The board is ready for use
+// when all default columns have been created and placed.
 //
 message BoardInit {
     option (entity).kind = PROCESS_MANAGER;
