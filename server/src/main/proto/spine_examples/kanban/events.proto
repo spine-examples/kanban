@@ -47,24 +47,20 @@ message BoardCreated {
     BoardId board = 1 [(required) = true];
 }
 
-// Default set of columns has been added to the board.
-//
-// After this event the board is ready for placing cards.
-//
+// The board is initialized and ready for use.
 message BoardInitialized {
 
+    // The ID of the initialized board.
     BoardId board = 1 [(required) = true];
-
-    repeated ColumnId columns = 2 [(required) = true];
 }
 
-// A column added to the board.
-message ColumnAdded {
+// A column placed on the board.
+message ColumnPlaced {
 
     // The ID of the board.
     BoardId board = 1 [(required) = true];
 
-    // The ID of the added column.
+    // The ID of the placed column.
     ColumnId column = 2 [(required) = true];
 }
 
@@ -98,8 +94,10 @@ message ColumnCreated {
     // The name of the new column.
     string name = 3 [(required) = true];
 
-    // If `true` the column is created during the board initialization.
-    bool board_init = 4;
+    // This flag was used to indicate that a column was created during
+    // the board initialization process. Currently, it is considered rudimentary.
+    reserved 4;
+    reserved "board_init";
 }
 
 // A new card is waiting to be placed to a column.

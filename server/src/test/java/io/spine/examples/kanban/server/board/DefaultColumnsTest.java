@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, TeamDev. All rights reserved.
+ * Copyright 2022, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,19 +26,25 @@
 
 package io.spine.examples.kanban.server.board;
 
-import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.BoardInit;
-import io.spine.server.procman.ProcessManagerRepository;
-import io.spine.server.route.EventRouting;
+import io.spine.testing.UtilityClassTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
-/**
- * Manages instances of {@link BoardInitProcess}.
- */
-public final class BoardInitRepository
-        extends ProcessManagerRepository<BoardId, BoardInitProcess, BoardInit> {
+@DisplayName("`DefaultColumns` should")
+class DefaultColumnsTest extends UtilityClassTest<DefaultColumns> {
 
-    @Override
-    protected void setupEventRouting(EventRouting<BoardId> routing) {
-        super.setupEventRouting(routing);
+    DefaultColumnsTest() {
+        super(DefaultColumns.class);
+    }
+
+    @Test
+    @DisplayName("convert an enum value to the Title Case")
+    void nameForConvertsToTitleCase() {
+        String expected = "To Do";
+        String actual = DefaultColumns.nameFor(BoardInit.DefaultColumn.TO_DO);
+
+        Assertions.assertEquals(expected, actual);
     }
 }

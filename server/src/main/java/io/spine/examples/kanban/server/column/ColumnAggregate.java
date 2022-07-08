@@ -61,7 +61,6 @@ final class ColumnAggregate extends Aggregate<ColumnId, Column, Column.Builder> 
                 .setBoard(c.getBoard())
                 .setColumn(c.getColumn())
                 .setName(c.getName())
-                .setBoardInit(c.getBoardInit())
                 .vBuild();
     }
 

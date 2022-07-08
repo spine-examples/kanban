@@ -55,22 +55,24 @@ message Board {
     repeated ColumnId column = 5;
 }
 
-// After a board is created it is initialized with the default set of columns.
+// The board initialization process manager.
 //
-// Once these columns are created, the board is initialized.
+// A board requires initial setup before a user can use it. The board is ready for use
+// when all default columns have been created and placed.
 //
 message BoardInit {
-
     option (entity).kind = PROCESS_MANAGER;
 
     // The ID of the board we initialize.
     BoardId id = 1 [(required) = true];
 
-    // The column to create next.
-    DefaultColumn step = 2;
+    // Columns already placed.
+    repeated ColumnId placed_column = 3;
 
-    // Columns already created.
-    repeated ColumnId created_column = 3;
+    // The process manager used to create default columns one by one, "step by step".
+    // Currently, it creates them all at once.
+    reserved 2;
+    reserved "step";
 
     enum DefaultColumn {
         TO_DO = 0;

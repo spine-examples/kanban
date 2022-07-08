@@ -26,33 +26,66 @@
 
 package io.spine.examples.kanban.server.board;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableList;
+import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.BoardInit.DefaultColumn;
+import io.spine.examples.kanban.ColumnId;
+import io.spine.examples.kanban.command.CreateColumn;
 
-/**
- * Provides default values for initializing columns.
- */
-final class Defaults {
+import java.util.Arrays;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
+
+/** Provides utility methods for dealing with default columns. */
+final class DefaultColumns {
 
     /** Prevents instantiation of this utility class. */
-    private Defaults() {
+    private DefaultColumns() {
+    }
+
+    /** Obtains the number of default columns. */
+    static int count() {
+        return DefaultColumn.values().length - 1;
     }
 
     /**
-     * Transforms the enum value into a column title.
+     * Returns an ordered list of commands for creating defaults columns for the
+     * provided board.
+     *
+     * <p> The list is ordered following the natural order of Kanban columns. This order
+     * corresponds to the declaration order of entries in the {@link DefaultColumn}.
      */
+    static ImmutableList<CreateColumn> creationCommands(BoardId board) {
+        checkNotNull(board);
+        return Arrays.stream(DefaultColumn.values())
+                     .filter(c -> c != DefaultColumn.UNRECOGNIZED)
+                     .map(c -> creationCommand(board, c))
+                     .collect(toImmutableList());
+    }
+
+    private static CreateColumn creationCommand(BoardId board, DefaultColumn column) {
+        return CreateColumn
+                .newBuilder()
+                .setBoard(board)
+                .setColumn(ColumnId.generate())
+                .setName(nameFor(column))
+                .vBuild();
+    }
+
+    /** Transforms the enum value into a column title. */
+    @VisibleForTesting
     static String nameFor(DefaultColumn column) {
+        checkNotNull(column);
         String lowerCase = column.name()
                                  .replace('_', ' ')
                                  .toLowerCase();
         return toTitleCase(lowerCase);
     }
 
-    static DefaultColumn first() {
-        return DefaultColumn.values()[0];
-    }
-
     /**
-     * Transforms the passed string to Title Case.
+     * Transforms the passed string to the Title Case.
      *
      * <p>Examples of transformations:
      * <ul>
@@ -62,7 +95,7 @@ final class Defaults {
      * </ul>
      */
     private static String toTitleCase(String input) {
-        StringBuilder titleCase = new StringBuilder();
+        StringBuilder res = new StringBuilder(input.length());
         boolean nextTitleCase = true;
 
         for (char c : input.toCharArray()) {
@@ -72,8 +105,8 @@ final class Defaults {
                 c = Character.toTitleCase(c);
                 nextTitleCase = false;
             }
-            titleCase.append(c);
+            res.append(c);
         }
-        return titleCase.toString();
+        return res.toString();
     }
 }

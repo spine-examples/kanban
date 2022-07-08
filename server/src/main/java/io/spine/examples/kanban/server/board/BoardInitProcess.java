@@ -26,115 +26,50 @@
 
 package io.spine.examples.kanban.server.board;
 
-import com.google.common.annotations.VisibleForTesting;
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.BoardInit;
-import io.spine.examples.kanban.BoardInit.DefaultColumn;
-import io.spine.examples.kanban.ColumnId;
 import io.spine.examples.kanban.command.CreateColumn;
 import io.spine.examples.kanban.event.BoardCreated;
-import io.spine.examples.kanban.event.ColumnCreated;
+import io.spine.examples.kanban.event.BoardInitialized;
+import io.spine.examples.kanban.event.ColumnPlaced;
 import io.spine.server.command.Command;
+import io.spine.server.event.React;
+import io.spine.server.model.Nothing;
 import io.spine.server.procman.ProcessManager;
-import org.checkerframework.checker.nullness.qual.Nullable;
-
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-
-import static io.spine.examples.kanban.server.board.Defaults.nameFor;
+import io.spine.server.tuple.EitherOf2;
 
 /**
  * Creates default columns on a newly created board.
  */
 final class BoardInitProcess extends ProcessManager<BoardId, BoardInit, BoardInit.Builder> {
 
-    private final Steps steps = new Steps();
-
     /**
-     * Whenever a new board is created, issue a command for creating the first default column.
+     * Whenever a new board is created, issue commands for creating default columns.
      */
     @Command
-    CreateColumn startPolicy(BoardCreated event) {
-        BoardId board = event.getBoard();
-        DefaultColumn first = Defaults.first();
-        builder().setStep(first);
-        return createColumn(board, nameFor(first));
+    Iterable<CreateColumn> startPolicy(BoardCreated e) {
+        return DefaultColumns.creationCommands(e.getBoard());
     }
 
     /**
-     * Create a column with the passed name at the specified board.
+     * Whenever all default columns are created and placed on the board,
+     * terminate the process.
      */
-    private static CreateColumn createColumn(BoardId board, String columnName) {
-        return CreateColumn
-                .newBuilder()
-                .setBoard(board)
-                .setColumn(ColumnId.generate())
-                .setName(columnName)
-                .setBoardInit(true)
-                .vBuild();
-    }
+    @React
+    EitherOf2<BoardInitialized, Nothing> terminationPolicy(ColumnPlaced e) {
+        builder().addPlacedColumn(e.getColumn());
 
-    /**
-     * Whenever a column is created and it's not the last column,
-     * issue a command for creating next default column.
-     * Otherwise, terminate the process.
-     */
-    @Command
-    Optional<CreateColumn> defaultColumnPolicy(ColumnCreated event) {
-        builder().addCreatedColumn(event.getColumn());
-
-        if (!steps.hasNext()) {
+        if (builder().getPlacedColumnCount() == DefaultColumns.count()) {
             setDeleted(true);
-            return Optional.empty();
+
+            return EitherOf2.withA(
+                    BoardInitialized
+                            .newBuilder()
+                            .setBoard(state().getId())
+                            .vBuild()
+            );
         }
 
-        DefaultColumn next = steps.next();
-
-        BoardId boardId = state().getId();
-        return Optional.of(createColumn(boardId, nameFor(next)));
-    }
-
-    /**
-     * Obtains the number of default columns that are to be created by the process.
-     *
-     * @apiNote
-     */
-    @VisibleForTesting
-    static int defaultColumnCount() {
-        int result = BoardInit.DefaultColumn.values().length - 1;
-        return result;
-    }
-
-    /**
-     * Traversal over default column values.
-     */
-    private final class Steps implements Iterator<DefaultColumn> {
-
-        @Override
-        public boolean hasNext() {
-            return internalNext() != null;
-        }
-
-        /**
-         * Advances the process to the next step and returns its value.
-         */
-        @Override
-        public DefaultColumn next() {
-            @Nullable DefaultColumn result = internalNext();
-            if (result == null) {
-                throw new NoSuchElementException("There is no column after " + current());
-            }
-            builder().setStep(result);
-            return result;
-        }
-
-        private @Nullable DefaultColumn internalNext() {
-            return DefaultColumn.forNumber(current().getNumber() + 1);
-        }
-
-        private DefaultColumn current() {
-            return state().getStep();
-        }
+        return EitherOf2.withB(nothing());
     }
 }
