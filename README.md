@@ -8,3 +8,8 @@ This example demonstrates:
 * Multiple related Aggregate.
 * Orchestrating Aggregates using Process Managers.
 * Building a Projection which is subscribed to both events and entity updates.
+
+# Developing Spine client
+
+Here is the [guide](ProtoVue.md) to setting up a Spine client project and using
+`protoc`-generated types.
