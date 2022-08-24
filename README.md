@@ -1,5 +1,8 @@
-[![Build Status](https://github.com/spine-examples/kanban/actions/workflows/build.yml/badge.svg)](https://github.com/spine-examples/kanban/actions/workflows/build.yml)
-[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+[![Build Status][github-actions-badge]](https://github.com/spine-examples/kanban/actions/workflows/build.yml)
+[![License][license-badge]](https://www.apache.org/licenses/LICENSE-2.0)
+
+[github-actions-badge]: https://github.com/spine-examples/kanban/actions/workflows/build.yml/badge.svg
+[license-badge]: https://img.shields.io/badge/License-Apache_2.0-blue.svg
 
 # Kanban Board example
 
@@ -11,5 +14,4 @@ This example demonstrates:
 
 # Developing Spine client
 
-Here is the [guide](ProtoVue.md) to setting up a Spine client project and using
-`protoc`-generated types.
+Here is the [guide](spine-vue-client-setup.md) to setting up a Spine client project.

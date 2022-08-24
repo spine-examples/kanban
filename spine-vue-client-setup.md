@@ -1,4 +1,4 @@
-# Vue + Typescript + `Protoc`-generated JS
+# Spine Vue client setup
 
 ## Prerequisites
 
