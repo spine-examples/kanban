@@ -1,8 +1,5 @@
-[![Build Status][travis-badge]](https://travis-ci.com/spine-examples/kanban) &nbsp;
-[![license][license-badge]](http://www.apache.org/licenses/LICENSE-2.0)
-
-[travis-badge]: https://travis-ci.com/spine-examples/kanban.svg?branch=master
-[license-badge]: https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat
+[![Build Status](https://github.com/spine-examples/kanban/actions/workflows/build.yml/badge.svg)](https://github.com/spine-examples/kanban/actions/workflows/build.yml)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
 # Kanban Board example
 
