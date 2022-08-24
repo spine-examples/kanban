@@ -46,7 +46,7 @@ the `.eslintrc.json`:
 ```
 
 As generated code is ignored, ESLint cannot know about the 'proto' namespace, which 
-results in the `'proto' namespace is undefined`. Considering that, the [`no-undef`](https://eslint.org/docs/latest/rules/no-undef) 
+results in the `'proto' namespace is undefined` error. Considering that, the [`no-undef`](https://eslint.org/docs/latest/rules/no-undef) 
 rule should be turned off by adding the following configuration to the `.eslintrc.json`:
 
 ```JSON
