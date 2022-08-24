@@ -3,6 +3,7 @@
 ## Prerequisites
 
 - Create a Vue client in a separate submodule following [this guide](https://cli.vuejs.org/guide/creating-a-project.html#vue-create).
+Ensure to include Typescript, ESLint, Babel.
 - Go through [this guide](https://spine.io/docs/guides/gradle). As a result, it is
 possible to run the following command:
 
