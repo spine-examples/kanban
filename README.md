@@ -12,6 +12,6 @@ This example demonstrates:
 * Orchestrating Aggregates using Process Managers.
 * Building a Projection which is subscribed to both events and entity updates.
 
-# Developing Spine client
+# Spine client
 
 Here is the [guide](spine-vue-client-setup.md) to setting up a Spine client project.
