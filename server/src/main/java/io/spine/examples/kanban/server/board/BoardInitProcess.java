@@ -28,10 +28,10 @@ package io.spine.examples.kanban.server.board;
 
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.BoardInit;
-import io.spine.examples.kanban.command.CreateColumn;
+import io.spine.examples.kanban.command.AddColumn;
 import io.spine.examples.kanban.event.BoardCreated;
 import io.spine.examples.kanban.event.BoardInitialized;
-import io.spine.examples.kanban.event.ColumnPlaced;
+import io.spine.examples.kanban.event.ColumnAdded;
 import io.spine.server.command.Command;
 import io.spine.server.event.React;
 import io.spine.server.model.Nothing;
@@ -47,8 +47,8 @@ final class BoardInitProcess extends ProcessManager<BoardId, BoardInit, BoardIni
      * Whenever a new board is created, issue commands for creating default columns.
      */
     @Command
-    Iterable<CreateColumn> startPolicy(BoardCreated e) {
-        return DefaultColumns.creationCommands(e.getBoard());
+    Iterable<AddColumn> startPolicy(BoardCreated e) {
+        return DefaultColumns.additionCommands(e.getBoard());
     }
 
     /**
@@ -56,7 +56,7 @@ final class BoardInitProcess extends ProcessManager<BoardId, BoardInit, BoardIni
      * terminate the process.
      */
     @React
-    EitherOf2<BoardInitialized, Nothing> terminationPolicy(ColumnPlaced e) {
+    EitherOf2<BoardInitialized, Nothing> terminationPolicy(ColumnAdded e) {
         builder().addPlacedColumn(e.getColumn());
 
         if (builder().getPlacedColumnCount() == DefaultColumns.count()) {

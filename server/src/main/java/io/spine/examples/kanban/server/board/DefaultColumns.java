@@ -31,7 +31,7 @@ import com.google.common.collect.ImmutableList;
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.BoardInit.DefaultColumn;
 import io.spine.examples.kanban.ColumnId;
-import io.spine.examples.kanban.command.CreateColumn;
+import io.spine.examples.kanban.command.AddColumn;
 
 import java.util.Arrays;
 
@@ -51,22 +51,22 @@ final class DefaultColumns {
     }
 
     /**
-     * Returns an ordered list of commands for creating defaults columns for the
+     * Returns an ordered list of commands for adding defaults columns to the
      * provided board.
      *
      * <p> The list is ordered following the natural order of Kanban columns. This order
      * corresponds to the declaration order of entries in the {@link DefaultColumn}.
      */
-    static ImmutableList<CreateColumn> creationCommands(BoardId board) {
+    static ImmutableList<AddColumn> additionCommands(BoardId board) {
         checkNotNull(board);
         return Arrays.stream(DefaultColumn.values())
                      .filter(c -> c != DefaultColumn.UNRECOGNIZED)
-                     .map(c -> creationCommand(board, c))
+                     .map(c -> additionCommand(board, c))
                      .collect(toImmutableList());
     }
 
-    private static CreateColumn creationCommand(BoardId board, DefaultColumn column) {
-        return CreateColumn
+    private static AddColumn additionCommand(BoardId board, DefaultColumn column) {
+        return AddColumn
                 .newBuilder()
                 .setBoard(board)
                 .setColumn(ColumnId.generate())

@@ -28,6 +28,7 @@ package io.spine.examples.kanban.server.board;
 
 import com.google.common.collect.ImmutableList;
 import io.spine.examples.kanban.Column;
+import io.spine.examples.kanban.command.AddColumn;
 import io.spine.examples.kanban.command.CreateColumn;
 import io.spine.examples.kanban.event.BoardInitialized;
 import io.spine.examples.kanban.server.KanbanContextTest;
@@ -49,15 +50,15 @@ class BoardInitProcessTest extends KanbanContextTest {
     }
 
     @Test
-    @DisplayName("issue creation commands for all default columns")
+    @DisplayName("issue addition commands for all default columns")
     void issuesCommands() {
         CommandSubject issuedCommands = context().assertCommands()
-                                                 .withType(CreateColumn.class);
+                                                 .withType(AddColumn.class);
         int expectedCount = DefaultColumns.count();
         issuedCommands.hasSize(expectedCount);
 
-        ImmutableList<CreateColumn> expectedCommands =
-                DefaultColumns.creationCommands(board())
+        ImmutableList<AddColumn> expectedCommands =
+                DefaultColumns.additionCommands(board())
                               .stream()
                               .map(BoardInitProcessTest::clearId)
                               .collect(toImmutableList());
@@ -69,15 +70,15 @@ class BoardInitProcessTest extends KanbanContextTest {
         }
     }
 
-    private static CreateColumn clearId(CreateColumn c) {
+    private static AddColumn clearId(AddColumn c) {
         return c.toBuilder()
                 .clearColumn()
                 .buildPartial();
     }
 
     @Test
-    @DisplayName("create default columns")
-    void createsColumns() {
+    @DisplayName("add default columns")
+    void addsColumns() {
         ImmutableList<Column> expectedColumns = expectedColumns();
         expectedColumns.forEach(
                 c -> context().assertEntityWithState(c.getId(), Column.class)
@@ -88,20 +89,21 @@ class BoardInitProcessTest extends KanbanContextTest {
 
     private ImmutableList<Column> expectedColumns() {
         return context().assertCommands()
-                        .withType(CreateColumn.class)
+                        .withType(AddColumn.class)
                         .actual()
                         .stream()
-                        .map(c -> unpack(c.getMessage(), CreateColumn.class))
+                        .map(c -> unpack(c.getMessage(), AddColumn.class))
                         .map(BoardInitProcessTest::toColumn)
                         .collect(toImmutableList());
     }
 
-    private static Column toColumn(CreateColumn c) {
+    private static Column toColumn(AddColumn c) {
         return Column
                 .newBuilder()
                 .setId(c.getColumn())
                 .setBoard(c.getBoard())
                 .setName(c.getName())
+                .setPosition(c.getDesiredPosition())
                 .vBuild();
     }
 
