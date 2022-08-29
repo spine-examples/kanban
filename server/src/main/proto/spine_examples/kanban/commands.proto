@@ -42,6 +42,9 @@ import "spine_examples/kanban/column_position.proto";
 message CreateBoard {
 
     // The ID of the board to create.
+    //
+    // Example note: By convention the first field of a command is its target.
+    // So we don't have to mark it as required.
     BoardId board = 1;
 }
 
@@ -99,8 +102,7 @@ message PlaceColumn {
 message CreateCard {
 
     // The ID for newly created card.
-    CardId card = 1;  // Example note: By convention the first field of a command is its target.
-                      // So we don't have to mark it as required.
+    CardId card = 1;
     
     // An ID of the board card is created on.
     BoardId board = 2 [(required) = true];
