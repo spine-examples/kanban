@@ -29,12 +29,15 @@ package io.spine.examples.kanban.server.board;
 import io.spine.examples.kanban.Board;
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.ColumnId;
+import io.spine.examples.kanban.command.AddColumn;
 import io.spine.examples.kanban.command.CreateBoard;
+import io.spine.examples.kanban.command.PlaceColumn;
 import io.spine.examples.kanban.event.BoardCreated;
 import io.spine.examples.kanban.event.CardCreated;
 import io.spine.examples.kanban.event.CardWaitingPlacement;
-import io.spine.examples.kanban.event.ColumnCreated;
+import io.spine.examples.kanban.event.ColumnAdditionRequested;
 import io.spine.examples.kanban.event.ColumnPlaced;
+import io.spine.examples.kanban.rejection.ColumnNameMustBeUnique;
 import io.spine.server.aggregate.Aggregate;
 import io.spine.server.aggregate.Apply;
 import io.spine.server.command.Assign;
@@ -58,22 +61,45 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
         builder().setId(e.getBoard());
     }
 
-    /**
-     * Whenever a new column is created, it is placed next to existing columns.
-     */
-    @React
-    ColumnPlaced columnPlacementPolicy(ColumnCreated event) {
+    @Assign
+    ColumnAdditionRequested handle(AddColumn c) throws ColumnNameMustBeUnique {
+        if (!isColumnNameUnique(c.getName())) {
+            throw ColumnNameMustBeUnique
+                    .newBuilder()
+                    .setColumn(c.getColumn())
+                    .setName(c.getName())
+                    .build();
+        }
+
+        return ColumnAdditionRequested
+                .newBuilder()
+                .setBoard(c.getBoard())
+                .setColumn(c.getColumn())
+                .setDesiredPosition(c.getDesiredPosition())
+                .setName(c.getName())
+                .vBuild();
+    }
+
+    private boolean isColumnNameUnique(String name) {
+        return builder()
+                .getColumnList()
+                .stream()
+                .noneMatch(c -> builder().getColumnNamesOrThrow(c.getUuid()).equals(name));
+    }
+
+    @Assign
+    ColumnPlaced handle(PlaceColumn c) {
         return ColumnPlaced
                 .newBuilder()
-                .setBoard(event.getBoard())
-                .setColumn(event.getColumn())
+                .setBoard(c.getBoard())
+                .setColumn(c.getColumn())
+                .setPosition(c.getPosition())
                 .vBuild();
     }
 
     @Apply
     private void event(ColumnPlaced e) {
-        builder().setId(e.getBoard())
-                 .addColumn(e.getColumn());
+        builder().addColumn(e.getPosition().getIndex(), e.getColumn());
     }
 
     /**
