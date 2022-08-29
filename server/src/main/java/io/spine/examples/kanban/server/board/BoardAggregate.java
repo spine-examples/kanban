@@ -46,17 +46,16 @@ import io.spine.server.event.React;
 final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
 
     @Assign
-    BoardCreated handle(CreateBoard command) {
-        BoardId id = command.getBoard();
+    BoardCreated handle(CreateBoard c) {
         return BoardCreated
                 .newBuilder()
-                .setBoard(id)
+                .setBoard(c.getBoard())
                 .vBuild();
     }
 
     @Apply
-    private void event(BoardCreated event) {
-        builder().setId(event.getBoard());
+    private void event(BoardCreated e) {
+        builder().setId(e.getBoard());
     }
 
     /**
