@@ -108,7 +108,7 @@ Webpack should be instructed on how to resolve imports during bundling. Add the
 following configuration to the `webpack.config.js`:
 
 ```JavaScript
-const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 
 module.exports = {
     resolve: {
@@ -160,6 +160,6 @@ export type Card = proto.spine.examples.kanban.Card;
 import { Card } from "@/types"
 
 let card: Card = new proto.spine.examples.kanban.Card();
-card.setName("Awesome card!")
+card.setName("Awesome card!");
 //...
 ```
