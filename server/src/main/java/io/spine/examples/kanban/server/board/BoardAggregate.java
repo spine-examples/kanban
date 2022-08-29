@@ -80,9 +80,9 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     /**
      * Whenever a card created, it is placed to the first column of the board.
      *
-     * @implNote This board knows its columns. So the board listens to the events on new card
-     *           creation, and emits the event with the references to the created card and
-     *           the first column on which the card is to be placed.
+     * @implNote This board knows its columns. So the board listens to the events
+     *           on new card creation, and emits the event with the references to the
+     *           created card and the first column on which the card is to be placed.
      */
     @React
     CardWaitingPlacement cardPlacementPolicy(CardCreated event) {
