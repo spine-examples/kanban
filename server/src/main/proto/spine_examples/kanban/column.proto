@@ -63,6 +63,21 @@ message Column {
     ColumnPosition position = 6;
 }
 
+// The process of adding a new column to a board.
+message ColumnAddition {
+
+    option (entity).kind = PROCESS_MANAGER;
+
+    // The ID of the column to add.
+    ColumnId column = 1 [(required) = true];
+
+    // The ID of the board to which to add the column.
+    BoardId board = 2 [(required) = true];
+
+    // The desired position of the column on the board.
+    ColumnPosition desired_position = 3 [(required) = true];
+}
+
 // The process of moving cards between columns.
 message CardTransition {
 

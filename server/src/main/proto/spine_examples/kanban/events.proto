@@ -35,6 +35,7 @@ option java_multiple_files = true;
 
 import "spine_examples/kanban/identifiers.proto";
 import "spine_examples/kanban/wip_limit.proto";
+import "spine_examples/kanban/column_position.proto";
 
 // A new board has been created.
 //
@@ -54,14 +55,49 @@ message BoardInitialized {
     BoardId board = 1 [(required) = true];
 }
 
-// A column placed on the board.
-message ColumnPlaced {
+// A request to add a new column to the board was made.
+message ColumnAdditionRequested {
 
-    // The ID of the board.
-    BoardId board = 1 [(required) = true];
+    // The ID of the column to add.
+    ColumnId column = 1;
+
+    // The ID of the board to which to add the column.
+    BoardId board = 2 [(required) = true];
+
+    // The name of the column.
+    string name = 3 [(required) = true];
+
+    // The desired position of column on the board.
+    ColumnPosition desired_position = 4 [(required) = true];
+}
+
+// A column was placed on the board.
+message ColumnPlaced {
 
     // The ID of the placed column.
     ColumnId column = 2 [(required) = true];
+
+    // The ID of the board where column was placed.
+    BoardId board = 1 [(required) = true];
+
+    // The position on the board where column was placed.
+    ColumnPosition position = 3 [(required) = true];
+}
+
+// A column was added to the board.
+message ColumnAdded {
+
+    // The ID of the added column.
+    ColumnId column = 1 [(required) = true];
+
+    // The ID of the board where column was added.
+    BoardId board = 2 [(required) = true];
+
+    // The name of the column.
+    string name = 3 [(required) = true];
+
+    // The position on the board where column was placed.
+    ColumnPosition position = 4 [(required) = true];
 }
 
 // A new card is created.
@@ -83,7 +119,6 @@ message CardCreated {
 
 // A column was created.
 message ColumnCreated {
-    option (is).java_type = "BoardAwareEvent";
 
     // The ID of the created column.
     ColumnId column = 1 [(required) = true];

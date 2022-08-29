@@ -36,6 +36,7 @@ option java_multiple_files = true;
 
 import "spine_examples/kanban/identifiers.proto";
 import "spine_examples/kanban/wip_limit.proto";
+import "spine_examples/kanban/column_position.proto";
 
 // A command to create a new board.
 message CreateBoard {
@@ -44,7 +45,23 @@ message CreateBoard {
     BoardId board = 1;
 }
 
-// A command to create a new column on a board.
+// A command to add a new column on a board.
+message AddColumn {
+
+    // The ID of the board on which to create the column.
+    BoardId board = 1;
+
+    // The ID of the column to add.
+    ColumnId column = 2 [(required) = true];
+
+    // The name of the column.
+    string name = 3 [(required) = true];
+
+    // The desired position of column on the board.
+    ColumnPosition desired_position = 4 [(required) = true];
+}
+
+// A command to create a new column.
 message CreateColumn {
 
     // The ID of the column to create.
@@ -60,6 +77,19 @@ message CreateColumn {
     // the board initialization process. Currently, it is considered rudimentary.
     reserved 4;
     reserved "board_init";
+}
+
+// A command to place a column.
+message PlaceColumn {
+
+    // The ID of the board on which to create the column.
+    BoardId board = 1 [(required) = true];
+
+    // The ID of the column to place.
+    ColumnId column = 2 [(required) = true];
+
+    // The position to place the column.
+    ColumnPosition position = 3 [(required) = true];
 }
 
 // A command to create a new card on the specified board.

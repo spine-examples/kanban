@@ -51,8 +51,12 @@ message Board {
     // By convention of this example application, the first column contains cards that wait
     // to be worked on. The last column is for cards that are done. Columns in between are
     // for stages of processing (i.e. work in progress).
-    //
     repeated ColumnId column = 5;
+
+    // Map of column ids and their names.
+    //
+    // This map is used to check that column names are unique within the board.
+    map<string, string> column_names = 6;
 }
 
 // The board initialization process manager.
