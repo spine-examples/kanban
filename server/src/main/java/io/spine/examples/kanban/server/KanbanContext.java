@@ -26,7 +26,7 @@
 
 package io.spine.examples.kanban.server;
 
-import io.spine.examples.kanban.server.board.BoardInitRepository;
+import io.spine.examples.kanban.server.board.BoardInitProcess;
 import io.spine.examples.kanban.server.board.BoardRepository;
 import io.spine.examples.kanban.server.card.CardRepository;
 import io.spine.examples.kanban.server.column.ColumnAdditionProcess;
@@ -56,7 +56,7 @@ final class KanbanContext {
         return BoundedContext
                 .singleTenant(NAME)
                 .add(new BoardRepository())
-                .add(new BoardInitRepository())
+                .add(DefaultRepository.of(BoardInitProcess.class))
                 .add(new ColumnRepository())
                 .add(DefaultRepository.of(ColumnAdditionProcess.class))
                 .add(new CardRepository())

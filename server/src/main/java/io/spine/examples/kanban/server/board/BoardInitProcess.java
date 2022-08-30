@@ -41,7 +41,8 @@ import io.spine.server.tuple.EitherOf2;
 /**
  * Creates default columns on a newly created board.
  */
-final class BoardInitProcess extends ProcessManager<BoardId, BoardInit, BoardInit.Builder> {
+public final class BoardInitProcess
+        extends ProcessManager<BoardId, BoardInit, BoardInit.Builder> {
 
     /**
      * Whenever a new board is created, issue commands for adding default columns.
