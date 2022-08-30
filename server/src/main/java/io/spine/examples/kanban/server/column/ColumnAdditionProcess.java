@@ -40,10 +40,7 @@ public final class ColumnAdditionProcess
 
     @Command
     CreateColumn handle(ColumnAdditionRequested e) {
-        builder().setColumn(e.getColumn());
-        builder().setBoard(e.getBoard());
-        builder().setDesiredPosition(e.getDesiredPosition());
-
+        initState(e);
         return CreateColumn
                .newBuilder()
                .setBoard(e.getBoard())
@@ -52,6 +49,11 @@ public final class ColumnAdditionProcess
                .vBuild();
     }
 
+    private void initState(ColumnAdditionRequested e) {
+        builder().setColumn(e.getColumn());
+        builder().setBoard(e.getBoard());
+        builder().setDesiredPosition(e.getDesiredPosition());
+    }
 
     @Command
     PlaceColumn handle(ColumnCreated e) {
