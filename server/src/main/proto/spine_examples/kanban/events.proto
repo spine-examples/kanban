@@ -84,6 +84,19 @@ message ColumnPlaced {
     ColumnPosition position = 3 [(required) = true];
 }
 
+// A column position was changed.
+message ColumnPositionUpdated {
+
+    // The ID of the placed column.
+    ColumnId column = 1 [(required) = true];
+
+    // The previous position of the column.
+    ColumnPosition previous = 2;
+
+    // The current position of the column.
+    ColumnPosition current = 3 [(required) = true];
+}
+
 // A column was added to the board.
 message ColumnAdded {
 

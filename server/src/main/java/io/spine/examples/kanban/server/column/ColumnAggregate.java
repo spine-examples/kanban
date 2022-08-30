@@ -28,6 +28,7 @@ package io.spine.examples.kanban.server.column;
 
 import io.spine.examples.kanban.Column;
 import io.spine.examples.kanban.ColumnId;
+import io.spine.examples.kanban.ColumnPosition;
 import io.spine.examples.kanban.WipLimit;
 import io.spine.examples.kanban.command.AddCardToColumn;
 import io.spine.examples.kanban.command.CreateColumn;
@@ -37,6 +38,8 @@ import io.spine.examples.kanban.event.CardAddedToColumn;
 import io.spine.examples.kanban.event.CardRemovedFromColumn;
 import io.spine.examples.kanban.event.CardWaitingPlacement;
 import io.spine.examples.kanban.event.ColumnCreated;
+import io.spine.examples.kanban.event.ColumnPlaced;
+import io.spine.examples.kanban.event.ColumnPositionUpdated;
 import io.spine.examples.kanban.event.WipLimitChanged;
 import io.spine.examples.kanban.event.WipLimitRemoved;
 import io.spine.examples.kanban.event.WipLimitSet;
@@ -68,6 +71,21 @@ final class ColumnAggregate extends Aggregate<ColumnId, Column, Column.Builder> 
     private void event(ColumnCreated e) {
         builder().setBoard(e.getBoard())
                  .setName(e.getName());
+    }
+
+    @React
+    ColumnPositionUpdated handle(ColumnPlaced c) {
+        return ColumnPositionUpdated
+                .newBuilder()
+                .setColumn(c.getColumn())
+                .setPrevious(state().getPosition())
+                .setCurrent(c.getPosition())
+                .vBuild();
+    }
+
+    @Apply
+    private void event(ColumnPositionUpdated e) {
+        builder().setPosition(e.getCurrent());
     }
 
     /**
