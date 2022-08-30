@@ -37,8 +37,8 @@ option java_multiple_files = true;
 message ColumnPosition {
 
     // The index of a column in a column list.
-    int32 index = 1 [(required) = true, (min).value = "1"];
+    int32 index = 1 [(min).value = "1"];
 
     // The total number of columns on a board.
-    int32 of_total = 2 [(required) = true, (min).value = "1"];
+    int32 of_total = 2 [(min).value = "1"];
 }
