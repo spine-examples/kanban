@@ -32,7 +32,6 @@ import io.spine.examples.kanban.command.CreateColumn;
 import io.spine.examples.kanban.command.PlaceColumn;
 import io.spine.examples.kanban.event.ColumnAdditionRequested;
 import io.spine.examples.kanban.event.ColumnCreated;
-import io.spine.server.aggregate.Apply;
 import io.spine.server.command.Command;
 import io.spine.server.procman.ProcessManager;
 
