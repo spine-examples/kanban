@@ -49,8 +49,10 @@ message ColumnNameMustBeUnique {
 
     // The ID of the column failed to be added.
     ColumnId column = 1 [(required) = true];
+
     // The provided name of the column.
     string name = 2[(required) = true];
+
     // The ID of the existing column with the provided name.
     ColumnId reason = 3 [(required) = true];
 }
