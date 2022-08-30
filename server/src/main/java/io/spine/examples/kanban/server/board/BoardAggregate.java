@@ -63,7 +63,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
 
     @Assign
     ColumnAdditionRequested handle(AddColumn c) throws ColumnNameMustBeUnique {
-        if (!isColumnNameUnique(c.getName())) {
+        if (columnNameIsTaken(c.getName())) {
             throw ColumnNameMustBeUnique
                     .newBuilder()
                     .setColumn(c.getColumn())
@@ -80,11 +80,12 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
                 .vBuild();
     }
 
-    private boolean isColumnNameUnique(String name) {
-        return builder()
-                .getColumnList()
+    private boolean columnNameIsTaken(String name) {
+        return state()
+                .getColumnNamesList()
                 .stream()
-                .noneMatch(c -> builder().getColumnNamesOrThrow(c.getUuid()).equals(name));
+                .anyMatch(entry -> entry.getName()
+                                        .equals(name));
     }
 
     @Assign
