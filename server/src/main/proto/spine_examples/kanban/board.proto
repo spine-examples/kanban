@@ -75,8 +75,8 @@ message BoardInit {
     // The ID of the board we initialize.
     BoardId id = 1 [(required) = true];
 
-    // Columns already placed.
-    repeated ColumnId placed_column = 3;
+    // Columns already added.
+    repeated ColumnId added_column = 3;
 
     // The process manager used to create default columns one by one, "step by step".
     // Currently, it creates them all at once.

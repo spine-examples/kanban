@@ -44,7 +44,7 @@ import io.spine.server.tuple.EitherOf2;
 final class BoardInitProcess extends ProcessManager<BoardId, BoardInit, BoardInit.Builder> {
 
     /**
-     * Whenever a new board is created, issue commands for creating default columns.
+     * Whenever a new board is created, issue commands for adding default columns.
      */
     @Command
     Iterable<AddColumn> startPolicy(BoardCreated e) {
@@ -52,14 +52,13 @@ final class BoardInitProcess extends ProcessManager<BoardId, BoardInit, BoardIni
     }
 
     /**
-     * Whenever all default columns are created and placed on the board,
-     * terminate the process.
+     * Whenever all default columns are added to the board, terminate the process.
      */
     @React
     EitherOf2<BoardInitialized, Nothing> terminationPolicy(ColumnAdded e) {
-        builder().addPlacedColumn(e.getColumn());
+        builder().addAddedColumn(e.getColumn());
 
-        if (builder().getPlacedColumnCount() == DefaultColumns.count()) {
+        if (builder().getAddedColumnCount() == DefaultColumns.count()) {
             setDeleted(true);
 
             return EitherOf2.withA(
