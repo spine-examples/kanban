@@ -73,10 +73,10 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
 
         return ColumnAdditionRequested
                 .newBuilder()
-                .setBoard(c.getBoard())
                 .setColumn(c.getColumn())
-                .setDesiredPosition(c.getDesiredPosition())
+                .setBoard(c.getBoard())
                 .setName(c.getName())
+                .setDesiredPosition(c.getDesiredPosition())
                 .vBuild();
     }
 
