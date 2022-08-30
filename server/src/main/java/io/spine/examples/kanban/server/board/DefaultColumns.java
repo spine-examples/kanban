@@ -31,12 +31,10 @@ import com.google.common.collect.ImmutableList;
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.BoardInit.DefaultColumn;
 import io.spine.examples.kanban.ColumnId;
+import io.spine.examples.kanban.ColumnPosition;
 import io.spine.examples.kanban.command.AddColumn;
 
-import java.util.Arrays;
-
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /** Provides utility methods for dealing with default columns. */
 final class DefaultColumns {
@@ -59,18 +57,33 @@ final class DefaultColumns {
      */
     static ImmutableList<AddColumn> additionCommands(BoardId board) {
         checkNotNull(board);
-        return Arrays.stream(DefaultColumn.values())
-                     .filter(c -> c != DefaultColumn.UNRECOGNIZED)
-                     .map(c -> additionCommand(board, c))
-                     .collect(toImmutableList());
+
+        ImmutableList.Builder<AddColumn> commands = new ImmutableList.Builder<>();
+        int index = 1;
+        for (DefaultColumn column : DefaultColumn.values()) {
+            if (column != DefaultColumn.UNRECOGNIZED) {
+                ColumnPosition position = ColumnPosition.newBuilder()
+                                                   .setIndex(index)
+                                                   .setOfTotal(index)
+                                                   .vBuild();
+
+                commands.add(additionCommand(board, column, position));
+                index++;
+            }
+        }
+
+        return commands.build();
     }
 
-    private static AddColumn additionCommand(BoardId board, DefaultColumn column) {
+    private static AddColumn additionCommand(BoardId board,
+                                             DefaultColumn column,
+                                             ColumnPosition position) {
         return AddColumn
                 .newBuilder()
                 .setBoard(board)
                 .setColumn(ColumnId.generate())
                 .setName(nameFor(column))
+                .setDesiredPosition(position)
                 .vBuild();
     }
 
