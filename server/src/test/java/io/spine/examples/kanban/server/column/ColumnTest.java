@@ -52,7 +52,7 @@ class ColumnTest extends KanbanContextTest {
 
     @BeforeEach
     void setupColumn() {
-        context().receivesCommand(createColumn());
+        context().receivesCommand(addColumn());
     }
 
     @Nested
@@ -191,7 +191,7 @@ class ColumnTest extends KanbanContextTest {
         @BeforeEach
         void initColumn() {
             columnWithLimit = ColumnId.generate();
-            context().receivesCommand(createColumn(columnWithLimit))
+            context().receivesCommand(addColumn(columnWithLimit))
                      .receivesCommand(setWipLimit(columnWithLimit, LIMIT));
         }
 

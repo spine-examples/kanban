@@ -30,9 +30,9 @@ import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.CardId;
 import io.spine.examples.kanban.ColumnId;
 import io.spine.examples.kanban.WipLimit;
+import io.spine.examples.kanban.command.AddColumn;
 import io.spine.examples.kanban.command.CreateBoard;
 import io.spine.examples.kanban.command.CreateCard;
-import io.spine.examples.kanban.command.CreateColumn;
 import io.spine.examples.kanban.command.SetWipLimit;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -80,8 +80,8 @@ public abstract class KanbanTest {
         return TestCommands.createBoard(board);
     }
 
-    protected final CreateColumn createColumn() {
-        return TestCommands.createColumn(board, column);
+    protected final AddColumn addColumn() {
+        return TestCommands.addColumn(board, column);
     }
 
     protected final CreateCard createCard() {
@@ -92,8 +92,8 @@ public abstract class KanbanTest {
         return TestCommands.createCard(board, card);
     }
 
-    protected final CreateColumn createColumn(ColumnId column) {
-        return TestCommands.createColumn(board, column);
+    protected final AddColumn addColumn(ColumnId column) {
+        return TestCommands.addColumn(board, column);
     }
 
     protected static SetWipLimit setWipLimit(ColumnId column, int limit) {
