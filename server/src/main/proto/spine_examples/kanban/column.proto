@@ -69,13 +69,16 @@ message ColumnAddition {
     option (entity).kind = PROCESS_MANAGER;
 
     // The ID of the column to add.
-    ColumnId column = 1 [(required) = true];
+    ColumnId column = 1;
 
     // The ID of the board to which to add the column.
     BoardId board = 2 [(required) = true];
 
+    // The name of the column.
+    string name = 3 [(required) = true];
+
     // The desired position of the column on the board.
-    ColumnPosition desired_position = 3 [(required) = true];
+    ColumnPosition desired_position = 4 [(required) = true];
 }
 
 // The process of moving cards between columns.

@@ -30,9 +30,12 @@ import io.spine.examples.kanban.ColumnAddition;
 import io.spine.examples.kanban.ColumnId;
 import io.spine.examples.kanban.command.CreateColumn;
 import io.spine.examples.kanban.command.PlaceColumn;
+import io.spine.examples.kanban.event.ColumnAdded;
 import io.spine.examples.kanban.event.ColumnAdditionRequested;
 import io.spine.examples.kanban.event.ColumnCreated;
+import io.spine.examples.kanban.event.ColumnPlaced;
 import io.spine.server.command.Command;
+import io.spine.server.event.React;
 import io.spine.server.procman.ProcessManager;
 
 public final class ColumnAdditionProcess
@@ -42,16 +45,17 @@ public final class ColumnAdditionProcess
     CreateColumn handle(ColumnAdditionRequested e) {
         initState(e);
         return CreateColumn
-               .newBuilder()
-               .setBoard(e.getBoard())
-               .setColumn(e.getColumn())
-               .setName(e.getName())
-               .vBuild();
+                .newBuilder()
+                .setBoard(e.getBoard())
+                .setColumn(e.getColumn())
+                .setName(e.getName())
+                .vBuild();
     }
 
     private void initState(ColumnAdditionRequested e) {
         builder().setColumn(e.getColumn());
         builder().setBoard(e.getBoard());
+        builder().setName(e.getName());
         builder().setDesiredPosition(e.getDesiredPosition());
     }
 
