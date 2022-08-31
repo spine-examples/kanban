@@ -29,6 +29,7 @@ package io.spine.examples.kanban.server.board;
 import io.spine.examples.kanban.Board;
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.ColumnId;
+import io.spine.examples.kanban.ColumnPosition;
 import io.spine.examples.kanban.command.AddColumn;
 import io.spine.examples.kanban.command.CreateBoard;
 import io.spine.examples.kanban.command.PlaceColumn;
@@ -72,12 +73,23 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
                     .build();
         }
 
+        ColumnPosition desiredPosition = c.getDesiredPosition();
+        if(!c.hasDesiredPosition()) {
+            int columnCount = state().getColumnCount();
+            desiredPosition =
+                    ColumnPosition
+                            .newBuilder()
+                            .setIndex(columnCount)
+                            .setOfTotal(columnCount)
+                            .build();
+        }
+
         return ColumnAdditionRequested
                 .newBuilder()
                 .setColumn(c.getColumn())
                 .setBoard(c.getBoard())
                 .setName(c.getName())
-                .setDesiredPosition(c.getDesiredPosition())
+                .setDesiredPosition(desiredPosition)
                 .vBuild();
     }
 

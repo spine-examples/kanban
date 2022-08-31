@@ -61,7 +61,7 @@ message AddColumn {
     string name = 3 [(required) = true];
 
     // The desired position of column on the board.
-    ColumnPosition desired_position = 4 [(required) = true];
+    ColumnPosition desired_position = 4;
 }
 
 // A command to create a new column.
