@@ -83,6 +83,7 @@ class BoardInitProcessTest extends KanbanContextTest {
         expectedColumns.forEach(
                 c -> context().assertEntityWithState(c.getId(), Column.class)
                               .hasStateThat()
+                              .comparingExpectedFieldsOnly()
                               .isEqualTo(c)
         );
     }
