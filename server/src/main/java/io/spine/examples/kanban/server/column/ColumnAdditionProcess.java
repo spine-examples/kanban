@@ -68,4 +68,16 @@ public final class ColumnAdditionProcess
                 .setPosition(state().getDesiredPosition())
                 .vBuild();
     }
+
+    @React
+    ColumnAdded event(ColumnPlaced e) {
+        setDeleted(true);
+        return ColumnAdded
+                .newBuilder()
+                .setColumn(e.getColumn())
+                .setBoard(e.getBoard())
+                .setName(state().getName())
+                .setPosition(e.getPosition())
+                .vBuild();
+    }
 }
