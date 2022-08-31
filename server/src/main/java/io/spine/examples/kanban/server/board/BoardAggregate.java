@@ -37,7 +37,6 @@ import io.spine.examples.kanban.event.BoardCreated;
 import io.spine.examples.kanban.event.CardCreated;
 import io.spine.examples.kanban.event.CardWaitingPlacement;
 import io.spine.examples.kanban.event.ColumnAdditionRequested;
-import io.spine.examples.kanban.event.ColumnCreated;
 import io.spine.examples.kanban.event.ColumnPlaced;
 import io.spine.examples.kanban.rejection.ColumnNameMustBeUnique;
 import io.spine.server.aggregate.Aggregate;
@@ -74,7 +73,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
         }
 
         ColumnPosition desiredPosition = c.getDesiredPosition();
-        if(!c.hasDesiredPosition()) {
+        if (!c.hasDesiredPosition()) {
             int columnCount = state().getColumnCount();
             desiredPosition =
                     ColumnPosition
@@ -102,7 +101,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     }
 
     @Apply
-    private void event(ColumnCreated e) {
+    private void event(ColumnAdditionRequested e) {
         builder().addColumnNames(Board.ColumnNamesMapEntry
                                          .newBuilder()
                                          .setColumn(e.getColumn())
