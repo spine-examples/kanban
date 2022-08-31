@@ -74,13 +74,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
 
         ColumnPosition desiredPosition = c.getDesiredPosition();
         if (!c.hasDesiredPosition()) {
-            int columnCount = state().getColumnCount();
-            desiredPosition =
-                    ColumnPosition
-                            .newBuilder()
-                            .setIndex(columnCount)
-                            .setOfTotal(columnCount)
-                            .build();
+            desiredPosition = nextPosition();
         }
 
         return ColumnAdditionRequested
@@ -90,6 +84,17 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
                 .setName(c.getName())
                 .setDesiredPosition(desiredPosition)
                 .vBuild();
+    }
+
+    private ColumnPosition nextPosition() {
+        int newTotal = state().getColumnCount() + 1;
+        int newIndex = newTotal;
+
+        return ColumnPosition
+                .newBuilder()
+                .setIndex(newIndex)
+                .setOfTotal(newTotal)
+                .build();
     }
 
     private boolean columnNameIsTaken(String name) {
