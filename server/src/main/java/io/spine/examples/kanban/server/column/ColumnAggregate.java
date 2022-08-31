@@ -28,7 +28,6 @@ package io.spine.examples.kanban.server.column;
 
 import io.spine.examples.kanban.Column;
 import io.spine.examples.kanban.ColumnId;
-import io.spine.examples.kanban.ColumnPosition;
 import io.spine.examples.kanban.WipLimit;
 import io.spine.examples.kanban.command.AddCardToColumn;
 import io.spine.examples.kanban.command.CreateColumn;
