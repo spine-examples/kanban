@@ -26,11 +26,15 @@
 
 package io.spine.examples.kanban.server.board;
 
+import io.spine.examples.kanban.Column;
+import io.spine.examples.kanban.event.ColumnAdded;
 import io.spine.examples.kanban.server.KanbanContextTest;
+import io.spine.testing.server.EventSubject;
 import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 @DisplayName("Kanban Context Board logic should")
 @Ignore("Restore the tests when move card API is defined")
@@ -39,6 +43,43 @@ class BoardTest extends KanbanContextTest {
     @BeforeEach
     void setupBoard() {
         context().receivesCommand(createBoard());
+    }
+
+    @Nested
+    @DisplayName("add a new column")
+    class AddColumn {
+
+        @BeforeEach
+        void addColumn() {
+            context().receivesCommand(BoardTest.this.addColumn());
+        }
+
+        @Test
+        @DisplayName("as entity with `Column` state")
+        void entity() {
+            context().assertEntityWithState(column(), Column.class)
+                     .exists();
+        }
+
+        @Test
+        @DisplayName("generating `ColumnAdded` event")
+        void event() {
+            EventSubject assertEvents =
+                    context().assertEvents()
+                             .withType(ColumnAdded.class);
+
+            assertEvents.hasSize(1);
+            ColumnAdded expected = ColumnAdded
+                    .newBuilder()
+                    .setBoard(board())
+                    .setColumn(column())
+                    // We call `buildPartial()` instead of `vBuild()` to be able to
+                    // omit the `name` field, which is `required` in the event.
+                    .buildPartial();
+            assertEvents.message(0)
+                        .comparingExpectedFieldsOnly()
+                        .isEqualTo(expected);
+        }
     }
 
     @Nested

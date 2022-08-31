@@ -56,38 +56,6 @@ class ColumnTest extends KanbanContextTest {
     }
 
     @Nested
-    @DisplayName("create new column")
-    class Creation {
-
-        @Test
-        @DisplayName("as entity with `Column` state")
-        void entity() {
-            context().assertEntityWithState(column(), Column.class)
-                     .exists();
-        }
-
-        @Test
-        @DisplayName("generating `ColumnCreated` event")
-        void event() {
-            EventSubject assertEvents =
-                    context().assertEvents()
-                             .withType(ColumnCreated.class);
-
-            assertEvents.hasSize(1);
-            ColumnCreated expected = ColumnCreated
-                    .newBuilder()
-                    .setBoard(board())
-                    .setColumn(column())
-                    // We call `buildPartial()` instead of `vBuild()` to be able to omit the `name` field,
-                    // which is `required` in the event.
-                    .buildPartial();
-            assertEvents.message(0)
-                        .ignoringFields(3 /* name */)
-                        .isEqualTo(expected);
-        }
-    }
-
-    @Nested
     @DisplayName("support WIP limit")
     class SettingWipLimit {
 
