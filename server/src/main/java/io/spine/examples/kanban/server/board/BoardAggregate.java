@@ -121,7 +121,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
 
     @Apply
     private void event(ColumnPlaced e) {
-        builder().addColumn(e.getPosition().getIndex(), e.getColumn());
+        builder().addColumn(e.getPosition().getIndex() - 1, e.getColumn());
     }
 
     /**
