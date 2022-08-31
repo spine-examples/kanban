@@ -29,7 +29,7 @@ package io.spine.examples.kanban.server;
 import io.spine.examples.kanban.server.board.BoardInitProcess;
 import io.spine.examples.kanban.server.board.BoardRepository;
 import io.spine.examples.kanban.server.card.CardRepository;
-import io.spine.examples.kanban.server.column.ColumnAdditionProcess;
+import io.spine.examples.kanban.server.column.ColumnAdditionRepository;
 import io.spine.examples.kanban.server.column.ColumnRepository;
 import io.spine.examples.kanban.server.column.MoveCardRepository;
 import io.spine.examples.kanban.server.view.BoardProjection;
@@ -58,7 +58,7 @@ final class KanbanContext {
                 .add(new BoardRepository())
                 .add(DefaultRepository.of(BoardInitProcess.class))
                 .add(new ColumnRepository())
-                .add(DefaultRepository.of(ColumnAdditionProcess.class))
+                .add(new ColumnAdditionRepository())
                 .add(new CardRepository())
                 .add(new MoveCardRepository())
                 .add(DefaultRepository.of(BoardProjection.class));
