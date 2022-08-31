@@ -46,43 +46,6 @@ class BoardTest extends KanbanContextTest {
     }
 
     @Nested
-    @DisplayName("add a new column")
-    class AddColumn {
-
-        @BeforeEach
-        void addColumn() {
-            context().receivesCommand(BoardTest.this.addColumn());
-        }
-
-        @Test
-        @DisplayName("as entity with `Column` state")
-        void entity() {
-            context().assertEntityWithState(column(), Column.class)
-                     .exists();
-        }
-
-        @Test
-        @DisplayName("generating `ColumnAdded` event")
-        void event() {
-            EventSubject assertEvents =
-                    context().assertEvents()
-                             .withType(ColumnAdded.class);
-
-            assertEvents.hasSize(1);
-            ColumnAdded expected = ColumnAdded
-                    .newBuilder()
-                    .setBoard(board())
-                    .setColumn(column())
-                    // We call `buildPartial()` instead of `vBuild()` to be able to
-                    // omit the `name` field, which is `required` in the event.
-                    .buildPartial();
-            assertEvents.message(0)
-                        .comparingExpectedFieldsOnly()
-                        .isEqualTo(expected);
-        }
-    }
-
-    @Nested
     @DisplayName("Move card emitting")
     class MoveCard {
 
