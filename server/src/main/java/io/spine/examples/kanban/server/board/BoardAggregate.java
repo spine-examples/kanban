@@ -140,4 +140,10 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
                 .setColumn(firstColumn)
                 .vBuild();
     }
+
+    @Apply
+    @SuppressWarnings("PMD.UnusedFormalParameter")
+    private void event(CardWaitingPlacement event) {
+        // Do nothing on the board. The corresponding column will handle the event.
+    }
 }
