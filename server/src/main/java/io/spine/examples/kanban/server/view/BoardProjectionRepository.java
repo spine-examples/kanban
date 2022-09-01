@@ -38,7 +38,6 @@ import static io.spine.server.route.EventRoute.withId;
 public class BoardProjectionRepository
         extends ProjectionRepository<BoardId, BoardProjection, BoardView> {
 
-    @OverridingMethodsMustInvokeSuper
     @Override
     protected void setupEventRouting(EventRouting<BoardId> routing) {
         super.setupEventRouting(routing);
