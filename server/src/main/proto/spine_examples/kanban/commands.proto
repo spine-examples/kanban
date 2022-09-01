@@ -98,13 +98,13 @@ message CreateCard {
     // The ID for newly created card.
     CardId card = 1;
     
-    // An ID of the board card is created on.
+    // The ID of the board card is created on.
     BoardId board = 2 [(required) = true];
 
-    // A name for card to create.
+    // The name of the card.
     string name = 3 [(required) = true];
 
-    // A description of work to be done.
+    // The description of the work.
     string description = 4;
 }
 

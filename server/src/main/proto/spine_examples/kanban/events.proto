@@ -128,7 +128,7 @@ message ColumnAdded {
     ColumnPosition position = 4 [(required) = true];
 }
 
-// A new card is created.
+// A new card was created.
 message CardCreated {
     option (is).java_type = "BoardAwareEvent";
 
@@ -138,10 +138,10 @@ message CardCreated {
     // The ID of the board which contains the card.
     BoardId board = 2 [(required) = true];
 
-    // A name of the card which was created.
+    // The name of the card.
     string name = 3 [(required) = true];
 
-    // Optional work description text.
+    // The description of the work.
     string description = 4;
 }
 
