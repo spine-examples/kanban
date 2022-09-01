@@ -68,6 +68,24 @@ message ColumnAdditionRequested {
     string name = 3 [(required) = true];
 }
 
+// A column was created.
+message ColumnCreated {
+
+    // The ID of the created column.
+    ColumnId column = 1 [(required) = true];
+
+    // The ID of the board on which the column created.
+    BoardId board = 2 [(required) = true];
+
+    // The name of the new column.
+    string name = 3 [(required) = true];
+
+    // This flag was used to indicate that a column was created during
+    // the board initialization process. Currently, it is considered rudimentary.
+    reserved 4;
+    reserved "board_init";
+}
+
 // A column was placed on the board.
 message ColumnPlaced {
 
@@ -125,24 +143,6 @@ message CardCreated {
 
     // Optional work description text.
     string description = 4;
-}
-
-// A column was created.
-message ColumnCreated {
-
-    // The ID of the created column.
-    ColumnId column = 1 [(required) = true];
-
-    // The ID of the board on which the column created.
-    BoardId board = 2 [(required) = true];
-
-    // The name of the new column.
-    string name = 3 [(required) = true];
-
-    // This flag was used to indicate that a column was created during
-    // the board initialization process. Currently, it is considered rudimentary.
-    reserved 4;
-    reserved "board_init";
 }
 
 // A new card is waiting to be placed to a column.
