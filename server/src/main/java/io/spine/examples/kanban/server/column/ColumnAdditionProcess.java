@@ -62,8 +62,8 @@ public final class ColumnAdditionProcess
     PlaceColumn handle(ColumnCreated e) {
         return PlaceColumn
                 .newBuilder()
-                .setBoard(state().getBoard())
-                .setColumn(state().getColumn())
+                .setBoard(e.getBoard())
+                .setColumn(e.getColumn())
                 .vBuild();
     }
 
