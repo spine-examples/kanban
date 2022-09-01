@@ -76,9 +76,6 @@ message ColumnAddition {
 
     // The name of the column.
     string name = 3 [(required) = true];
-
-    // The desired position of the column on the board.
-    ColumnPosition desired_position = 4 [(required) = true];
 }
 
 // The process of moving cards between columns.

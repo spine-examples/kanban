@@ -104,7 +104,6 @@ class BoardInitProcessTest extends KanbanContextTest {
                 .setId(c.getColumn())
                 .setBoard(c.getBoard())
                 .setName(c.getName())
-                .setPosition(c.getDesiredPosition())
                 .vBuild();
     }
 

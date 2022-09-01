@@ -66,9 +66,6 @@ message ColumnAdditionRequested {
 
     // The name of the column.
     string name = 3 [(required) = true];
-
-    // The desired position of column on the board.
-    ColumnPosition desired_position = 4 [(required) = true];
 }
 
 // A column was placed on the board.

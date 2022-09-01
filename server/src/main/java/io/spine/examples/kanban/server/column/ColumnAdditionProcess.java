@@ -53,10 +53,9 @@ public final class ColumnAdditionProcess
     }
 
     private void initState(ColumnAdditionRequested e) {
-        builder().setColumn(e.getColumn());
-        builder().setBoard(e.getBoard());
-        builder().setName(e.getName());
-        builder().setDesiredPosition(e.getDesiredPosition());
+        builder().setColumn(e.getColumn())
+                .setBoard(e.getBoard())
+                .setName(e.getName());
     }
 
     @Command
@@ -65,7 +64,6 @@ public final class ColumnAdditionProcess
                 .newBuilder()
                 .setBoard(state().getBoard())
                 .setColumn(state().getColumn())
-                .setPosition(state().getDesiredPosition())
                 .vBuild();
     }
 

@@ -72,46 +72,30 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
                     .build();
         }
 
-        ColumnPosition desiredPosition = c.getDesiredPosition();
-        if (!c.hasDesiredPosition()) {
-            desiredPosition = nextPosition();
-        }
-
         return ColumnAdditionRequested
                 .newBuilder()
                 .setColumn(c.getColumn())
                 .setBoard(c.getBoard())
                 .setName(c.getName())
-                .setDesiredPosition(desiredPosition)
                 .vBuild();
-    }
-
-    private ColumnPosition nextPosition() {
-        int newTotal = state().getColumnCount() + 1;
-        int newIndex = newTotal;
-
-        return ColumnPosition
-                .newBuilder()
-                .setIndex(newIndex)
-                .setOfTotal(newTotal)
-                .build();
     }
 
     private boolean columnNameIsTaken(String name) {
         return state()
                 .getColumnNamesList()
                 .stream()
-                .anyMatch(entry -> entry.getName()
-                                        .equals(name));
+                .anyMatch(entry -> entry.getName().equals(name));
     }
 
     @Apply
     private void event(ColumnAdditionRequested e) {
-        builder().addColumnNames(Board.ColumnNamesMapEntry
-                                         .newBuilder()
-                                         .setColumn(e.getColumn())
-                                         .setName(e.getName())
-                                         .build());
+        builder().addColumnNames(
+                Board.ColumnNamesMapEntry
+                        .newBuilder()
+                        .setColumn(e.getColumn())
+                        .setName(e.getName())
+                        .build()
+        );
     }
 
     @Assign
@@ -120,7 +104,15 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
                 .newBuilder()
                 .setBoard(c.getBoard())
                 .setColumn(c.getColumn())
-                .setPosition(c.getPosition())
+                .setPosition(nextPosition())
+                .vBuild();
+    }
+
+    private ColumnPosition nextPosition() {
+        int newTotal = state().getColumnCount() + 1;
+        return ColumnPosition.newBuilder()
+                .setIndex(newTotal)
+                .setOfTotal(newTotal)
                 .vBuild();
     }
 
