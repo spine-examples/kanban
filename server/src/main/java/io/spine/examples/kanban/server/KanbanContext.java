@@ -32,10 +32,9 @@ import io.spine.examples.kanban.server.card.CardRepository;
 import io.spine.examples.kanban.server.column.ColumnAdditionRepository;
 import io.spine.examples.kanban.server.column.ColumnRepository;
 import io.spine.examples.kanban.server.column.MoveCardRepository;
-import io.spine.examples.kanban.server.view.BoardProjection;
+import io.spine.examples.kanban.server.view.BoardProjectionRepository;
 import io.spine.server.BoundedContext;
 import io.spine.server.BoundedContextBuilder;
-import io.spine.server.DefaultRepository;
 
 /**
  * Configures Kanban Bounded Context with repositories.
@@ -61,6 +60,6 @@ final class KanbanContext {
                 .add(new ColumnAdditionRepository())
                 .add(new CardRepository())
                 .add(new MoveCardRepository())
-                .add(DefaultRepository.of(BoardProjection.class));
+                .add(new BoardProjectionRepository());
     }
 }

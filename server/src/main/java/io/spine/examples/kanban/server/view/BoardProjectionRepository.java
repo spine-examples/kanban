@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, TeamDev. All rights reserved.
+ * Copyright 2022, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,46 +26,22 @@
 
 package io.spine.examples.kanban.server.view;
 
-import io.spine.core.Subscribe;
+import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper;
 import io.spine.examples.kanban.BoardId;
-import io.spine.examples.kanban.Card;
-import io.spine.examples.kanban.Column;
-import io.spine.examples.kanban.event.BoardCreated;
 import io.spine.examples.kanban.event.ColumnAdded;
 import io.spine.examples.kanban.view.BoardView;
-import io.spine.server.projection.Projection;
+import io.spine.server.projection.ProjectionRepository;
+import io.spine.server.route.EventRouting;
 
-/**
- * Builds display information for a board.
- */
-public final class BoardProjection extends Projection<BoardId, BoardView, BoardView.Builder> {
+import static io.spine.server.route.EventRoute.withId;
 
-    @Subscribe
-    void on(BoardCreated e) {
-        builder().setId(e.getBoard());
-    }
+public class BoardProjectionRepository
+        extends ProjectionRepository<BoardId, BoardProjection, BoardView> {
 
-    @Subscribe
-    void on(ColumnAdded e) {
-        Column addedColumn = Column
-                .newBuilder()
-                .setId(e.getColumn())
-                .setBoard(e.getBoard())
-                .setName(e.getName())
-                .setPosition(e.getPosition())
-                .vBuild();
-
-        builder().addColumn(e.getPosition().getIndex() - 1, addedColumn);
-    }
-
-    @Subscribe
-    void updated(Card card) {
-        int index = state().getCardList()
-                           .indexOf(card);
-        if (index != -1) {
-            builder().setCard(index, card);
-        } else {
-            builder().addCard(card);
-        }
+    @OverridingMethodsMustInvokeSuper
+    @Override
+    protected void setupEventRouting(EventRouting<BoardId> routing) {
+        super.setupEventRouting(routing);
+        routing.route(ColumnAdded.class, (event, context) -> withId(event.getBoard()));
     }
 }
