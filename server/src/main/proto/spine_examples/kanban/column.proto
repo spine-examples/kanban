@@ -45,7 +45,7 @@ message Column {
     option (entity) = { kind: AGGREGATE visibility: FULL };
 
     // The ID of the column.
-    ColumnId id = 1 [(required) = true];
+    ColumnId id = 1;
 
     // The board to which the column belongs.
     BoardId board = 2 [(required) = true];
