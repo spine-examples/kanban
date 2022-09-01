@@ -26,7 +26,6 @@
 
 package io.spine.examples.kanban.server.view;
 
-import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper;
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.event.ColumnAdded;
 import io.spine.examples.kanban.view.BoardView;
