@@ -94,7 +94,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
                         .newBuilder()
                         .setColumn(e.getColumn())
                         .setName(e.getName())
-                        .build()
+                        .vBuild()
         );
     }
 
