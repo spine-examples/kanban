@@ -26,6 +26,8 @@
 
 package io.spine.examples.kanban.server.board;
 
+import com.google.common.collect.ImmutableList;
+import io.spine.base.EventMessage;
 import io.spine.examples.kanban.Board;
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.ColumnId;
@@ -37,6 +39,7 @@ import io.spine.examples.kanban.event.BoardCreated;
 import io.spine.examples.kanban.event.CardCreated;
 import io.spine.examples.kanban.event.CardWaitingPlacement;
 import io.spine.examples.kanban.event.ColumnAdditionRequested;
+import io.spine.examples.kanban.event.ColumnMoved;
 import io.spine.examples.kanban.event.ColumnPlaced;
 import io.spine.examples.kanban.rejection.ColumnNameMustBeUnique;
 import io.spine.server.aggregate.Aggregate;
@@ -99,26 +102,69 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     }
 
     @Assign
-    ColumnPlaced handle(PlaceColumn c) {
+    Iterable<EventMessage> handle(PlaceColumn c) {
+        return new ImmutableList.Builder<EventMessage>()
+                .addAll(shiftColumns())
+                .add(placeColumn(c))
+                .build();
+    }
+
+    private ImmutableList<ColumnMoved> shiftColumns() {
+        int currentTotal = state().getColumnCount();
+        int newTotal = currentTotal + 1;
+        ImmutableList.Builder<ColumnMoved> columnsMoved =
+                new ImmutableList.Builder<>();
+
+        for (int i = 0; i < currentTotal; i++) {
+            ColumnId column = state().getColumn(i);
+            ColumnPosition from = ColumnPosition
+                    .newBuilder()
+                    .setIndex(i + 1)
+                    .setOfTotal(currentTotal)
+                    .vBuild();
+            ColumnPosition to = ColumnPosition
+                    .newBuilder()
+                    .setIndex(i + 1)
+                    .setOfTotal(newTotal)
+                    .vBuild();
+
+            columnsMoved.add(
+                    ColumnMoved
+                            .newBuilder()
+                            .setColumn(column)
+                            .setFrom(from)
+                            .setTo(to)
+                            .vBuild()
+            );
+        }
+
+        return columnsMoved.build();
+    }
+
+    private ColumnPlaced placeColumn(PlaceColumn c) {
+        int newTotal = state().getColumnCount() + 1;
         return ColumnPlaced
                 .newBuilder()
                 .setBoard(c.getBoard())
                 .setColumn(c.getColumn())
-                .setPosition(nextPosition())
-                .vBuild();
-    }
-
-    private ColumnPosition nextPosition() {
-        int newTotal = state().getColumnCount() + 1;
-        return ColumnPosition.newBuilder()
-                .setIndex(newTotal)
-                .setOfTotal(newTotal)
+                .setPosition(
+                        ColumnPosition.newBuilder()
+                                      .setIndex(newTotal)
+                                      .setOfTotal(newTotal)
+                                      .vBuild()
+                )
                 .vBuild();
     }
 
     @Apply
     private void event(ColumnPlaced e) {
         builder().addColumn(e.getPosition().getIndex() - 1, e.getColumn());
+    }
+
+    @Apply
+    private void event(ColumnMoved e) {
+        builder().removeColumn(e.getFrom().getIndex() - 1)
+                 .addColumn(e.getTo().getIndex() - 1, e.getColumn());
     }
 
     /**

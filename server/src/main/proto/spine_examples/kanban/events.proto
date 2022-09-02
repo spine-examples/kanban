@@ -99,6 +99,19 @@ message ColumnPlaced {
     ColumnPosition position = 3 [(required) = true];
 }
 
+// A column was moved on the board.
+message ColumnMoved {
+
+    // The ID of the moved column.
+    ColumnId column = 1 [(required) = true];
+
+    // The original position of the column.
+    ColumnPosition from = 2 [(required) = true];
+
+    // The position on the board to which column was moved.
+    ColumnPosition to = 3 [(required) = true];
+}
+
 // A column position was changed.
 message ColumnPositionUpdated {
 

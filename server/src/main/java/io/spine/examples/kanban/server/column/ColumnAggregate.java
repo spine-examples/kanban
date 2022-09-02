@@ -37,6 +37,7 @@ import io.spine.examples.kanban.event.CardAddedToColumn;
 import io.spine.examples.kanban.event.CardRemovedFromColumn;
 import io.spine.examples.kanban.event.CardWaitingPlacement;
 import io.spine.examples.kanban.event.ColumnCreated;
+import io.spine.examples.kanban.event.ColumnMoved;
 import io.spine.examples.kanban.event.ColumnPlaced;
 import io.spine.examples.kanban.event.ColumnPositionUpdated;
 import io.spine.examples.kanban.event.WipLimitChanged;
@@ -68,17 +69,27 @@ final class ColumnAggregate extends Aggregate<ColumnId, Column, Column.Builder> 
 
     @Apply
     private void event(ColumnCreated e) {
-        builder().setBoard(e.getBoard())
+        builder().setId(e.getColumn())
+                 .setBoard(e.getBoard())
                  .setName(e.getName());
     }
 
     @React
-    ColumnPositionUpdated handle(ColumnPlaced c) {
+    ColumnPositionUpdated handle(ColumnPlaced e) {
         return ColumnPositionUpdated
                 .newBuilder()
-                .setColumn(c.getColumn())
+                .setColumn(e.getColumn())
+                .setCurrent(e.getPosition())
+                .vBuild();
+    }
+
+    @React
+    ColumnPositionUpdated handle(ColumnMoved e) {
+        return ColumnPositionUpdated
+                .newBuilder()
+                .setColumn(e.getColumn())
                 .setPrevious(state().getPosition())
-                .setCurrent(c.getPosition())
+                .setCurrent(e.getTo())
                 .vBuild();
     }
 
@@ -155,10 +166,10 @@ final class ColumnAggregate extends Aggregate<ColumnId, Column, Column.Builder> 
      * Updates the WIP limit value for a column.
      *
      * @return <ul>
-     *             <li>{@code WipLimitSet} — if the column did not have a limit before;
-     *             <li>{@code WipLimitChanged} — if a non-zero limit value changes to another
-     *                 non-zero value;
-     *             <li>{@code WipLimitRemoved} — if the column had a limit before this command.
+     *         <li>{@code WipLimitSet} — if the column did not have a limit before;
+     *         <li>{@code WipLimitChanged} — if a non-zero limit value changes to another
+     *         non-zero value;
+     *         <li>{@code WipLimitRemoved} — if the column had a limit before this command.
      *         </ul>
      * @throws WipLimitAlreadySet
      *         if the command attempts to change the limit to the value (zero or non-zero)
