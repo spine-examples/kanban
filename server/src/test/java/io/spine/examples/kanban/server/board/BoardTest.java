@@ -26,15 +26,19 @@
 
 package io.spine.examples.kanban.server.board;
 
-import io.spine.examples.kanban.Column;
-import io.spine.examples.kanban.event.ColumnAdded;
+import io.spine.examples.kanban.Board;
+import io.spine.examples.kanban.ColumnId;
+import io.spine.examples.kanban.command.AddColumn;
+import io.spine.examples.kanban.event.BoardCreated;
 import io.spine.examples.kanban.server.KanbanContextTest;
-import io.spine.testing.server.EventSubject;
 import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import static io.spine.examples.kanban.rejection.Rejections.ColumnNameMustBeUnique;
+import static io.spine.testing.TestValues.randomString;
 
 @DisplayName("Kanban Context Board logic should")
 @Ignore("Restore the tests when move card API is defined")
@@ -43,6 +47,72 @@ class BoardTest extends KanbanContextTest {
     @BeforeEach
     void setupBoard() {
         context().receivesCommand(createBoard());
+    }
+
+    @Nested
+    @DisplayName("create a board")
+    class CreateBoard {
+        @Test
+        @DisplayName("as a `Board` entity")
+        void entity() {
+            context().assertEntityWithState(board(), Board.class)
+                     .exists();
+        }
+
+        @Test
+        @DisplayName("emitting the `BoardCreated` event")
+        void event() {
+            BoardCreated expected = BoardCreated
+                    .newBuilder()
+                    .setBoard(board())
+                    .build();
+
+            context().assertEvents()
+                     .withType(BoardCreated.class)
+                     .message(0)
+                     .isEqualTo(expected);
+        }
+    }
+
+
+    @Nested
+    @DisplayName("not allow creation of a column with a duplicate name")
+    class RejectDuplicateColumnNames {
+
+        private AddColumn rejectedCommand;
+
+        @BeforeEach
+        void sendCommands() {
+            String name = randomString();
+            AddColumn successfulCommand = AddColumn.newBuilder()
+                                                   .setBoard(board())
+                                                   .setColumn(ColumnId.generate())
+                                                   .setName(name)
+                                                   .vBuild();
+            rejectedCommand = AddColumn.newBuilder()
+                                       .setBoard(board())
+                                       .setColumn(ColumnId.generate())
+                                       .setName(name)
+                                       .vBuild();
+
+            context().receivesCommand(successfulCommand);
+            context().receivesCommand(rejectedCommand);
+        }
+
+        @Test
+        @DisplayName("emitting the `ColumnNameMustBeUnique` rejection")
+        void rejection() {
+            ColumnNameMustBeUnique expected = ColumnNameMustBeUnique
+                    .newBuilder()
+                    .setColumn(rejectedCommand.getColumn())
+                    .setName(rejectedCommand.getName())
+                    .build();
+
+            context().assertEvents()
+                     .withType(ColumnNameMustBeUnique.class)
+                     .message(0)
+                     .isEqualTo(expected);
+        }
     }
 
     @Nested
