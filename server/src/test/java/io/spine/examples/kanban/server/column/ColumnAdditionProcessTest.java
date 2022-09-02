@@ -44,6 +44,12 @@ class ColumnAdditionProcessTest extends KanbanContextTest {
     }
 
     @Test
+    @DisplayName("add a `Column`")
+    void entity() {
+        context().assertEntityWithState(column(), Column.class)
+                 .exists();
+    }
+    @Test
     @DisplayName("emit the `ColumnAdded` event when terminated")
     void event() {
         EventSubject assertEvents = context().assertEvents()
@@ -61,8 +67,7 @@ class ColumnAdditionProcessTest extends KanbanContextTest {
                                 .setOfTotal(1)
                                 .vBuild()
                 )
-                // We call `buildPartial()` instead of `vBuild()` to be able to
-                // omit the `name` field, which is `required` in the event.
+                // We call `buildPartial()` instead of `vBuild()` to omit `required` fields.
                 .buildPartial();
         assertEvents.message(0)
                     .comparingExpectedFieldsOnly()
@@ -70,17 +75,10 @@ class ColumnAdditionProcessTest extends KanbanContextTest {
     }
 
     @Test
-    @DisplayName("delete itself when terminated")
+    @DisplayName("be deleted when terminated")
     void deletesItself() {
         context().assertEntity(column(), ColumnAdditionProcess.class)
                  .deletedFlag()
                  .isTrue();
-    }
-
-    @Test
-    @DisplayName("add a `Column`")
-    void entity() {
-        context().assertEntityWithState(column(), Column.class)
-                 .exists();
     }
 }
