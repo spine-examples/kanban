@@ -35,10 +35,9 @@ import io.spine.examples.kanban.event.ColumnAdded;
 import io.spine.examples.kanban.view.BoardView;
 import io.spine.server.projection.Projection;
 
-/**
- * Builds display information for a board.
- */
-public final class BoardProjection extends Projection<BoardId, BoardView, BoardView.Builder> {
+/** Builds display information for a board. */
+public final class BoardProjection
+        extends Projection<BoardId, BoardView, BoardView.Builder> {
 
     @Subscribe
     void on(BoardCreated e) {

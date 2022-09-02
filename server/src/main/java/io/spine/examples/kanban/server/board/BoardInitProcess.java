@@ -48,7 +48,7 @@ public final class BoardInitProcess
      * Whenever a new board is created, issue commands for adding default columns.
      */
     @Command
-    Iterable<AddColumn> startPolicy(BoardCreated e) {
+    Iterable<AddColumn> on(BoardCreated e) {
         return DefaultColumns.additionCommands(e.getBoard());
     }
 
@@ -56,7 +56,7 @@ public final class BoardInitProcess
      * Whenever all default columns are added to the board, terminate the process.
      */
     @React
-    EitherOf2<BoardInitialized, Nothing> terminationPolicy(ColumnAdded e) {
+    EitherOf2<BoardInitialized, Nothing> on(ColumnAdded e) {
         builder().addAddedColumn(e.getColumn());
 
         if (builder().getAddedColumnCount() == DefaultColumns.count()) {

@@ -49,7 +49,7 @@ public final class ColumnAdditionProcess
      * new column.
      */
     @Command
-    CreateColumn handle(ColumnAdditionRequested e) {
+    CreateColumn on(ColumnAdditionRequested e) {
         initState(e);
         return CreateColumn
                 .newBuilder()
@@ -70,7 +70,7 @@ public final class ColumnAdditionProcess
      * the board.
      */
     @Command
-    PlaceColumn handle(ColumnCreated e) {
+    PlaceColumn on(ColumnCreated e) {
         return PlaceColumn
                 .newBuilder()
                 .setBoard(e.getBoard())
@@ -80,7 +80,7 @@ public final class ColumnAdditionProcess
 
     /** Whenever a column is placed on the board, terminate the process. */
     @React
-    ColumnAdded event(ColumnPlaced e) {
+    ColumnAdded on(ColumnPlaced e) {
         setDeleted(true);
         return ColumnAdded
                 .newBuilder()

@@ -59,7 +59,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     }
 
     @Apply
-    private void event(BoardCreated e) {
+    private void apply(BoardCreated e) {
         builder().setId(e.getBoard());
     }
 
@@ -89,7 +89,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     }
 
     @Apply
-    private void event(ColumnAdditionRequested e) {
+    private void apply(ColumnAdditionRequested e) {
         builder().addColumnNames(
                 Board.ColumnNamesMapEntry
                         .newBuilder()
@@ -158,12 +158,12 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     }
 
     @Apply
-    private void event(ColumnPlaced e) {
+    private void apply(ColumnPlaced e) {
         builder().addColumn(e.getPosition().getZeroBasedIndex(), e.getColumn());
     }
 
     @Apply
-    private void event(ColumnMoved e) {
+    private void apply(ColumnMoved e) {
         builder().removeColumn(e.getFrom().getZeroBasedIndex())
                  .addColumn(e.getTo().getZeroBasedIndex(), e.getColumn());
     }

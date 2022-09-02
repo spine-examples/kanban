@@ -68,14 +68,14 @@ final class ColumnAggregate extends Aggregate<ColumnId, Column, Column.Builder> 
     }
 
     @Apply
-    private void event(ColumnCreated e) {
+    private void apply(ColumnCreated e) {
         builder().setId(e.getColumn())
                  .setBoard(e.getBoard())
                  .setName(e.getName());
     }
 
     @React
-    ColumnPositionUpdated handle(ColumnPlaced e) {
+    ColumnPositionUpdated on(ColumnPlaced e) {
         return ColumnPositionUpdated
                 .newBuilder()
                 .setColumn(e.getColumn())
@@ -84,7 +84,7 @@ final class ColumnAggregate extends Aggregate<ColumnId, Column, Column.Builder> 
     }
 
     @React
-    ColumnPositionUpdated handle(ColumnMoved e) {
+    ColumnPositionUpdated on(ColumnMoved e) {
         return ColumnPositionUpdated
                 .newBuilder()
                 .setColumn(e.getColumn())
@@ -94,7 +94,7 @@ final class ColumnAggregate extends Aggregate<ColumnId, Column, Column.Builder> 
     }
 
     @Apply
-    private void event(ColumnPositionUpdated e) {
+    private void apply(ColumnPositionUpdated e) {
         builder().setPosition(e.getCurrent());
     }
 
