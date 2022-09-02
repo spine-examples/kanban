@@ -47,9 +47,7 @@ import io.spine.server.aggregate.Apply;
 import io.spine.server.command.Assign;
 import io.spine.server.event.React;
 
-/**
- * An aggregate of a Kanban board.
- */
+/** An aggregate of a Kanban board. */
 final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
 
     @Assign
@@ -101,19 +99,37 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
         );
     }
 
+    /**
+     * Places a column on a board and notifies all existing columns that the total
+     * number of columns has changed.
+     */
     @Assign
     Iterable<EventMessage> handle(PlaceColumn c) {
         return new ImmutableList.Builder<EventMessage>()
-                .addAll(shiftColumns())
                 .add(placeColumn(c))
+                .addAll(updateTotals())
                 .build();
     }
 
-    private ImmutableList<ColumnMoved> shiftColumns() {
+    private ColumnPlaced placeColumn(PlaceColumn c) {
+        int newTotal = state().getColumnCount() + 1;
+        return ColumnPlaced
+                .newBuilder()
+                .setBoard(c.getBoard())
+                .setColumn(c.getColumn())
+                .setPosition(
+                        ColumnPosition.newBuilder()
+                                      .setIndex(newTotal)
+                                      .setOfTotal(newTotal)
+                                      .vBuild()
+                )
+                .vBuild();
+    }
+
+    private ImmutableList<ColumnMoved> updateTotals() {
         int currentTotal = state().getColumnCount();
         int newTotal = currentTotal + 1;
-        ImmutableList.Builder<ColumnMoved> columnsMoved =
-                new ImmutableList.Builder<>();
+        ImmutableList.Builder<ColumnMoved> columnsMoved = new ImmutableList.Builder<>();
 
         for (int i = 0; i < currentTotal; i++) {
             ColumnId column = state().getColumn(i);
@@ -139,21 +155,6 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
         }
 
         return columnsMoved.build();
-    }
-
-    private ColumnPlaced placeColumn(PlaceColumn c) {
-        int newTotal = state().getColumnCount() + 1;
-        return ColumnPlaced
-                .newBuilder()
-                .setBoard(c.getBoard())
-                .setColumn(c.getColumn())
-                .setPosition(
-                        ColumnPosition.newBuilder()
-                                      .setIndex(newTotal)
-                                      .setOfTotal(newTotal)
-                                      .vBuild()
-                )
-                .vBuild();
     }
 
     @Apply

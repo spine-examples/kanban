@@ -34,6 +34,7 @@ import io.spine.server.route.EventRouting;
 
 import static io.spine.server.route.EventRoute.withId;
 
+/** Manages instances of {@link BoardInitProcess}. */
 public class BoardInitRepository
         extends ProcessManagerRepository<BoardId, BoardInitProcess, BoardInit> {
 

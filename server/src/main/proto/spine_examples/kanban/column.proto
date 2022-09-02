@@ -64,6 +64,8 @@ message Column {
 }
 
 // The process of adding a new column to a board.
+//
+// A newly created column is placed next to existing columns.
 message ColumnAddition {
 
     option (entity).kind = PROCESS_MANAGER;

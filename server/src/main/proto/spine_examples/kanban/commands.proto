@@ -74,10 +74,10 @@ message CreateColumn {
     string name = 3 [(required) = true];
 }
 
-// A command to place a column.
+// A command to place a column on a board.
 message PlaceColumn {
 
-    // The ID of the board on which to create the column.
+    // The ID of the board on which to place the column.
     BoardId board = 1 [(required) = true];
 
     // The ID of the column to place.

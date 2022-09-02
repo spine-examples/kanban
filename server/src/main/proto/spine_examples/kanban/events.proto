@@ -81,7 +81,7 @@ message ColumnCreated {
     string name = 3 [(required) = true];
 }
 
-// A column was placed on the board.
+// A column was placed on a board.
 message ColumnPlaced {
 
     // The ID of the placed column.

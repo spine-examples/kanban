@@ -37,7 +37,7 @@ option java_multiple_files = true;
 message ColumnPosition {
     option (is).java_type = "ColumnPositionMixin";
 
-    // The index of a column in a column list.
+    // The one-based index of a column in a column list.
     int32 index = 1 [(min).value = "1"];
 
     // The total number of columns on a board.

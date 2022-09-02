@@ -38,9 +38,16 @@ import io.spine.server.command.Command;
 import io.spine.server.event.React;
 import io.spine.server.procman.ProcessManager;
 
+/**
+ * Coordinates addition of a new column to a board.
+ */
 public final class ColumnAdditionProcess
         extends ProcessManager<ColumnId, ColumnAddition, ColumnAddition.Builder> {
 
+    /**
+     * Whenever a request to add a new column was made, issue a command to create a
+     * new column.
+     */
     @Command
     CreateColumn handle(ColumnAdditionRequested e) {
         initState(e);
@@ -58,6 +65,10 @@ public final class ColumnAdditionProcess
                 .setName(e.getName());
     }
 
+    /**
+     * Whenever a new column is created, issue a command to place this column on
+     * the board.
+     */
     @Command
     PlaceColumn handle(ColumnCreated e) {
         return PlaceColumn
@@ -67,6 +78,7 @@ public final class ColumnAdditionProcess
                 .vBuild();
     }
 
+    /** Whenever a column is placed on the board, terminate the process. */
     @React
     ColumnAdded event(ColumnPlaced e) {
         setDeleted(true);

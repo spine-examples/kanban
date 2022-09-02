@@ -34,6 +34,7 @@ import io.spine.server.route.EventRouting;
 
 import static io.spine.server.route.EventRoute.withId;
 
+/** Manages instances of {@link BoardProjection}. */
 public class BoardProjectionRepository
         extends ProjectionRepository<BoardId, BoardProjection, BoardView> {
 
