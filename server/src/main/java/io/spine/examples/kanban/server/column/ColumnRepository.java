@@ -43,8 +43,8 @@ public final class ColumnRepository extends AggregateRepository<ColumnId, Column
     @Override
     protected void setupEventRouting(EventRouting<ColumnId> routing) {
         super.setupEventRouting(routing);
-        routing.route(CardWaitingPlacement.class, (event, context) -> withId(event.getColumn()));
-        routing.route(ColumnPlaced.class, (event, context) -> withId(event.getColumn()));
-        routing.route(ColumnMoved.class, (event, context) -> withId(event.getColumn()));
+        routing.route(CardWaitingPlacement.class, (event, context) -> withId(event.getColumn()))
+               .route(ColumnPlaced.class, (event, context) -> withId(event.getColumn()))
+               .route(ColumnMoved.class, (event, context) -> withId(event.getColumn()));
     }
 }
