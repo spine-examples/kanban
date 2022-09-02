@@ -59,7 +59,7 @@ message BoardInitialized {
 message ColumnAdditionRequested {
 
     // The ID of the column to add.
-    ColumnId column = 1;
+    ColumnId column = 1 [(required) = true];
 
     // The ID of the board to which to add the column.
     BoardId board = 2 [(required) = true];
@@ -85,10 +85,10 @@ message ColumnCreated {
 message ColumnPlaced {
 
     // The ID of the placed column.
-    ColumnId column = 2 [(required) = true];
+    ColumnId column = 1 [(required) = true];
 
     // The ID of the board where column was placed.
-    BoardId board = 1 [(required) = true];
+    BoardId board = 2 [(required) = true];
 
     // The position on the board where column was placed.
     ColumnPosition position = 3 [(required) = true];
