@@ -158,13 +158,13 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
 
     @Apply
     private void event(ColumnPlaced e) {
-        builder().addColumn(e.getPosition().getIndex() - 1, e.getColumn());
+        builder().addColumn(e.getPosition().getZeroBasedIndex(), e.getColumn());
     }
 
     @Apply
     private void event(ColumnMoved e) {
-        builder().removeColumn(e.getFrom().getIndex() - 1)
-                 .addColumn(e.getTo().getIndex() - 1, e.getColumn());
+        builder().removeColumn(e.getFrom().getZeroBasedIndex())
+                 .addColumn(e.getTo().getZeroBasedIndex(), e.getColumn());
     }
 
     /**

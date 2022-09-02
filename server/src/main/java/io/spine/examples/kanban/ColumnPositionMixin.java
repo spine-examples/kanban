@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, TeamDev. All rights reserved.
+ * Copyright 2022, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,23 +23,20 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-syntax = "proto3";
 
-package spine_examples.kanban;
+package io.spine.examples.kanban;
 
-import "spine/options.proto";
+import com.google.errorprone.annotations.Immutable;
+import io.spine.annotation.GeneratedMixin;
+import io.spine.base.SerializableMessage;
 
-option (type_url_prefix) = "type.spine.io";
-option java_package = "io.spine.examples.kanban";
-option java_multiple_files = true;
+@Immutable
+@GeneratedMixin
+public interface ColumnPositionMixin extends SerializableMessage {
 
-// The position of a column on a board.
-message ColumnPosition {
-    option (is).java_type = "ColumnPositionMixin";
+    int getIndex();
 
-    // The index of a column in a column list.
-    int32 index = 1 [(min).value = "1"];
-
-    // The total number of columns on a board.
-    int32 of_total = 2 [(min).value = "1"];
+    default int getZeroBasedIndex() {
+        return getIndex() - 1;
+    }
 }

@@ -47,7 +47,7 @@ public final class BoardProjection extends Projection<BoardId, BoardView, BoardV
 
     @Subscribe
     void on(ColumnAdded e) {
-        Column addedColumn = Column
+        Column column = Column
                 .newBuilder()
                 .setId(e.getColumn())
                 .setBoard(e.getBoard())
@@ -55,7 +55,7 @@ public final class BoardProjection extends Projection<BoardId, BoardView, BoardV
                 .setPosition(e.getPosition())
                 .vBuild();
 
-        builder().addColumn(e.getPosition().getIndex() - 1, addedColumn);
+        builder().addColumn(e.getPosition().getZeroBasedIndex(), column);
     }
 
     @Subscribe
