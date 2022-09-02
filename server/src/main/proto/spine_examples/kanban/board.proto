@@ -78,11 +78,6 @@ message BoardInit {
     // Columns already added.
     repeated ColumnId added_column = 3;
 
-    // The process manager used to create default columns one by one, "step by step".
-    // Currently, it creates them all at once.
-    reserved 2;
-    reserved "step";
-
     enum DefaultColumn {
         TO_DO = 0;
         IN_PROGRESS = 1;
