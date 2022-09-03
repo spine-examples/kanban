@@ -66,6 +66,9 @@ message ColumnAdditionRequested {
 
     // The name of the column.
     string name = 3 [(required) = true];
+
+    // The desired position of the column.
+    ColumnPosition desired_position = 4 [(required) = true];
 }
 
 // A column was created.
@@ -74,10 +77,10 @@ message ColumnCreated {
     // The ID of the created column.
     ColumnId column = 1 [(required) = true];
 
-    // The ID of the board on which the column created.
+    // The ID of the board on which the column was created.
     BoardId board = 2 [(required) = true];
 
-    // The name of the new column.
+    // The name of the created column.
     string name = 3 [(required) = true];
 }
 
@@ -90,8 +93,11 @@ message ColumnPlaced {
     // The ID of the board where column was placed.
     BoardId board = 2 [(required) = true];
 
-    // The position on the board where column was placed.
-    ColumnPosition position = 3 [(required) = true];
+    // The position on the board where the column was desired to be placed.
+    ColumnPosition desired_position = 3 [(required) = true];
+
+    // The position on the board where the column was actually placed.
+    ColumnPosition actual_position = 4 [(required) = true];
 }
 
 // A column was moved on the board.
@@ -140,7 +146,7 @@ message ColumnAdded {
 message CardCreated {
     option (is).java_type = "BoardAwareEvent";
 
-    // The ID of the newly created card.
+    // The ID of the created card.
     CardId card = 1 [(required) = true];
 
     // The ID of the board which contains the card.

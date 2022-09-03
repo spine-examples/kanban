@@ -79,7 +79,7 @@ final class ColumnAggregate extends Aggregate<ColumnId, Column, Column.Builder> 
         return ColumnPositionUpdated
                 .newBuilder()
                 .setColumn(e.getColumn())
-                .setCurrent(e.getPosition())
+                .setCurrent(e.getActualPosition())
                 .vBuild();
     }
 

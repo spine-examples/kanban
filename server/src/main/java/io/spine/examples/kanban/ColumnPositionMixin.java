@@ -39,10 +39,10 @@ public interface ColumnPositionMixin extends SerializableMessage {
     int getIndex();
 
     /**
-     * Converts one-based to zero-base index.
+     * Converts one-based index to zero-based.
      *
-     * `ColumnPosition` uses one-based index. This method is for programmatic access
-     * to items in lists or arrays using a `ColumnPosition` object.
+     * This method is for programmatic access to items in lists or arrays using a
+     * `ColumnPosition` object to avoid the `IndexOutOfBoundsException`.
      */
     default int getZeroBasedIndex() {
         return getIndex() - 1;

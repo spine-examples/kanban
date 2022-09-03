@@ -78,6 +78,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
                 .setColumn(c.getColumn())
                 .setBoard(c.getBoard())
                 .setName(c.getName())
+                .setDesiredPosition(c.getDesiredPosition())
                 .vBuild();
     }
 
@@ -100,7 +101,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     }
 
     /**
-     * Places a column on a board and notifies all existing columns that the total
+     * Places a column on the board and notifies all existing columns that the total
      * number of columns has changed.
      */
     @Assign
@@ -112,54 +113,59 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     }
 
     private ColumnPlaced placeColumn(PlaceColumn c) {
-        int newTotal = state().getColumnCount() + 1;
+        ColumnPosition actualPosition =
+                ColumnPosition.newBuilder()
+                              .setIndex(c.getDesiredPosition().getIndex())
+                              .setOfTotal(getNewTotal())
+                              .vBuild();
+
         return ColumnPlaced
                 .newBuilder()
                 .setBoard(c.getBoard())
                 .setColumn(c.getColumn())
-                .setPosition(
-                        ColumnPosition.newBuilder()
-                                      .setIndex(newTotal)
-                                      .setOfTotal(newTotal)
-                                      .vBuild()
-                )
+                .setDesiredPosition(c.getDesiredPosition())
+                .setActualPosition(actualPosition)
                 .vBuild();
+    }
+
+    private int getNewTotal() {
+        return state().getColumnCount() + 1;
     }
 
     private ImmutableList<ColumnMoved> updateTotals() {
         int currentTotal = state().getColumnCount();
-        int newTotal = currentTotal + 1;
+        int newTotal = getNewTotal();
         ImmutableList.Builder<ColumnMoved> columnsMoved = new ImmutableList.Builder<>();
 
-        for (int i = 0; i < currentTotal; i++) {
-            ColumnId column = state().getColumn(i);
-            ColumnPosition from = ColumnPosition
-                    .newBuilder()
-                    .setIndex(i + 1)
-                    .setOfTotal(currentTotal)
-                    .vBuild();
-            ColumnPosition to = ColumnPosition
-                    .newBuilder()
-                    .setIndex(i + 1)
-                    .setOfTotal(newTotal)
-                    .vBuild();
-
-            columnsMoved.add(
-                    ColumnMoved
-                            .newBuilder()
-                            .setColumn(column)
-                            .setFrom(from)
-                            .setTo(to)
-                            .vBuild()
-            );
+        for (int i = 1; i <= currentTotal; i++) {
+            columnsMoved.add(updateTotal(i, currentTotal, newTotal));
         }
 
         return columnsMoved.build();
     }
 
+    private ColumnMoved updateTotal(int index, int currentTotal, int newTotal) {
+        ColumnPosition from = ColumnPosition.newBuilder()
+                                            .setIndex(index)
+                                            .setOfTotal(currentTotal)
+                                            .vBuild();
+        ColumnPosition to = ColumnPosition.newBuilder()
+                                          .setIndex(index)
+                                          .setOfTotal(newTotal)
+                                          .vBuild();
+        ColumnId column = state().getColumn(from.getZeroBasedIndex());
+
+        return ColumnMoved
+                .newBuilder()
+                .setColumn(column)
+                .setFrom(from)
+                .setTo(to)
+                .vBuild();
+    }
+
     @Apply
     private void apply(ColumnPlaced e) {
-        builder().addColumn(e.getPosition().getZeroBasedIndex(), e.getColumn());
+        builder().addColumn(e.getActualPosition().getZeroBasedIndex(), e.getColumn());
     }
 
     @Apply

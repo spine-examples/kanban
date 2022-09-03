@@ -27,7 +27,6 @@
 package io.spine.examples.kanban.server.column;
 
 import io.spine.examples.kanban.Column;
-import io.spine.examples.kanban.ColumnPosition;
 import io.spine.examples.kanban.event.ColumnAdded;
 import io.spine.examples.kanban.server.KanbanContextTest;
 import io.spine.testing.server.EventSubject;
@@ -35,7 +34,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("`ColumnAdditionProcess` should")
+@DisplayName("`ColumnAdditionProcess` should ")
 class ColumnAdditionProcessTest extends KanbanContextTest {
 
     @BeforeEach
@@ -44,7 +43,7 @@ class ColumnAdditionProcessTest extends KanbanContextTest {
     }
 
     @Test
-    @DisplayName("add a `Column`")
+    @DisplayName("add a `Column` entity")
     void entity() {
         context().assertEntityWithState(column(), Column.class)
                  .exists();
@@ -60,13 +59,7 @@ class ColumnAdditionProcessTest extends KanbanContextTest {
                 .newBuilder()
                 .setBoard(board())
                 .setColumn(column())
-                .setPosition(
-                        ColumnPosition
-                                .newBuilder()
-                                .setIndex(1)
-                                .setOfTotal(1)
-                                .vBuild()
-                )
+                .setPosition(defaultPosition())
                 // We call `buildPartial()` instead of `vBuild()` to omit `required` fields.
                 .buildPartial();
         assertEvents.message(0)

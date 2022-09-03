@@ -28,9 +28,11 @@ package io.spine.examples.kanban.server.board;
 
 import io.spine.examples.kanban.Board;
 import io.spine.examples.kanban.ColumnId;
+import io.spine.examples.kanban.ColumnPosition;
 import io.spine.examples.kanban.command.AddColumn;
 import io.spine.examples.kanban.event.BoardCreated;
 import io.spine.examples.kanban.server.KanbanContextTest;
+import io.spine.testing.server.EventSubject;
 import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -52,6 +54,7 @@ class BoardTest extends KanbanContextTest {
     @Nested
     @DisplayName("create a board")
     class CreateBoard {
+
         @Test
         @DisplayName("as a `Board` entity")
         void entity() {
@@ -62,10 +65,10 @@ class BoardTest extends KanbanContextTest {
         @Test
         @DisplayName("emitting the `BoardCreated` event")
         void event() {
-            BoardCreated expected = BoardCreated
-                    .newBuilder()
-                    .setBoard(board())
-                    .build();
+            BoardCreated expected =
+                    BoardCreated.newBuilder()
+                                .setBoard(board())
+                                .build();
 
             context().assertEvents()
                      .withType(BoardCreated.class)
@@ -74,25 +77,38 @@ class BoardTest extends KanbanContextTest {
         }
     }
 
-
     @Nested
-    @DisplayName("not allow creation of a column with a duplicate name")
-    class RejectDuplicateColumnNames {
+    @DisplayName("guard column name uniqueness")
+    class GuardColumnNameUniqueness {
 
         private AddColumn rejectedCommand;
 
         @BeforeEach
         void sendCommands() {
             String name = randomString();
-            AddColumn successfulCommand = AddColumn.newBuilder()
-                                                   .setBoard(board())
-                                                   .setColumn(ColumnId.generate())
-                                                   .setName(name)
-                                                   .vBuild();
+
+            ColumnPosition position = columnPosition(
+                    DefaultColumns.count() + 1,
+                    DefaultColumns.count() + 1
+            );
+            AddColumn successfulCommand =
+                    AddColumn.newBuilder()
+                             .setBoard(board())
+                             .setColumn(ColumnId.generate())
+                             .setName(name)
+                             .setDesiredPosition(position)
+                             .vBuild();
+
+            position = columnPosition(
+                    DefaultColumns.count() + 2,
+                    DefaultColumns.count() + 2
+            );
+
             rejectedCommand = AddColumn.newBuilder()
                                        .setBoard(board())
                                        .setColumn(ColumnId.generate())
                                        .setName(name)
+                                       .setDesiredPosition(position)
                                        .vBuild();
 
             context().receivesCommand(successfulCommand);
@@ -100,18 +116,20 @@ class BoardTest extends KanbanContextTest {
         }
 
         @Test
-        @DisplayName("emitting the `ColumnNameMustBeUnique` rejection")
+        @DisplayName("by rejecting the addition of the column with a duplicate name")
         void rejection() {
-            ColumnNameMustBeUnique expected = ColumnNameMustBeUnique
-                    .newBuilder()
-                    .setColumn(rejectedCommand.getColumn())
-                    .setName(rejectedCommand.getName())
-                    .build();
+            EventSubject assertRejections =
+                    context().assertEvents()
+                             .withType(ColumnNameMustBeUnique.class);
+            assertRejections.hasSize(1);
 
-            context().assertEvents()
-                     .withType(ColumnNameMustBeUnique.class)
-                     .message(0)
-                     .isEqualTo(expected);
+            ColumnNameMustBeUnique expected =
+                    ColumnNameMustBeUnique
+                            .newBuilder()
+                            .setColumn(rejectedCommand.getColumn())
+                            .setName(rejectedCommand.getName())
+                            .build();
+            assertRejections.message(0).isEqualTo(expected);
         }
     }
 

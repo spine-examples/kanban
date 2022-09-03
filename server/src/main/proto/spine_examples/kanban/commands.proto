@@ -59,9 +59,14 @@ message AddColumn {
 
     // The name of the column.
     string name = 3 [(required) = true];
+
+    // The desired position of the column.
+    //
+    // An actual position where the column is placed may differ from the desired one.
+    ColumnPosition desired_position = 4 [(required) = true];
 }
 
-// A command to create a new column.
+// A command to create a column.
 message CreateColumn {
 
     // The ID of the column to create.
@@ -78,10 +83,13 @@ message CreateColumn {
 message PlaceColumn {
 
     // The ID of the board on which to place the column.
-    BoardId board = 1 [(required) = true];
+    BoardId board = 1;
 
     // The ID of the column to place.
     ColumnId column = 2 [(required) = true];
+
+    // The desired position of the column.
+    ColumnPosition desired_position = 3 [(required) = true];
 }
 
 // A command to create a new card on the specified board.

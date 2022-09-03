@@ -29,6 +29,7 @@ package io.spine.examples.kanban.server;
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.CardId;
 import io.spine.examples.kanban.ColumnId;
+import io.spine.examples.kanban.ColumnPosition;
 import io.spine.examples.kanban.WipLimit;
 import io.spine.examples.kanban.command.AddColumn;
 import io.spine.examples.kanban.command.CreateBoard;
@@ -55,13 +56,18 @@ final class TestCommands {
                 .vBuild();
     }
 
-    /** Add the column to the specified board. */
-    static AddColumn addColumn(BoardId board, ColumnId column) {
+    /** Add the column to the board. */
+    static AddColumn addColumn(
+            BoardId board,
+            ColumnId column,
+            ColumnPosition columnPosition
+    ) {
         return AddColumn
                 .newBuilder()
                 .setBoard(board)
                 .setColumn(column)
                 .setName("Generated column" + randomString())
+                .setDesiredPosition(columnPosition)
                 .vBuild();
     }
 

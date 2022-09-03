@@ -44,7 +44,7 @@ message Board {
 
     option (entity) = { kind: AGGREGATE visibility: FULL };
 
-    BoardId id = 1 [(required) = true];
+    BoardId id = 1;
 
     // Columns of the board.
     //
@@ -73,7 +73,7 @@ message BoardInit {
     option (entity).kind = PROCESS_MANAGER;
 
     // The ID of the board we initialize.
-    BoardId id = 1 [(required) = true];
+    BoardId id = 1;
 
     // Columns already added.
     repeated ColumnId added_column = 3;

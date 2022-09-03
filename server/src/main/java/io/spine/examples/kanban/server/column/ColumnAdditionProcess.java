@@ -45,8 +45,8 @@ public final class ColumnAdditionProcess
         extends ProcessManager<ColumnId, ColumnAddition, ColumnAddition.Builder> {
 
     /**
-     * Whenever a request to add a new column was made, issue a command to create a
-     * new column.
+     * Whenever a request to add a new column is made, issue a command to
+     * create a column.
      */
     @Command
     CreateColumn on(ColumnAdditionRequested e) {
@@ -62,7 +62,8 @@ public final class ColumnAdditionProcess
     private void initState(ColumnAdditionRequested e) {
         builder().setColumn(e.getColumn())
                 .setBoard(e.getBoard())
-                .setName(e.getName());
+                .setName(e.getName())
+                .setDesiredPosition(e.getDesiredPosition());
     }
 
     /**
@@ -75,6 +76,7 @@ public final class ColumnAdditionProcess
                 .newBuilder()
                 .setBoard(e.getBoard())
                 .setColumn(e.getColumn())
+                .setDesiredPosition(state().getDesiredPosition())
                 .vBuild();
     }
 
@@ -87,7 +89,7 @@ public final class ColumnAdditionProcess
                 .setColumn(e.getColumn())
                 .setBoard(e.getBoard())
                 .setName(state().getName())
-                .setPosition(e.getPosition())
+                .setPosition(e.getActualPosition())
                 .vBuild();
     }
 }
