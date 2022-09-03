@@ -116,7 +116,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
         ColumnPosition actualPosition =
                 ColumnPosition.newBuilder()
                               .setIndex(c.getDesiredPosition().getIndex())
-                              .setOfTotal(getNewTotal())
+                              .setOfTotal(incrementColumnCount())
                               .vBuild();
 
         return ColumnPlaced
@@ -128,13 +128,13 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
                 .vBuild();
     }
 
-    private int getNewTotal() {
+    private int incrementColumnCount() {
         return state().getColumnCount() + 1;
     }
 
     private ImmutableList<ColumnMoved> updateTotals() {
         int currentTotal = state().getColumnCount();
-        int newTotal = getNewTotal();
+        int newTotal = incrementColumnCount();
         ImmutableList.Builder<ColumnMoved> columnsMoved = new ImmutableList.Builder<>();
 
         for (int i = 1; i <= currentTotal; i++) {
@@ -145,14 +145,16 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     }
 
     private ColumnMoved updateTotal(int index, int currentTotal, int newTotal) {
-        ColumnPosition from = ColumnPosition.newBuilder()
-                                            .setIndex(index)
-                                            .setOfTotal(currentTotal)
-                                            .vBuild();
-        ColumnPosition to = ColumnPosition.newBuilder()
-                                          .setIndex(index)
-                                          .setOfTotal(newTotal)
-                                          .vBuild();
+        ColumnPosition from =
+                ColumnPosition.newBuilder()
+                              .setIndex(index)
+                              .setOfTotal(currentTotal)
+                              .vBuild();
+        ColumnPosition to =
+                ColumnPosition.newBuilder()
+                              .setIndex(index)
+                              .setOfTotal(newTotal)
+                              .vBuild();
         ColumnId column = state().getColumn(from.getZeroBasedIndex());
 
         return ColumnMoved
