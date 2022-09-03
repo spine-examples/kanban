@@ -31,7 +31,9 @@ import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.Card;
 import io.spine.examples.kanban.Column;
 import io.spine.examples.kanban.event.BoardCreated;
-import io.spine.examples.kanban.event.ColumnAdded;
+import io.spine.examples.kanban.event.ColumnAdditionRequested;
+import io.spine.examples.kanban.event.ColumnMoved;
+import io.spine.examples.kanban.event.ColumnPlaced;
 import io.spine.examples.kanban.view.BoardView;
 import io.spine.server.projection.Projection;
 
@@ -45,16 +47,39 @@ public final class BoardProjection
     }
 
     @Subscribe
-    void on(ColumnAdded e) {
-        Column column = Column
-                .newBuilder()
-                .setId(e.getColumn())
-                .setBoard(e.getBoard())
-                .setName(e.getName())
-                .setPosition(e.getPosition())
+    void on(ColumnAdditionRequested e) {
+        Column column = Column.newBuilder()
+                              .setId(e.getColumn())
+                              .setBoard(e.getBoard())
+                              .setName(e.getName())
+                              .setPosition(e.getDesiredPosition())
+                              .vBuild();
+
+        builder().addColumn(e.getDesiredPosition().getZeroBasedIndex(), column);
+    }
+
+    @Subscribe
+    void on(ColumnPlaced e) {
+        Column column = state()
+                .getColumn(e.getDesiredPosition().getZeroBasedIndex())
+                .toBuilder()
+                .setPosition(e.getActualPosition())
                 .vBuild();
 
-        builder().addColumn(e.getPosition().getZeroBasedIndex(), column);
+        builder().removeColumn(e.getDesiredPosition().getZeroBasedIndex())
+                 .addColumn(column.getPosition().getZeroBasedIndex(), column);
+    }
+
+    @Subscribe
+    void on(ColumnMoved e) {
+        Column column = state()
+                .getColumn(e.getFrom().getZeroBasedIndex())
+                .toBuilder()
+                .setPosition(e.getTo())
+                .vBuild();
+
+        builder().removeColumn(e.getFrom().getZeroBasedIndex())
+                 .addColumn(column.getPosition().getZeroBasedIndex(), column);
     }
 
     @Subscribe
