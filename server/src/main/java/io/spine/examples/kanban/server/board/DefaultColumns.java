@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, TeamDev. All rights reserved.
+ * Copyright 2022, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,13 +62,13 @@ final class DefaultColumns {
         DefaultColumn[] columns = DefaultColumn.values();
         int total = columns.length - 1;
 
-        for(int i = 1; i <= total; i++) {
+        for (int i = 1; i <= total; i++) {
             DefaultColumn column = columns[i];
-            ColumnPosition position = ColumnPosition
-                    .newBuilder()
-                    .setIndex(i)
-                    .setOfTotal(total)
-                    .vBuild();
+            ColumnPosition position =
+                    ColumnPosition.newBuilder()
+                                  .setIndex(i)
+                                  .setOfTotal(total)
+                                  .vBuild();
 
             commands.add(additionCommand(board, column, position));
         }

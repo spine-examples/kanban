@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, TeamDev. All rights reserved.
+ * Copyright 2022, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,7 +78,7 @@ class BoardTest extends KanbanContextTest {
     }
 
     @Nested
-    @DisplayName("guard column name uniqueness")
+    @DisplayName("keep column names unique")
     class GuardColumnNameUniqueness {
 
         private AddColumn rejectedCommand;
@@ -86,7 +86,6 @@ class BoardTest extends KanbanContextTest {
         @BeforeEach
         void sendCommands() {
             String name = randomString();
-
             ColumnPosition position = columnPosition(
                     DefaultColumns.count() + 1,
                     DefaultColumns.count() + 1
@@ -98,12 +97,10 @@ class BoardTest extends KanbanContextTest {
                              .setName(name)
                              .setDesiredPosition(position)
                              .vBuild();
-
             position = columnPosition(
                     DefaultColumns.count() + 2,
                     DefaultColumns.count() + 2
             );
-
             rejectedCommand = AddColumn.newBuilder()
                                        .setBoard(board())
                                        .setColumn(ColumnId.generate())
