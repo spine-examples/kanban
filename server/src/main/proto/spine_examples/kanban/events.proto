@@ -100,7 +100,7 @@ message ColumnPlaced {
     ColumnPosition actual_position = 4 [(required) = true];
 }
 
-// A column was moved on the board.
+// A column was moved on a board.
 message ColumnMoved {
 
     // The ID of the moved column.
@@ -116,7 +116,7 @@ message ColumnMoved {
 // A column position was changed.
 message ColumnPositionUpdated {
 
-    // The ID of the placed column.
+    // The ID of the column.
     ColumnId column = 1 [(required) = true];
 
     // The previous position of the column.
@@ -132,7 +132,7 @@ message ColumnAdded {
     // The ID of the added column.
     ColumnId column = 1 [(required) = true];
 
-    // The ID of the board where column was added.
+    // The ID of the board to which column was added.
     BoardId board = 2 [(required) = true];
 
     // The name of the column.
