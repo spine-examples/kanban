@@ -24,8 +24,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.examples.kanban.dependency.JavaX
-
 /*
  * Add the Gradle plugin for bootstrapping projects built with Spine.
  */
@@ -43,5 +41,5 @@ spine {
 }
 
 dependencies {
-    implementation(JavaX.annotations)
+    implementation(project(":model"))
 }

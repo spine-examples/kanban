@@ -27,3 +27,4 @@
 rootProject.name = "kanban"
 
 include("server")
+include("model")
