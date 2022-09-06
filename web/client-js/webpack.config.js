@@ -24,9 +24,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "kanban"
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 
-include("server")
-include("model")
-include("web:server")
-include("web:client-js")
+module.exports = {
+    resolve: {
+        plugins: [
+            new TsconfigPathsPlugin({
+                extensions: [".js", ".ts"]
+            })
+        ]
+    },
+};
