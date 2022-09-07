@@ -101,6 +101,10 @@ message ColumnPlaced {
 }
 
 // A column was moved on a board.
+//
+// The `Board` emits this event to reflect the change of its column order and notify
+// subscribed entities and the `Column` that the column was moved.
+//
 message ColumnMoved {
 
     // The ID of the moved column.
@@ -114,6 +118,10 @@ message ColumnMoved {
 }
 
 // A column position was changed.
+//
+// The `Column` emits this event to reflect the change of its position. The position
+// is updated when the column was placed or moved.
+//
 message ColumnPositionUpdated {
 
     // The ID of the column.
