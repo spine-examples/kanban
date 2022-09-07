@@ -45,8 +45,7 @@ public final class ColumnAdditionProcess
         extends ProcessManager<ColumnId, ColumnAddition, ColumnAddition.Builder> {
 
     /**
-     * Whenever a request to add a new column is made, issue a command to
-     * create a column.
+     * Issues a command to create the column when a request to add it was made.
      */
     @Command
     CreateColumn on(ColumnAdditionRequested e) {
@@ -67,8 +66,7 @@ public final class ColumnAdditionProcess
     }
 
     /**
-     * Whenever a new column is created, issue a command to place this column on
-     * the board.
+     * Issues a command to place the column on the board when the column was created.
      */
     @Command
     PlaceColumn on(ColumnCreated e) {
@@ -80,7 +78,9 @@ public final class ColumnAdditionProcess
                 .vBuild();
     }
 
-    /** Whenever a column is placed on the board, terminate the process. */
+    /**
+     * Terminates the process when the column was placed.
+     */
     @React
     ColumnAdded on(ColumnPlaced e) {
         setDeleted(true);
