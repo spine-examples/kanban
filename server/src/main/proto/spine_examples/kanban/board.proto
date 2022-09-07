@@ -62,8 +62,10 @@ message Board {
 
     // Maps a taken column name to the column it belongs to.
     message TakenColumnName {
+
         // The taken column name.
         string name = 1;
+
         // The column to which the taken name belongs to.
         ColumnId column = 2;
     }
