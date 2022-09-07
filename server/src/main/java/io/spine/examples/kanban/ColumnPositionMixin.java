@@ -31,7 +31,7 @@ import io.spine.annotation.GeneratedMixin;
 import io.spine.base.SerializableMessage;
 
 /**
- * Defines custom operations for the `ColumnPosition`.
+ * Defines custom operations for the {@link ColumnPosition}.
  */
 @Immutable
 @GeneratedMixin
@@ -46,7 +46,7 @@ public interface ColumnPositionMixin extends SerializableMessage {
      * Converts the one-based index to the zero-based.
      *
      * <p> This helper method is for accessing items in lists or arrays using a
-     * `ColumnPosition` object to avoid the `IndexOutOfBoundsException`.
+     * {@link ColumnPosition} object to avoid the {@link IndexOutOfBoundsException}.
      */
     default int zeroBasedIndex() {
         return getIndex() - 1;
