@@ -39,7 +39,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import static io.spine.examples.kanban.rejection.Rejections.ColumnNameIsTaken;
+import static io.spine.examples.kanban.rejection.Rejections.ColumnNameAlreadyTaken;
 import static io.spine.testing.TestValues.randomString;
 
 @DisplayName("Kanban Context Board logic should")
@@ -117,11 +117,11 @@ class BoardTest extends KanbanContextTest {
         void rejection() {
             EventSubject assertRejections =
                     context().assertEvents()
-                             .withType(ColumnNameIsTaken.class);
+                             .withType(ColumnNameAlreadyTaken.class);
             assertRejections.hasSize(1);
 
-            ColumnNameIsTaken expected =
-                    ColumnNameIsTaken
+            ColumnNameAlreadyTaken expected =
+                    ColumnNameAlreadyTaken
                             .newBuilder()
                             .setColumn(rejectedCommand.getColumn())
                             .setName(rejectedCommand.getName())

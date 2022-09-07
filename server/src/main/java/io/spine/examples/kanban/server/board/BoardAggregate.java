@@ -41,7 +41,7 @@ import io.spine.examples.kanban.event.CardWaitingPlacement;
 import io.spine.examples.kanban.event.ColumnAdditionRequested;
 import io.spine.examples.kanban.event.ColumnMoved;
 import io.spine.examples.kanban.event.ColumnPlaced;
-import io.spine.examples.kanban.rejection.ColumnNameIsTaken;
+import io.spine.examples.kanban.rejection.ColumnNameAlreadyTaken;
 import io.spine.server.aggregate.Aggregate;
 import io.spine.server.aggregate.Apply;
 import io.spine.server.command.Assign;
@@ -66,9 +66,9 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     }
 
     @Assign
-    ColumnAdditionRequested handle(AddColumn c) throws ColumnNameIsTaken {
+    ColumnAdditionRequested handle(AddColumn c) throws ColumnNameAlreadyTaken {
         if (columnNameIsTaken(c.getName())) {
-            throw ColumnNameIsTaken
+            throw ColumnNameAlreadyTaken
                     .newBuilder()
                     .setColumn(c.getColumn())
                     .setName(c.getName())
