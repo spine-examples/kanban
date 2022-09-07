@@ -32,7 +32,7 @@ import io.spine.examples.kanban.Card;
 import io.spine.examples.kanban.Column;
 import io.spine.examples.kanban.event.BoardCreated;
 import io.spine.examples.kanban.event.ColumnAdditionRequested;
-import io.spine.examples.kanban.event.ColumnMoved;
+import io.spine.examples.kanban.event.ColumnMovedOnBoard;
 import io.spine.examples.kanban.event.ColumnPlaced;
 import io.spine.examples.kanban.view.BoardView;
 import io.spine.server.projection.Projection;
@@ -73,7 +73,7 @@ public final class BoardProjection
     }
 
     @Subscribe
-    void on(ColumnMoved e) {
+    void on(ColumnMovedOnBoard e) {
         Column column = state()
                 .getColumn(e.getFrom().zeroBasedIndex())
                 .toBuilder()

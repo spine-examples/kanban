@@ -105,7 +105,7 @@ message ColumnPlaced {
 // The `Board` emits this event to reflect the change of its column order and notify
 // subscribed entities and the `Column` that the column was moved.
 //
-message ColumnMoved {
+message ColumnMovedOnBoard {
 
     // The ID of the moved column.
     ColumnId column = 1 [(required) = true];

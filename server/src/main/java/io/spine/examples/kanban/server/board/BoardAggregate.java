@@ -39,7 +39,7 @@ import io.spine.examples.kanban.event.BoardCreated;
 import io.spine.examples.kanban.event.CardCreated;
 import io.spine.examples.kanban.event.CardWaitingPlacement;
 import io.spine.examples.kanban.event.ColumnAdditionRequested;
-import io.spine.examples.kanban.event.ColumnMoved;
+import io.spine.examples.kanban.event.ColumnMovedOnBoard;
 import io.spine.examples.kanban.event.ColumnPlaced;
 import io.spine.examples.kanban.rejection.ColumnNameAlreadyTaken;
 import io.spine.server.aggregate.Aggregate;
@@ -134,10 +134,11 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
         return state().getColumnCount() + 1;
     }
 
-    private ImmutableList<ColumnMoved> updateTotals() {
+    private ImmutableList<ColumnMovedOnBoard> updateTotals() {
         int currentTotal = state().getColumnCount();
         int newTotal = incrementColumnCount();
-        ImmutableList.Builder<ColumnMoved> columnsMoved = new ImmutableList.Builder<>();
+        ImmutableList.Builder<ColumnMovedOnBoard> columnsMoved =
+                new ImmutableList.Builder<>();
 
         for (int i = 1; i <= currentTotal; i++) {
             columnsMoved.add(updateTotal(i, currentTotal, newTotal));
@@ -146,7 +147,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
         return columnsMoved.build();
     }
 
-    private ColumnMoved updateTotal(int index, int currentTotal, int newTotal) {
+    private ColumnMovedOnBoard updateTotal(int index, int currentTotal, int newTotal) {
         ColumnPosition from =
                 ColumnPosition.newBuilder()
                               .setIndex(index)
@@ -159,7 +160,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
                               .vBuild();
         ColumnId column = state().getColumn(from.zeroBasedIndex());
 
-        return ColumnMoved
+        return ColumnMovedOnBoard
                 .newBuilder()
                 .setColumn(column)
                 .setFrom(from)
@@ -173,7 +174,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     }
 
     @Apply
-    private void apply(ColumnMoved e) {
+    private void apply(ColumnMovedOnBoard e) {
         builder().removeColumn(e.getFrom().zeroBasedIndex())
                  .addColumn(e.getTo().zeroBasedIndex(), e.getColumn());
     }

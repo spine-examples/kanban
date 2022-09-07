@@ -37,7 +37,7 @@ import io.spine.examples.kanban.event.CardAddedToColumn;
 import io.spine.examples.kanban.event.CardRemovedFromColumn;
 import io.spine.examples.kanban.event.CardWaitingPlacement;
 import io.spine.examples.kanban.event.ColumnCreated;
-import io.spine.examples.kanban.event.ColumnMoved;
+import io.spine.examples.kanban.event.ColumnMovedOnBoard;
 import io.spine.examples.kanban.event.ColumnPlaced;
 import io.spine.examples.kanban.event.ColumnPositionUpdated;
 import io.spine.examples.kanban.event.WipLimitChanged;
@@ -84,7 +84,7 @@ final class ColumnAggregate extends Aggregate<ColumnId, Column, Column.Builder> 
     }
 
     @React
-    ColumnPositionUpdated on(ColumnMoved e) {
+    ColumnPositionUpdated on(ColumnMovedOnBoard e) {
         return ColumnPositionUpdated
                 .newBuilder()
                 .setColumn(e.getColumn())

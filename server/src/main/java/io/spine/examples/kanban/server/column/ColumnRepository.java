@@ -28,7 +28,7 @@ package io.spine.examples.kanban.server.column;
 
 import io.spine.examples.kanban.ColumnId;
 import io.spine.examples.kanban.event.CardWaitingPlacement;
-import io.spine.examples.kanban.event.ColumnMoved;
+import io.spine.examples.kanban.event.ColumnMovedOnBoard;
 import io.spine.examples.kanban.event.ColumnPlaced;
 import io.spine.server.aggregate.AggregateRepository;
 import io.spine.server.route.EventRouting;
@@ -45,6 +45,6 @@ public final class ColumnRepository extends AggregateRepository<ColumnId, Column
         super.setupEventRouting(routing);
         routing.route(CardWaitingPlacement.class, (event, context) -> withId(event.getColumn()))
                .route(ColumnPlaced.class, (event, context) -> withId(event.getColumn()))
-               .route(ColumnMoved.class, (event, context) -> withId(event.getColumn()));
+               .route(ColumnMovedOnBoard.class, (event, context) -> withId(event.getColumn()));
     }
 }
