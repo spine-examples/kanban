@@ -120,10 +120,9 @@ message ColumnMovedOnBoard {
     ColumnPosition to = 4 [(required) = true];
 }
 
-// A column's position was changed.
+// A column's position changed as a result of being placed or moved.
 //
-// The `Column` emits this event to reflect the change of its position. The position
-// is updated when the column was placed or moved.
+// The `Column` emits this event to reflect the change of its position.
 //
 message ColumnPositionUpdated {
 
