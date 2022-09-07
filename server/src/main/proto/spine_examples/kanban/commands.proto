@@ -66,7 +66,7 @@ message AddColumn {
 
 // A command to create a column.
 //
-// This command is internal to the bounded context and should not be sent by actors
+// This command is internal to the bounded context and must not be sent by actors
 // from outside.
 //
 message CreateColumn {
@@ -83,7 +83,7 @@ message CreateColumn {
 
 // A command to place a column on a board.
 //
-// This command is internal to the bounded context and should not be sent by actors
+// This command is internal to the bounded context and must not be sent by actors
 // from outside.
 //
 message PlaceColumn {
