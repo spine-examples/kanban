@@ -83,7 +83,7 @@ message BoardInit {
     BoardId id = 1;
 
     // Columns already added.
-    repeated ColumnId added_column = 3;
+    repeated ColumnId added_column = 2;
 
     enum DefaultColumn {
         TO_DO = 0;
