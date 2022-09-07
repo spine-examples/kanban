@@ -54,15 +54,18 @@ message Board {
     //
     repeated ColumnId column = 5;
 
-    // Map of column IDs and their names.
+    // Taken column names.
     //
     // This map is used to check that column names are unique within the board.
     //
-    repeated ColumnNamesMapEntry column_names = 6;
+    repeated TakenColumnName taken_column_names = 6;
 
-    message ColumnNamesMapEntry {
-        ColumnId column = 1;
-        string name = 2;
+    // Maps a taken column name to the column it belongs to.
+    message TakenColumnName {
+        // The taken column name.
+        string name = 1;
+        // The column to which the taken name belongs to.
+        ColumnId column = 2;
     }
 }
 

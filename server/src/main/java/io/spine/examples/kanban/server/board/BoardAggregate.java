@@ -41,7 +41,7 @@ import io.spine.examples.kanban.event.CardWaitingPlacement;
 import io.spine.examples.kanban.event.ColumnAdditionRequested;
 import io.spine.examples.kanban.event.ColumnMoved;
 import io.spine.examples.kanban.event.ColumnPlaced;
-import io.spine.examples.kanban.rejection.ColumnNameMustBeUnique;
+import io.spine.examples.kanban.rejection.ColumnNameIsTaken;
 import io.spine.server.aggregate.Aggregate;
 import io.spine.server.aggregate.Apply;
 import io.spine.server.command.Assign;
@@ -66,9 +66,9 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     }
 
     @Assign
-    ColumnAdditionRequested handle(AddColumn c) throws ColumnNameMustBeUnique {
+    ColumnAdditionRequested handle(AddColumn c) throws ColumnNameIsTaken {
         if (columnNameIsTaken(c.getName())) {
-            throw ColumnNameMustBeUnique
+            throw ColumnNameIsTaken
                     .newBuilder()
                     .setColumn(c.getColumn())
                     .setName(c.getName())
@@ -86,18 +86,18 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
 
     private boolean columnNameIsTaken(String name) {
         return state()
-                .getColumnNamesList()
+                .getTakenColumnNamesList()
                 .stream()
                 .anyMatch(entry -> entry.getName().equals(name));
     }
 
     @Apply
     private void apply(ColumnAdditionRequested e) {
-        builder().addColumnNames(
-                Board.ColumnNamesMapEntry
+        builder().addTakenColumnNames(
+                Board.TakenColumnName
                         .newBuilder()
-                        .setColumn(e.getColumn())
                         .setName(e.getName())
+                        .setColumn(e.getColumn())
                         .vBuild()
         );
     }
