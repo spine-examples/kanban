@@ -163,6 +163,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
         return ColumnMovedOnBoard
                 .newBuilder()
                 .setColumn(column)
+                .setBoard(state().getId())
                 .setFrom(from)
                 .setTo(to)
                 .vBuild();
