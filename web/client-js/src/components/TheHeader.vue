@@ -24,24 +24,34 @@
   - OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   -->
 
-<template class="all">
-  <TheHeader />
-  <router-view />
+<template>
+  <div id="header">
+    <div class="logo">
+      <a href="/">
+        <img id="logo" src="../assets/logo.svg" alt="Spine Event Engine" />
+      </a>
+    </div>
+  </div>
 </template>
 
-<script>
-import TheHeader from "@/components/TheHeader";
-import "proto/index";
-
+<script lang="ts">
 export default {
-  components: {
-    TheHeader,
-  },
+  name: "TheHeader",
 };
 </script>
-<style>
-* {
-  margin: 0;
-  padding: 0;
+
+<style scoped>
+#logo {
+  height: 80px;
+  padding-left: 20px;
+}
+
+#header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100px;
+  background-color: #1378da;
+  margin: 0 auto 30px;
 }
 </style>
