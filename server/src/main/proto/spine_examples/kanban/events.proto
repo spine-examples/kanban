@@ -155,7 +155,7 @@ message CardCreated {
     // The name of the card.
     string name = 3 [(required) = true];
 
-    // The description of the work.
+    // The description of the work to be done.
     string description = 4;
 }
 

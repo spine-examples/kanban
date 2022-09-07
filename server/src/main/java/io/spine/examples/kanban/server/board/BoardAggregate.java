@@ -47,7 +47,9 @@ import io.spine.server.aggregate.Apply;
 import io.spine.server.command.Assign;
 import io.spine.server.event.React;
 
-/** An aggregate of a Kanban board. */
+/**
+ * An aggregate of a Kanban board.
+ */
 final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
 
     @Assign
@@ -155,7 +157,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
                               .setIndex(index)
                               .setOfTotal(newTotal)
                               .vBuild();
-        ColumnId column = state().getColumn(from.getZeroBasedIndex());
+        ColumnId column = state().getColumn(from.zeroBasedIndex());
 
         return ColumnMoved
                 .newBuilder()
@@ -167,13 +169,13 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
 
     @Apply
     private void apply(ColumnPlaced e) {
-        builder().addColumn(e.getActualPosition().getZeroBasedIndex(), e.getColumn());
+        builder().addColumn(e.getActualPosition().zeroBasedIndex(), e.getColumn());
     }
 
     @Apply
     private void apply(ColumnMoved e) {
-        builder().removeColumn(e.getFrom().getZeroBasedIndex())
-                 .addColumn(e.getTo().getZeroBasedIndex(), e.getColumn());
+        builder().removeColumn(e.getFrom().zeroBasedIndex())
+                 .addColumn(e.getTo().zeroBasedIndex(), e.getColumn());
     }
 
     /**

@@ -51,7 +51,7 @@ message ColumnNameMustBeUnique {
     ColumnId column = 1 [(required) = true];
 
     // The provided name of the column.
-    string name = 2[(required) = true];
+    string name = 2 [(required) = true];
 }
 
 // A rejection thrown on attempt to add a card to a column which already has the number of cards

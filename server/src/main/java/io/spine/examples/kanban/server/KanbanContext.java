@@ -44,7 +44,9 @@ final class KanbanContext {
 
     static final String NAME = "Kanban";
 
-    /** Prevents instantiation of this utility class. */
+    /**
+     * Prevents instantiation of this utility class.
+     */
     private KanbanContext() {
     }
 

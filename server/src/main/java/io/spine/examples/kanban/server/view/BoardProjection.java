@@ -37,7 +37,9 @@ import io.spine.examples.kanban.event.ColumnPlaced;
 import io.spine.examples.kanban.view.BoardView;
 import io.spine.server.projection.Projection;
 
-/** Builds display information for a board. */
+/**
+ * Builds display information for a board.
+ */
 public final class BoardProjection
         extends Projection<BoardId, BoardView, BoardView.Builder> {
 
@@ -55,31 +57,31 @@ public final class BoardProjection
                               .setPosition(e.getDesiredPosition())
                               .vBuild();
 
-        builder().addColumn(e.getDesiredPosition().getZeroBasedIndex(), column);
+        builder().addColumn(e.getDesiredPosition().zeroBasedIndex(), column);
     }
 
     @Subscribe
     void on(ColumnPlaced e) {
         Column column = state()
-                .getColumn(e.getDesiredPosition().getZeroBasedIndex())
+                .getColumn(e.getDesiredPosition().zeroBasedIndex())
                 .toBuilder()
                 .setPosition(e.getActualPosition())
                 .vBuild();
 
-        builder().removeColumn(e.getDesiredPosition().getZeroBasedIndex())
-                 .addColumn(column.getPosition().getZeroBasedIndex(), column);
+        builder().removeColumn(e.getDesiredPosition().zeroBasedIndex())
+                 .addColumn(column.getPosition().zeroBasedIndex(), column);
     }
 
     @Subscribe
     void on(ColumnMoved e) {
         Column column = state()
-                .getColumn(e.getFrom().getZeroBasedIndex())
+                .getColumn(e.getFrom().zeroBasedIndex())
                 .toBuilder()
                 .setPosition(e.getTo())
                 .vBuild();
 
-        builder().removeColumn(e.getFrom().getZeroBasedIndex())
-                 .addColumn(column.getPosition().getZeroBasedIndex(), column);
+        builder().removeColumn(e.getFrom().zeroBasedIndex())
+                 .addColumn(column.getPosition().zeroBasedIndex(), column);
     }
 
     @Subscribe

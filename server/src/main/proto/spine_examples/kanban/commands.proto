@@ -42,9 +42,6 @@ import "spine_examples/kanban/column_position.proto";
 message CreateBoard {
 
     // The ID of the board to create.
-    //
-    // Example note: By convention the first field of a command is its target.
-    // So we don't have to mark it as required.
     BoardId board = 1;
 }
 
@@ -63,10 +60,15 @@ message AddColumn {
     // The desired position of the column.
     //
     // An actual position where the column is placed may differ from the desired one.
+    //
     ColumnPosition desired_position = 4 [(required) = true];
 }
 
 // A command to create a column.
+//
+// This command is internal to the bounded context and should not be sent by actors
+// from outside.
+//
 message CreateColumn {
 
     // The ID of the column to create.
@@ -80,6 +82,10 @@ message CreateColumn {
 }
 
 // A command to place a column on a board.
+//
+// This command is internal to the bounded context and should not be sent by actors
+// from outside.
+//
 message PlaceColumn {
 
     // The ID of the board on which to place the column.
@@ -98,6 +104,7 @@ message PlaceColumn {
 //
 message CreateCard {
 
+    option (internal_type) = true;
     // The ID for newly created card.
     CardId card = 1;
     
@@ -107,7 +114,7 @@ message CreateCard {
     // The name of the card.
     string name = 3 [(required) = true];
 
-    // The description of the work.
+    // The description of the work to be done.
     string description = 4;
 }
 

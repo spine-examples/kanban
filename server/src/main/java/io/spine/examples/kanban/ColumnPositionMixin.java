@@ -30,21 +30,25 @@ import com.google.errorprone.annotations.Immutable;
 import io.spine.annotation.GeneratedMixin;
 import io.spine.base.SerializableMessage;
 
-/** Defines custom operations for the `ColumnPosition`. */
+/**
+ * Defines custom operations for the `ColumnPosition`.
+ */
 @Immutable
 @GeneratedMixin
 public interface ColumnPositionMixin extends SerializableMessage {
 
-    /** The index of a column in a column list. */
+    /**
+     * The index of a column in a column list.
+     */
     int getIndex();
 
     /**
      * Converts the one-based index to the zero-based.
      *
-     * This helper method is for accessing items in lists or arrays using a
+     * <p> This helper method is for accessing items in lists or arrays using a
      * `ColumnPosition` object to avoid the `IndexOutOfBoundsException`.
      */
-    default int getZeroBasedIndex() {
+    default int zeroBasedIndex() {
         return getIndex() - 1;
     }
 }

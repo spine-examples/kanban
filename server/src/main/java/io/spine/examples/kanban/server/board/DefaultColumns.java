@@ -36,14 +36,20 @@ import io.spine.examples.kanban.command.AddColumn;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/** Provides utility methods for dealing with default columns. */
+/**
+ * Provides utility methods for dealing with default columns.
+ */
 final class DefaultColumns {
 
-    /** Prevents instantiation of this utility class. */
+    /**
+     *  Prevents instantiation of this utility class.
+     */
     private DefaultColumns() {
     }
 
-    /** Obtains the number of default columns. */
+    /**
+     * Obtains the number of default columns.
+     */
     static int count() {
         return DefaultColumn.values().length - 1;
     }
@@ -90,7 +96,9 @@ final class DefaultColumns {
                 .vBuild();
     }
 
-    /** Transforms the enum value into a column title. */
+    /**
+     * Transforms the enum value into a column title.
+     */
     @VisibleForTesting
     static String nameFor(DefaultColumn column) {
         checkNotNull(column);
