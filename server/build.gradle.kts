@@ -28,7 +28,7 @@
  * Add the Gradle plugin for bootstrapping projects built with Spine.
  */
 plugins {
-    id("io.spine.tools.gradle.bootstrap") version("1.8.0")
+    id("io.spine.tools.gradle.bootstrap") version("1.8.2")
 }
 
 spine {
