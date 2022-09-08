@@ -1,5 +1,11 @@
 <template>
-  <div v-if="board" id="board"></div>
+  <div v-if="board" id="board">
+    <KanbanColumn
+        v-for="(column, $columnIndex) of board.getColumnList()"
+        :key="$columnIndex"
+        :column="column"
+    />
+  </div>
   <div v-if="!board" id="add-board">
     <button v-on:click="this[Action.CREATE_BOARD]()">
       Add a board
@@ -9,11 +15,13 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import KanbanColumn from "@/components/KanbanColumn.vue";
 import { mapState, mapActions } from "vuex";
 import { Action } from "@/store/types";
 
 export default defineComponent({
   name: "KanbanBoard",
+  components: { KanbanColumn },
   computed: {
     ...mapState(["board"]),
   },
