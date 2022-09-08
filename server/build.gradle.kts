@@ -26,6 +26,7 @@
 
 /*
  * Add the Gradle plugin for bootstrapping projects built with Spine.
+ * See: https://github.com/SpineEventEngine/bootstrap
  */
 plugins {
     id("io.spine.tools.gradle.bootstrap") version("1.8.2")
@@ -34,7 +35,7 @@ plugins {
 spine {
     /*
      * Add and configure required dependencies for developing a Spine-based Java server.
-     * See more information: https://github.com/SpineEventEngine/bootstrap#java-projects
+     * See: https://github.com/SpineEventEngine/bootstrap#java-projects
      */
     enableJava().server()
     forceDependencies = true
