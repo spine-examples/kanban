@@ -37,14 +37,14 @@ repositories {
 /**
  * The version of the ErrorProne Gradle plugin.
  *
- * Please keep in sync with [io.spine.examples.kanban.dependency.ErrorProne.GradlePlugin.version].
+ * Keep in sync with [io.spine.examples.kanban.dependency.ErrorProne.GradlePlugin.version].
  */
 val errorProneVersion = "2.0.2"
 
 /**
  * The version of the Spine Gradle plugin.
  *
- * Please keep in sync with [io.spine.examples.kanban.dependency.Spine.version].
+ * Keep in sync with [io.spine.examples.kanban.dependency.Spine.version].
  */
 val spineVersion = "1.8.2"
 
