@@ -29,6 +29,7 @@ package io.spine.examples.kanban.dependency
 import io.spine.examples.kanban.dependency.ErrorProne.GradlePlugin.id
 
 object Spine {
+    // Keep in sync with in sync with `buildSrc/build.gradle.kts`.
     const val version = "1.8.2"
 
     // https://github.com/SpineEventEngine/core-java
