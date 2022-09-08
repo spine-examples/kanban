@@ -24,6 +24,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import io.spine.examples.kanban.dependency.JavaX
+import io.spine.examples.kanban.dependency.Spine
+
 /*
  * Add the Gradle plugin for bootstrapping projects built with Spine.
  * See: https://github.com/SpineEventEngine/bootstrap
@@ -33,14 +36,11 @@ plugins {
 }
 
 spine {
-    /*
-     * Add and configure required dependencies for developing a Spine-based Java server.
-     * See: https://github.com/SpineEventEngine/bootstrap#java-projects
-     */
-    enableJava().server()
-    forceDependencies = true
+    assembleModel()
+    enableJava()
 }
 
 dependencies {
-    implementation(project(":model"))
+    implementation(Spine.Server.lib)
+    implementation(JavaX.annotations)
 }

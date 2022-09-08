@@ -15,3 +15,7 @@ This example demonstrates:
 # Spine client
 
 Here is the [guide](spine-vue-client-setup.md) to setting up a Spine client project.
+
+# Spine version
+
+The Spine version used in the project is stored [here](buildSrc/src/main/kotlin/io/spine/examples/kanban/dependency/Spine.kt).

@@ -37,10 +37,18 @@ repositories {
 /**
  * The version of the ErrorProne Gradle plugin.
  *
- * Please keep in sync with [io.spine.examples.kanban.dependency.ErrorProne.GradlePlugin.version].
+ * Keep in sync with [io.spine.examples.kanban.dependency.ErrorProne.GradlePlugin.version].
  */
 val errorProneVersion = "2.0.2"
 
+/**
+ * The version of the Spine Gradle plugin.
+ *
+ * Keep in sync with [io.spine.examples.kanban.dependency.Spine.version].
+ */
+val spineVersion = "1.8.2"
+
 dependencies {
     implementation("net.ltgt.gradle:gradle-errorprone-plugin:${errorProneVersion}")
+    implementation("io.spine.tools:spine-bootstrap:${spineVersion}")
 }
