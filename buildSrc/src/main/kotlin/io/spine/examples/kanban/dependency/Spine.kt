@@ -24,31 +24,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-plugins {
-    `kotlin-dsl`
-}
+package io.spine.examples.kanban.dependency
 
-repositories {
-    mavenLocal()
-    gradlePluginPortal()
-    mavenCentral()
-}
+import io.spine.examples.kanban.dependency.ErrorProne.GradlePlugin.id
 
-/**
- * The version of the ErrorProne Gradle plugin.
- *
- * Please keep in sync with [io.spine.examples.kanban.dependency.ErrorProne.GradlePlugin.version].
- */
-val errorProneVersion = "2.0.2"
+object Spine {
+    const val version = "1.8.2"
 
-/**
- * The version of the Spine Gradle plugin.
- *
- * Please keep in sync with [io.spine.examples.kanban.dependency.Spine.version].
- */
-val spineVersion = "1.8.2"
+    // https://github.com/SpineEventEngine/core-java
+    object Server {
+        const val lib = "io.spine:spine-server:${version}";
+    }
 
-dependencies {
-    implementation("net.ltgt.gradle:gradle-errorprone-plugin:${errorProneVersion}")
-    implementation("io.spine.tools:spine-bootstrap:${spineVersion}")
+    // https://github.com/SpineEventEngine/bootstraps
+    object GradlePlugin {
+        const val id = "io.spine.tools.gradle.bootstrap";
+
+        /**
+         * The version of this plugin is already specified in `buildSrc/build.gradle.kts` file.
+         * Thus, when applying the plugin in projects build files, only the [id] should be used.
+         */
+        const val lib = "io.spine.tools:spine-bootstrap:${version}";
+    }
 }

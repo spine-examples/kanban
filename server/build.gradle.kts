@@ -29,7 +29,7 @@
  * See: https://github.com/SpineEventEngine/bootstrap
  */
 plugins {
-    id("io.spine.tools.gradle.bootstrap") version("1.8.2")
+    id("io.spine.tools.gradle.bootstrap")
 }
 
 spine {

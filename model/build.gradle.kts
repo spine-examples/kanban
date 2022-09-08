@@ -25,13 +25,14 @@
  */
 
 import io.spine.examples.kanban.dependency.JavaX
+import io.spine.examples.kanban.dependency.Spine
 
 /*
  * Add the Gradle plugin for bootstrapping projects built with Spine.
  * See: https://github.com/SpineEventEngine/bootstrap
  */
 plugins {
-    id("io.spine.tools.gradle.bootstrap") version("1.8.2")
+    id("io.spine.tools.gradle.bootstrap")
 }
 
 spine {
@@ -40,6 +41,6 @@ spine {
 }
 
 dependencies {
-    implementation("io.spine:spine-server:1.8.2")
+    implementation(Spine.Server.lib)
     implementation(JavaX.annotations)
 }
