@@ -110,7 +110,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     Iterable<EventMessage> handle(PlaceColumn c) {
         return new ImmutableList.Builder<EventMessage>()
                 .add(placeColumn(c))
-                .addAll(updateTotals())
+                .addAll(moveColumns())
                 .build();
     }
 
@@ -134,7 +134,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
         return state().getColumnCount() + 1;
     }
 
-    private ImmutableList<ColumnMovedOnBoard> updateTotals() {
+    private ImmutableList<ColumnMovedOnBoard> moveColumns() {
         int currentTotal = state().getColumnCount();
         int newTotal = incrementColumnCount();
         ImmutableList.Builder<ColumnMovedOnBoard> columnsMoved =
