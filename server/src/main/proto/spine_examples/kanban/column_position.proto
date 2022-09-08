@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2021, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,15 +23,23 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+syntax = "proto3";
 
-/**
- * This package contains projections for displaying Kanban board.
- */
+package spine_examples.kanban;
 
-@CheckReturnValue
-@ParametersAreNonnullByDefault
-package io.spine.examples.kanban.server.view;
+import "spine/options.proto";
 
-import com.google.errorprone.annotations.CheckReturnValue;
+option (type_url_prefix) = "type.spine.io";
+option java_package = "io.spine.examples.kanban";
+option java_multiple_files = true;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+// The position of a column on a board.
+message ColumnPosition {
+    option (is).java_type = "ColumnPositionMixin";
+
+    // The one-based index of the column in the column list.
+    int32 index = 1 [(min).value = "1"];
+
+    // The total number of columns on the board.
+    int32 of_total = 2 [(min).value = "1"];
+}

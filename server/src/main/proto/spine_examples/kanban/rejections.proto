@@ -44,6 +44,16 @@ option java_multiple_files = false;
 import "spine_examples/kanban/identifiers.proto";
 import "spine_examples/kanban/wip_limit.proto";
 
+// A column cannot be added as its name is already taken.
+message ColumnNameAlreadyTaken {
+
+    // The ID of the column failed to be added.
+    ColumnId column = 1 [(required) = true];
+
+    // The provided name of the column.
+    string name = 2 [(required) = true];
+}
+
 // A rejection thrown on attempt to add a card to a column which already has the number of cards
 // equal to the defined WIP limit.
 message WipLimitExceeded {

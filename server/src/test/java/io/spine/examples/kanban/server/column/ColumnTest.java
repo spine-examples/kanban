@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, TeamDev. All rights reserved.
+ * Copyright 2022, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,10 +29,8 @@ package io.spine.examples.kanban.server.column;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import io.spine.examples.kanban.Card;
 import io.spine.examples.kanban.CardId;
-import io.spine.examples.kanban.Column;
 import io.spine.examples.kanban.ColumnId;
 import io.spine.examples.kanban.command.AddCardToColumn;
-import io.spine.examples.kanban.event.ColumnCreated;
 import io.spine.examples.kanban.event.WipLimitChanged;
 import io.spine.examples.kanban.event.WipLimitRemoved;
 import io.spine.examples.kanban.event.WipLimitSet;
@@ -52,39 +50,7 @@ class ColumnTest extends KanbanContextTest {
 
     @BeforeEach
     void setupColumn() {
-        context().receivesCommand(createColumn());
-    }
-
-    @Nested
-    @DisplayName("create new column")
-    class Creation {
-
-        @Test
-        @DisplayName("as entity with `Column` state")
-        void entity() {
-            context().assertEntityWithState(column(), Column.class)
-                     .exists();
-        }
-
-        @Test
-        @DisplayName("generating `ColumnCreated` event")
-        void event() {
-            EventSubject assertEvents =
-                    context().assertEvents()
-                             .withType(ColumnCreated.class);
-
-            assertEvents.hasSize(1);
-            ColumnCreated expected = ColumnCreated
-                    .newBuilder()
-                    .setBoard(board())
-                    .setColumn(column())
-                    // We call `buildPartial()` instead of `vBuild()` to be able to omit the `name` field,
-                    // which is `required` in the event.
-                    .buildPartial();
-            assertEvents.message(0)
-                        .ignoringFields(3 /* name */)
-                        .isEqualTo(expected);
-        }
+        context().receivesCommand(addColumn());
     }
 
     @Nested
@@ -191,7 +157,7 @@ class ColumnTest extends KanbanContextTest {
         @BeforeEach
         void initColumn() {
             columnWithLimit = ColumnId.generate();
-            context().receivesCommand(createColumn(columnWithLimit))
+            context().receivesCommand(addColumn(columnWithLimit))
                      .receivesCommand(setWipLimit(columnWithLimit, LIMIT));
         }
 

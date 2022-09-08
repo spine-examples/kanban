@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, TeamDev. All rights reserved.
+ * Copyright 2022, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,13 +31,17 @@ import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.Card;
 import io.spine.examples.kanban.Column;
 import io.spine.examples.kanban.event.BoardCreated;
+import io.spine.examples.kanban.event.ColumnAdditionRequested;
+import io.spine.examples.kanban.event.ColumnMovedOnBoard;
+import io.spine.examples.kanban.event.ColumnPlaced;
 import io.spine.examples.kanban.view.BoardView;
 import io.spine.server.projection.Projection;
 
 /**
  * Builds display information for a board.
  */
-public final class BoardProjection extends Projection<BoardId, BoardView, BoardView.Builder> {
+public final class BoardProjection
+        extends Projection<BoardId, BoardView, BoardView.Builder> {
 
     @Subscribe
     void on(BoardCreated e) {
@@ -45,14 +49,39 @@ public final class BoardProjection extends Projection<BoardId, BoardView, BoardV
     }
 
     @Subscribe
-    void updated(Column column) {
-        int index = state().getColumnList()
-                           .indexOf(column);
-        if (index != -1) {
-            builder().setColumn(index, column);
-        } else {
-            builder().addColumn(column);
-        }
+    void on(ColumnAdditionRequested e) {
+        Column column = Column.newBuilder()
+                              .setId(e.getColumn())
+                              .setBoard(e.getBoard())
+                              .setName(e.getName())
+                              .setPosition(e.getDesiredPosition())
+                              .vBuild();
+
+        builder().addColumn(e.getDesiredPosition().zeroBasedIndex(), column);
+    }
+
+    @Subscribe
+    void on(ColumnPlaced e) {
+        Column column = state()
+                .getColumn(e.getDesiredPosition().zeroBasedIndex())
+                .toBuilder()
+                .setPosition(e.getActualPosition())
+                .vBuild();
+
+        builder().removeColumn(e.getDesiredPosition().zeroBasedIndex())
+                 .addColumn(column.getPosition().zeroBasedIndex(), column);
+    }
+
+    @Subscribe
+    void on(ColumnMovedOnBoard e) {
+        Column column = state()
+                .getColumn(e.getFrom().zeroBasedIndex())
+                .toBuilder()
+                .setPosition(e.getTo())
+                .vBuild();
+
+        builder().removeColumn(e.getFrom().zeroBasedIndex())
+                 .addColumn(column.getPosition().zeroBasedIndex(), column);
     }
 
     @Subscribe

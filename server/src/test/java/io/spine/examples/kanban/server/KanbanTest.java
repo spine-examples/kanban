@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, TeamDev. All rights reserved.
+ * Copyright 2022, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,10 +29,11 @@ package io.spine.examples.kanban.server;
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.CardId;
 import io.spine.examples.kanban.ColumnId;
+import io.spine.examples.kanban.ColumnPosition;
 import io.spine.examples.kanban.WipLimit;
+import io.spine.examples.kanban.command.AddColumn;
 import io.spine.examples.kanban.command.CreateBoard;
 import io.spine.examples.kanban.command.CreateCard;
-import io.spine.examples.kanban.command.CreateColumn;
 import io.spine.examples.kanban.command.SetWipLimit;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -43,6 +44,7 @@ public abstract class KanbanTest {
 
     private BoardId board;
     private ColumnId column;
+    private final ColumnPosition defaultPosition = columnPosition(1, 1);
     private CardId card;
 
     /**
@@ -52,6 +54,14 @@ public abstract class KanbanTest {
         return WipLimit.newBuilder()
                        .setValue(limit)
                        .vBuild();
+    }
+
+    /** Creates a column position with the passed index and total number of columns. */
+    public static ColumnPosition columnPosition(int index, int ofTotal) {
+        return ColumnPosition.newBuilder()
+                             .setIndex(index)
+                             .setOfTotal(ofTotal)
+                             .vBuild();
     }
 
     /**
@@ -76,12 +86,20 @@ public abstract class KanbanTest {
         return card;
     }
 
+    protected final ColumnPosition defaultPosition() {
+        return defaultPosition;
+    }
+
     protected final CreateBoard createBoard() {
         return TestCommands.createBoard(board);
     }
 
-    protected final CreateColumn createColumn() {
-        return TestCommands.createColumn(board, column);
+    protected final AddColumn addColumn() {
+        return TestCommands.addColumn(board, column, defaultPosition);
+    }
+
+    protected final AddColumn addColumn(ColumnId column) {
+        return TestCommands.addColumn(board, column, defaultPosition);
     }
 
     protected final CreateCard createCard() {
@@ -90,10 +108,6 @@ public abstract class KanbanTest {
 
     protected final CreateCard createCard(CardId card) {
         return TestCommands.createCard(board, card);
-    }
-
-    protected final CreateColumn createColumn(ColumnId column) {
-        return TestCommands.createColumn(board, column);
     }
 
     protected static SetWipLimit setWipLimit(ColumnId column, int limit) {

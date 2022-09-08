@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, TeamDev. All rights reserved.
+ * Copyright 2022, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,10 +29,11 @@ package io.spine.examples.kanban.server;
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.CardId;
 import io.spine.examples.kanban.ColumnId;
+import io.spine.examples.kanban.ColumnPosition;
 import io.spine.examples.kanban.WipLimit;
+import io.spine.examples.kanban.command.AddColumn;
 import io.spine.examples.kanban.command.CreateBoard;
 import io.spine.examples.kanban.command.CreateCard;
-import io.spine.examples.kanban.command.CreateColumn;
 import io.spine.examples.kanban.command.SetWipLimit;
 
 import static io.spine.examples.kanban.server.KanbanTest.wipLimit;
@@ -55,13 +56,18 @@ final class TestCommands {
                 .vBuild();
     }
 
-    /** Create the column on the specified board. */
-    static CreateColumn createColumn(BoardId board, ColumnId column) {
-        return CreateColumn
+    /** Add the column to the board. */
+    static AddColumn addColumn(
+            BoardId board,
+            ColumnId column,
+            ColumnPosition columnPosition
+    ) {
+        return AddColumn
                 .newBuilder()
                 .setBoard(board)
                 .setColumn(column)
                 .setName("Generated column" + randomString())
+                .setDesiredPosition(columnPosition)
                 .vBuild();
     }
 

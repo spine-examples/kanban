@@ -35,6 +35,7 @@ option java_multiple_files = true;
 
 import "spine_examples/kanban/identifiers.proto";
 import "spine_examples/kanban/wip_limit.proto";
+import "spine_examples/kanban/column_position.proto";
 
 // A new board has been created.
 //
@@ -54,50 +55,118 @@ message BoardInitialized {
     BoardId board = 1 [(required) = true];
 }
 
-// A column placed on the board.
-message ColumnPlaced {
+// A request to add a new column to the board was made.
+message ColumnAdditionRequested {
 
-    // The ID of the board.
-    BoardId board = 1 [(required) = true];
+    // The ID of the column to add.
+    ColumnId column = 1 [(required) = true];
 
-    // The ID of the placed column.
-    ColumnId column = 2 [(required) = true];
+    // The ID of the board to which to add the column.
+    BoardId board = 2 [(required) = true];
+
+    // The name of the column.
+    string name = 3 [(required) = true];
+
+    // The desired position of the column.
+    ColumnPosition desired_position = 4 [(required) = true];
 }
 
-// A new card is created.
+// A column was created.
+message ColumnCreated {
+
+    // The ID of the created column.
+    ColumnId column = 1 [(required) = true];
+
+    // The ID of the board on which the column was created.
+    BoardId board = 2 [(required) = true];
+
+    // The name of the created column.
+    string name = 3 [(required) = true];
+}
+
+// A column was placed on a board.
+message ColumnPlaced {
+
+    // The ID of the placed column.
+    ColumnId column = 1 [(required) = true];
+
+    // The ID of the board where column was placed.
+    BoardId board = 2 [(required) = true];
+
+    // The position on the board where the column was desired to be placed.
+    ColumnPosition desired_position = 3 [(required) = true];
+
+    // The position on the board where the column was actually placed.
+    ColumnPosition actual_position = 4 [(required) = true];
+}
+
+// A column was moved on a board.
+//
+// The `Board` emits this event to reflect the change of its column order and notify
+// subscribed entities and the `Column` that the column was moved.
+//
+message ColumnMovedOnBoard {
+
+    // The ID of the moved column.
+    ColumnId column = 1 [(required) = true];
+
+    // The ID of the board.
+    BoardId board = 2 [(required) = true];
+
+    // The original position of the column.
+    ColumnPosition from = 3 [(required) = true];
+
+    // The position on the board to which column was moved.
+    ColumnPosition to = 4 [(required) = true];
+}
+
+// A column's position changed as a result of being placed or moved.
+//
+// The `Column` emits this event to reflect the change of its position.
+//
+message ColumnPositionUpdated {
+
+    // The ID of the column.
+    ColumnId column = 1 [(required) = true];
+
+    // The previous position of the column.
+    ColumnPosition previous = 2;
+
+    // The current position of the column.
+    ColumnPosition current = 3 [(required) = true];
+}
+
+// A column was added to the board.
+message ColumnAdded {
+
+    // The ID of the added column.
+    ColumnId column = 1 [(required) = true];
+
+    // The ID of the board to which column was added.
+    BoardId board = 2 [(required) = true];
+
+    // The name of the column.
+    string name = 3 [(required) = true];
+
+    // The position on the board where column was placed.
+    ColumnPosition position = 4 [(required) = true];
+}
+
+// A new card was created.
 message CardCreated {
     option (is).java_type = "BoardAwareEvent";
 
-    // The ID of the newly created card.
+    // The ID of the created card.
     CardId card = 1 [(required) = true];
 
     // The ID of the board which contains the card.
     BoardId board = 2 [(required) = true];
 
-    // A name of the card which was created.
+    // The name of the card.
     string name = 3 [(required) = true];
 
-    // Optional work description text.
+    // The description of the work to be done.
     string description = 4;
-}
-
-// A column was created.
-message ColumnCreated {
-    option (is).java_type = "BoardAwareEvent";
-
-    // The ID of the created column.
-    ColumnId column = 1 [(required) = true];
-
-    // The ID of the board on which the column created.
-    BoardId board = 2 [(required) = true];
-
-    // The name of the new column.
-    string name = 3 [(required) = true];
-
-    // This flag was used to indicate that a column was created during
-    // the board initialization process. Currently, it is considered rudimentary.
-    reserved 4;
-    reserved "board_init";
 }
 
 // A new card is waiting to be placed to a column.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, TeamDev. All rights reserved.
+ * Copyright 2022, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,8 @@ package io.spine.examples.kanban.server.column;
 
 import io.spine.examples.kanban.ColumnId;
 import io.spine.examples.kanban.event.CardWaitingPlacement;
+import io.spine.examples.kanban.event.ColumnMovedOnBoard;
+import io.spine.examples.kanban.event.ColumnPlaced;
 import io.spine.server.aggregate.AggregateRepository;
 import io.spine.server.route.EventRouting;
 
@@ -41,6 +43,8 @@ public final class ColumnRepository extends AggregateRepository<ColumnId, Column
     @Override
     protected void setupEventRouting(EventRouting<ColumnId> routing) {
         super.setupEventRouting(routing);
-        routing.route(CardWaitingPlacement.class, (event, context) -> withId(event.getColumn()));
+        routing.route(CardWaitingPlacement.class, (event, context) -> withId(event.getColumn()))
+               .route(ColumnPlaced.class, (event, context) -> withId(event.getColumn()))
+               .route(ColumnMovedOnBoard.class, (event, context) -> withId(event.getColumn()));
     }
 }

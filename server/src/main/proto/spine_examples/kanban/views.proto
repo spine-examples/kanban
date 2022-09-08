@@ -44,7 +44,7 @@ message BoardView {
     option (entity).kind = PROJECTION;
 
     // The ID of the board.
-    BoardId id = 1 [(required) = true];
+    BoardId id = 1;
 
     // Columns of the board.
     repeated Column column = 2;

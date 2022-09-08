@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, TeamDev. All rights reserved.
+ * Copyright 2022, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ package io.spine.examples.kanban.server;
 import io.spine.examples.kanban.server.board.BoardInitRepository;
 import io.spine.examples.kanban.server.board.BoardRepository;
 import io.spine.examples.kanban.server.card.CardRepository;
+import io.spine.examples.kanban.server.column.ColumnAdditionRepository;
 import io.spine.examples.kanban.server.column.ColumnRepository;
 import io.spine.examples.kanban.server.column.MoveCardRepository;
 import io.spine.examples.kanban.server.view.BoardProjection;
@@ -43,7 +44,9 @@ final class KanbanContext {
 
     static final String NAME = "Kanban";
 
-    /** Prevents instantiation of this utility class. */
+    /**
+     * Prevents instantiation of this utility class.
+     */
     private KanbanContext() {
     }
 
@@ -53,12 +56,13 @@ final class KanbanContext {
      */
     static BoundedContextBuilder newBuilder() {
         return BoundedContext
-                    .singleTenant(NAME)
-                    .add(new CardRepository())
-                    .add(new BoardRepository())
-                    .add(new BoardInitRepository())
-                    .add(new ColumnRepository())
-                    .add(new MoveCardRepository())
-                    .add(DefaultRepository.of(BoardProjection.class));
+                .singleTenant(NAME)
+                .add(new BoardRepository())
+                .add(new BoardInitRepository())
+                .add(DefaultRepository.of(BoardProjection.class))
+                .add(new ColumnRepository())
+                .add(new ColumnAdditionRepository())
+                .add(new CardRepository())
+                .add(new MoveCardRepository());
     }
 }

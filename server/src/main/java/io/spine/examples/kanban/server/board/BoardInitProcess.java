@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, TeamDev. All rights reserved.
+ * Copyright 2022, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,10 +28,10 @@ package io.spine.examples.kanban.server.board;
 
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.BoardInit;
-import io.spine.examples.kanban.command.CreateColumn;
+import io.spine.examples.kanban.command.AddColumn;
 import io.spine.examples.kanban.event.BoardCreated;
 import io.spine.examples.kanban.event.BoardInitialized;
-import io.spine.examples.kanban.event.ColumnPlaced;
+import io.spine.examples.kanban.event.ColumnAdded;
 import io.spine.server.command.Command;
 import io.spine.server.event.React;
 import io.spine.server.model.Nothing;
@@ -41,25 +41,25 @@ import io.spine.server.tuple.EitherOf2;
 /**
  * Creates default columns on a newly created board.
  */
-final class BoardInitProcess extends ProcessManager<BoardId, BoardInit, BoardInit.Builder> {
+public final class BoardInitProcess
+        extends ProcessManager<BoardId, BoardInit, BoardInit.Builder> {
 
     /**
-     * Whenever a new board is created, issue commands for creating default columns.
+     * Whenever a new board is created, issue commands for adding default columns.
      */
     @Command
-    Iterable<CreateColumn> startPolicy(BoardCreated e) {
-        return DefaultColumns.creationCommands(e.getBoard());
+    Iterable<AddColumn> on(BoardCreated e) {
+        return DefaultColumns.additionCommands(e.getBoard());
     }
 
     /**
-     * Whenever all default columns are created and placed on the board,
-     * terminate the process.
+     * Whenever all default columns are added to the board, terminate the process.
      */
     @React
-    EitherOf2<BoardInitialized, Nothing> terminationPolicy(ColumnPlaced e) {
-        builder().addPlacedColumn(e.getColumn());
+    EitherOf2<BoardInitialized, Nothing> on(ColumnAdded e) {
+        builder().addAddedColumn(e.getColumn());
 
-        if (builder().getPlacedColumnCount() == DefaultColumns.count()) {
+        if (builder().getAddedColumnCount() == DefaultColumns.count()) {
             setDeleted(true);
 
             return EitherOf2.withA(

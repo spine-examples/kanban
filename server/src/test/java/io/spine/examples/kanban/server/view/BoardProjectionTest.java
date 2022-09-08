@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, TeamDev. All rights reserved.
+ * Copyright 2022, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,8 +33,8 @@ import io.spine.examples.kanban.Card;
 import io.spine.examples.kanban.CardId;
 import io.spine.examples.kanban.Column;
 import io.spine.examples.kanban.ColumnId;
+import io.spine.examples.kanban.command.AddColumn;
 import io.spine.examples.kanban.command.CreateCard;
-import io.spine.examples.kanban.command.CreateColumn;
 import io.spine.examples.kanban.server.KanbanContextTest;
 import io.spine.examples.kanban.view.BoardView;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,8 +58,8 @@ class BoardProjectionTest extends KanbanContextTest {
     @BeforeEach
     void initBoard() {
         context().receivesCommand(createBoard());
-        columns = commands(CreateColumn.class)
-                .map(CreateColumn::getColumn)
+        columns = commands(AddColumn.class)
+                .map(AddColumn::getColumn)
                 .collect(toImmutableList());
         cards = commands(CreateCard.class)
                 .map(CreateCard::getCard)

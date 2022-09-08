@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, TeamDev. All rights reserved.
+ * Copyright 2022, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,50 +31,74 @@ import com.google.common.collect.ImmutableList;
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.BoardInit.DefaultColumn;
 import io.spine.examples.kanban.ColumnId;
-import io.spine.examples.kanban.command.CreateColumn;
-
-import java.util.Arrays;
+import io.spine.examples.kanban.ColumnPosition;
+import io.spine.examples.kanban.command.AddColumn;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.ImmutableList.toImmutableList;
 
-/** Provides utility methods for dealing with default columns. */
+/**
+ * Provides utility methods for dealing with default columns.
+ */
 final class DefaultColumns {
 
-    /** Prevents instantiation of this utility class. */
+    /**
+     *  Prevents instantiation of this utility class.
+     */
     private DefaultColumns() {
     }
 
-    /** Obtains the number of default columns. */
+    /**
+     * Obtains the number of default columns.
+     */
     static int count() {
         return DefaultColumn.values().length - 1;
     }
 
     /**
-     * Returns an ordered list of commands for creating defaults columns for the
+     * Returns an ordered list of commands for adding defaults columns to the
      * provided board.
      *
      * <p> The list is ordered following the natural order of Kanban columns. This order
      * corresponds to the declaration order of entries in the {@link DefaultColumn}.
      */
-    static ImmutableList<CreateColumn> creationCommands(BoardId board) {
+    static ImmutableList<AddColumn> additionCommands(BoardId board) {
         checkNotNull(board);
-        return Arrays.stream(DefaultColumn.values())
-                     .filter(c -> c != DefaultColumn.UNRECOGNIZED)
-                     .map(c -> creationCommand(board, c))
-                     .collect(toImmutableList());
+
+        ImmutableList.Builder<AddColumn> commands = new ImmutableList.Builder<>();
+        DefaultColumn[] columns = DefaultColumn.values();
+        int total = columns.length - 1;
+
+        for (int i = 1; i <= total; i++) {
+            DefaultColumn column = columns[i];
+            ColumnPosition position =
+                    ColumnPosition.newBuilder()
+                                  .setIndex(i)
+                                  .setOfTotal(total)
+                                  .vBuild();
+
+            commands.add(additionCommand(board, column, position));
+        }
+
+        return commands.build();
     }
 
-    private static CreateColumn creationCommand(BoardId board, DefaultColumn column) {
-        return CreateColumn
+    private static AddColumn additionCommand(
+            BoardId board,
+            DefaultColumn column,
+            ColumnPosition position
+    ) {
+        return AddColumn
                 .newBuilder()
                 .setBoard(board)
                 .setColumn(ColumnId.generate())
                 .setName(nameFor(column))
+                .setDesiredPosition(position)
                 .vBuild();
     }
 
-    /** Transforms the enum value into a column title. */
+    /**
+     * Transforms the enum value into a column title.
+     */
     @VisibleForTesting
     static String nameFor(DefaultColumn column) {
         checkNotNull(column);

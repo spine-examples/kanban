@@ -24,14 +24,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+package io.spine.examples.kanban;
+
+import com.google.errorprone.annotations.Immutable;
+import io.spine.annotation.GeneratedMixin;
+import io.spine.base.SerializableMessage;
+
 /**
- * This package contains projections for displaying Kanban board.
+ * Defines custom operations for the {@link ColumnPosition}.
  */
+@Immutable
+@GeneratedMixin
+public interface ColumnPositionMixin extends SerializableMessage {
 
-@CheckReturnValue
-@ParametersAreNonnullByDefault
-package io.spine.examples.kanban.server.view;
+    /**
+     * The index of a column in a column list.
+     */
+    int getIndex();
 
-import com.google.errorprone.annotations.CheckReturnValue;
-
-import javax.annotation.ParametersAreNonnullByDefault;
+    /**
+     * Converts the one-based index to the zero-based.
+     *
+     * <p> This helper method is for accessing items in lists or arrays using a
+     * {@link ColumnPosition} object to avoid the {@link IndexOutOfBoundsException}.
+     */
+    default int zeroBasedIndex() {
+        return getIndex() - 1;
+    }
+}

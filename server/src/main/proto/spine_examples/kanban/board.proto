@@ -44,15 +44,31 @@ message Board {
 
     option (entity) = { kind: AGGREGATE visibility: FULL };
 
-    BoardId id = 1 [(required) = true];
+    BoardId id = 1;
 
     // Columns of the board.
     //
-    // By convention of this example application, the first column contains cards that wait
-    // to be worked on. The last column is for cards that are done. Columns in between are
-    // for stages of processing (i.e. work in progress).
+    // By convention of this example application, the first column contains cards that
+    // wait to be worked on. The last column is for cards that are done. Columns in
+    // between are for stages of processing (i.e. work in progress).
     //
     repeated ColumnId column = 5;
+
+    // Taken column names.
+    //
+    // This map is used to check that column names are unique within the board.
+    //
+    repeated TakenColumnName taken_column_names = 6;
+
+    // Maps a taken column name to the column it belongs to.
+    message TakenColumnName {
+
+        // The taken column name.
+        string name = 1;
+
+        // The column to which the taken name belongs to.
+        ColumnId column = 2;
+    }
 }
 
 // The board initialization process manager.
@@ -64,15 +80,10 @@ message BoardInit {
     option (entity).kind = PROCESS_MANAGER;
 
     // The ID of the board we initialize.
-    BoardId id = 1 [(required) = true];
+    BoardId id = 1;
 
-    // Columns already placed.
-    repeated ColumnId placed_column = 3;
-
-    // The process manager used to create default columns one by one, "step by step".
-    // Currently, it creates them all at once.
-    reserved 2;
-    reserved "step";
+    // Columns already added.
+    repeated ColumnId added_column = 2;
 
     enum DefaultColumn {
         TO_DO = 0;

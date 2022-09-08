@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, TeamDev. All rights reserved.
+ * Copyright 2022, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,17 +28,21 @@ package io.spine.examples.kanban.server.board;
 
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.BoardInit;
+import io.spine.examples.kanban.event.ColumnAdded;
 import io.spine.server.procman.ProcessManagerRepository;
 import io.spine.server.route.EventRouting;
+
+import static io.spine.server.route.EventRoute.withId;
 
 /**
  * Manages instances of {@link BoardInitProcess}.
  */
-public final class BoardInitRepository
+public class BoardInitRepository
         extends ProcessManagerRepository<BoardId, BoardInitProcess, BoardInit> {
 
     @Override
     protected void setupEventRouting(EventRouting<BoardId> routing) {
         super.setupEventRouting(routing);
+        routing.route(ColumnAdded.class, (event, context) -> withId(event.getBoard()));
     }
 }

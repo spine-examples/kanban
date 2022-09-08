@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, TeamDev. All rights reserved.
+ * Copyright 2022, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,9 @@ import io.spine.examples.kanban.event.CardAddedToColumn;
 import io.spine.examples.kanban.event.CardRemovedFromColumn;
 import io.spine.examples.kanban.event.CardWaitingPlacement;
 import io.spine.examples.kanban.event.ColumnCreated;
+import io.spine.examples.kanban.event.ColumnMovedOnBoard;
+import io.spine.examples.kanban.event.ColumnPlaced;
+import io.spine.examples.kanban.event.ColumnPositionUpdated;
 import io.spine.examples.kanban.event.WipLimitChanged;
 import io.spine.examples.kanban.event.WipLimitRemoved;
 import io.spine.examples.kanban.event.WipLimitSet;
@@ -65,9 +68,34 @@ final class ColumnAggregate extends Aggregate<ColumnId, Column, Column.Builder> 
     }
 
     @Apply
-    private void event(ColumnCreated e) {
-        builder().setBoard(e.getBoard())
+    private void apply(ColumnCreated e) {
+        builder().setId(e.getColumn())
+                 .setBoard(e.getBoard())
                  .setName(e.getName());
+    }
+
+    @React
+    ColumnPositionUpdated on(ColumnPlaced e) {
+        return ColumnPositionUpdated
+                .newBuilder()
+                .setColumn(e.getColumn())
+                .setCurrent(e.getActualPosition())
+                .vBuild();
+    }
+
+    @React
+    ColumnPositionUpdated on(ColumnMovedOnBoard e) {
+        return ColumnPositionUpdated
+                .newBuilder()
+                .setColumn(e.getColumn())
+                .setPrevious(state().getPosition())
+                .setCurrent(e.getTo())
+                .vBuild();
+    }
+
+    @Apply
+    private void apply(ColumnPositionUpdated e) {
+        builder().setPosition(e.getCurrent());
     }
 
     /**

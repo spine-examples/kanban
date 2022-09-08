@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, TeamDev. All rights reserved.
+ * Copyright 2022, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,15 +26,22 @@
 
 package io.spine.examples.kanban.server.board;
 
+import com.google.common.collect.ImmutableList;
+import io.spine.base.EventMessage;
 import io.spine.examples.kanban.Board;
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.ColumnId;
+import io.spine.examples.kanban.ColumnPosition;
+import io.spine.examples.kanban.command.AddColumn;
 import io.spine.examples.kanban.command.CreateBoard;
+import io.spine.examples.kanban.command.PlaceColumn;
 import io.spine.examples.kanban.event.BoardCreated;
 import io.spine.examples.kanban.event.CardCreated;
 import io.spine.examples.kanban.event.CardWaitingPlacement;
-import io.spine.examples.kanban.event.ColumnCreated;
+import io.spine.examples.kanban.event.ColumnAdditionRequested;
+import io.spine.examples.kanban.event.ColumnMovedOnBoard;
 import io.spine.examples.kanban.event.ColumnPlaced;
+import io.spine.examples.kanban.rejection.ColumnNameAlreadyTaken;
 import io.spine.server.aggregate.Aggregate;
 import io.spine.server.aggregate.Apply;
 import io.spine.server.command.Assign;
@@ -46,43 +53,135 @@ import io.spine.server.event.React;
 final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
 
     @Assign
-    BoardCreated handle(CreateBoard command) {
-        BoardId id = command.getBoard();
+    BoardCreated handle(CreateBoard c) {
         return BoardCreated
                 .newBuilder()
-                .setBoard(id)
+                .setBoard(c.getBoard())
                 .vBuild();
     }
 
     @Apply
-    private void event(BoardCreated event) {
-        builder().setId(event.getBoard());
+    private void apply(BoardCreated e) {
+        builder().setId(e.getBoard());
+    }
+
+    @Assign
+    ColumnAdditionRequested handle(AddColumn c) throws ColumnNameAlreadyTaken {
+        if (columnNameIsTaken(c.getName())) {
+            throw ColumnNameAlreadyTaken
+                    .newBuilder()
+                    .setColumn(c.getColumn())
+                    .setName(c.getName())
+                    .build();
+        }
+
+        return ColumnAdditionRequested
+                .newBuilder()
+                .setColumn(c.getColumn())
+                .setBoard(c.getBoard())
+                .setName(c.getName())
+                .setDesiredPosition(c.getDesiredPosition())
+                .vBuild();
+    }
+
+    private boolean columnNameIsTaken(String name) {
+        return state()
+                .getTakenColumnNamesList()
+                .stream()
+                .anyMatch(entry -> entry.getName().equals(name));
+    }
+
+    @Apply
+    private void apply(ColumnAdditionRequested e) {
+        builder().addTakenColumnNames(
+                Board.TakenColumnName
+                        .newBuilder()
+                        .setName(e.getName())
+                        .setColumn(e.getColumn())
+                        .vBuild()
+        );
     }
 
     /**
-     * Whenever a new column is created, it is placed next to existing columns.
+     * Places a column on the board and notifies all existing columns that the total
+     * number of columns has changed.
      */
-    @React
-    ColumnPlaced columnPlacementPolicy(ColumnCreated event) {
+    @Assign
+    Iterable<EventMessage> handle(PlaceColumn c) {
+        return new ImmutableList.Builder<EventMessage>()
+                .add(placeColumn(c))
+                .addAll(moveColumns())
+                .build();
+    }
+
+    private ColumnPlaced placeColumn(PlaceColumn c) {
+        ColumnPosition actualPosition =
+                ColumnPosition.newBuilder()
+                              .setIndex(c.getDesiredPosition().getIndex())
+                              .setOfTotal(incrementColumnCount())
+                              .vBuild();
+
         return ColumnPlaced
                 .newBuilder()
-                .setBoard(event.getBoard())
-                .setColumn(event.getColumn())
+                .setBoard(c.getBoard())
+                .setColumn(c.getColumn())
+                .setDesiredPosition(c.getDesiredPosition())
+                .setActualPosition(actualPosition)
+                .vBuild();
+    }
+
+    private int incrementColumnCount() {
+        return state().getColumnCount() + 1;
+    }
+
+    private ImmutableList<ColumnMovedOnBoard> moveColumns() {
+        int currentTotal = state().getColumnCount();
+        int newTotal = incrementColumnCount();
+        ImmutableList.Builder<ColumnMovedOnBoard> columnsMoved =
+                new ImmutableList.Builder<>();
+
+        for (int i = 1; i <= currentTotal; i++) {
+            columnsMoved.add(updateTotal(i, currentTotal, newTotal));
+        }
+
+        return columnsMoved.build();
+    }
+
+    private ColumnMovedOnBoard updateTotal(int index, int currentTotal, int newTotal) {
+        ColumnPosition from =
+                ColumnPosition.newBuilder()
+                              .setIndex(index)
+                              .setOfTotal(currentTotal)
+                              .vBuild();
+        ColumnPosition to =
+                ColumnPosition.newBuilder()
+                              .setIndex(index)
+                              .setOfTotal(newTotal)
+                              .vBuild();
+        ColumnId column = state().getColumn(from.zeroBasedIndex());
+
+        return ColumnMovedOnBoard
+                .newBuilder()
+                .setColumn(column)
+                .setBoard(state().getId())
+                .setFrom(from)
+                .setTo(to)
                 .vBuild();
     }
 
     @Apply
-    private void event(ColumnPlaced e) {
-        builder().setId(e.getBoard())
-                 .addColumn(e.getColumn());
+    private void apply(ColumnPlaced e) {
+        builder().addColumn(e.getActualPosition().zeroBasedIndex(), e.getColumn());
+    }
+
+    @Apply
+    private void apply(ColumnMovedOnBoard e) {
+        builder().removeColumn(e.getFrom().zeroBasedIndex())
+                 .addColumn(e.getTo().zeroBasedIndex(), e.getColumn());
     }
 
     /**
-     * Whenever a card created, it is placed to the first column of the board.
-     *
-     * @implNote This board knows its columns. So the board listens to the events on new card
-     *           creation, and emits the event with the references to the created card and
-     *           the first column on which the card is to be placed.
+     * Places the created card to the first column of the board.
      */
     @React
     CardWaitingPlacement cardPlacementPolicy(CardCreated event) {

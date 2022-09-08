@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, TeamDev. All rights reserved.
+ * Copyright 2022, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,11 +26,21 @@
 
 package io.spine.examples.kanban.server.board;
 
+import io.spine.examples.kanban.Board;
+import io.spine.examples.kanban.ColumnId;
+import io.spine.examples.kanban.ColumnPosition;
+import io.spine.examples.kanban.command.AddColumn;
+import io.spine.examples.kanban.event.BoardCreated;
 import io.spine.examples.kanban.server.KanbanContextTest;
+import io.spine.testing.server.EventSubject;
 import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+
+import static io.spine.examples.kanban.rejection.Rejections.ColumnNameAlreadyTaken;
+import static io.spine.testing.TestValues.randomString;
 
 @DisplayName("Kanban Context Board logic should")
 @Ignore("Restore the tests when move card API is defined")
@@ -39,6 +49,85 @@ class BoardTest extends KanbanContextTest {
     @BeforeEach
     void setupBoard() {
         context().receivesCommand(createBoard());
+    }
+
+    @Nested
+    @DisplayName("create a board")
+    class CreateBoard {
+
+        @Test
+        @DisplayName("as a `Board` entity")
+        void entity() {
+            context().assertEntityWithState(board(), Board.class)
+                     .exists();
+        }
+
+        @Test
+        @DisplayName("emitting the `BoardCreated` event")
+        void event() {
+            BoardCreated expected =
+                    BoardCreated.newBuilder()
+                                .setBoard(board())
+                                .build();
+
+            context().assertEvents()
+                     .withType(BoardCreated.class)
+                     .message(0)
+                     .isEqualTo(expected);
+        }
+    }
+
+    @Nested
+    @DisplayName("keep column names unique")
+    class GuardColumnNameUniqueness {
+
+        private AddColumn rejectedCommand;
+
+        @BeforeEach
+        void sendCommands() {
+            String name = randomString();
+            ColumnPosition position = columnPosition(
+                    DefaultColumns.count() + 1,
+                    DefaultColumns.count() + 1
+            );
+            AddColumn successfulCommand =
+                    AddColumn.newBuilder()
+                             .setBoard(board())
+                             .setColumn(ColumnId.generate())
+                             .setName(name)
+                             .setDesiredPosition(position)
+                             .vBuild();
+            position = columnPosition(
+                    DefaultColumns.count() + 2,
+                    DefaultColumns.count() + 2
+            );
+            rejectedCommand = AddColumn.newBuilder()
+                                       .setBoard(board())
+                                       .setColumn(ColumnId.generate())
+                                       .setName(name)
+                                       .setDesiredPosition(position)
+                                       .vBuild();
+
+            context().receivesCommand(successfulCommand);
+            context().receivesCommand(rejectedCommand);
+        }
+
+        @Test
+        @DisplayName("by rejecting the addition of the column with a duplicate name")
+        void rejection() {
+            EventSubject assertRejections =
+                    context().assertEvents()
+                             .withType(ColumnNameAlreadyTaken.class);
+            assertRejections.hasSize(1);
+
+            ColumnNameAlreadyTaken expected =
+                    ColumnNameAlreadyTaken
+                            .newBuilder()
+                            .setColumn(rejectedCommand.getColumn())
+                            .setName(rejectedCommand.getName())
+                            .build();
+            assertRejections.message(0).isEqualTo(expected);
+        }
     }
 
     @Nested

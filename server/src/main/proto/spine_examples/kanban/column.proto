@@ -36,26 +36,49 @@ option java_multiple_files = true;
 
 import "spine_examples/kanban/identifiers.proto";
 import "spine_examples/kanban/wip_limit.proto";
+import "spine_examples/kanban/column_position.proto";
 
 // A column on a Kanban board.
 message Column {
+
     option (is).java_type = "BoardAware";
     option (entity) = { kind: AGGREGATE visibility: FULL };
 
-    // The identifier of the column on its board.
-    ColumnId id = 1 [(required) = true];
+    // The ID of the column.
+    ColumnId id = 1;
 
     // The board to which the column belongs.
     BoardId board = 2 [(required) = true];
 
-    // A human-readable name of the column.
+    // The name of the column.
     string name = 3 [(required) = true];
 
-    // Cards are placed in the order of their priorities, with the highest priority at the top.
+    // The list of cards that reside in the column.
     repeated CardId card = 4;
 
-    // WIP limit for a column.
+    // WIP limit for the column.
     WipLimit wip_limit = 5;
+
+    // The position of the column on the board.
+    ColumnPosition position = 6;
+}
+
+// The process of adding a new column to a board.
+message ColumnAddition {
+
+    option (entity).kind = PROCESS_MANAGER;
+
+    // The ID of the column to add.
+    ColumnId column = 1;
+
+    // The ID of the board to which to add the column.
+    BoardId board = 2 [(required) = true];
+
+    // The name of the column.
+    string name = 3 [(required) = true];
+
+    // The desired position of the column.
+    ColumnPosition desired_position = 4 [(required) = true];
 }
 
 // The process of moving cards between columns.

@@ -24,14 +24,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+package io.spine.examples.kanban.server.column;
+
+import io.spine.examples.kanban.ColumnAddition;
+import io.spine.examples.kanban.ColumnId;
+import io.spine.examples.kanban.event.ColumnAdditionRequested;
+import io.spine.server.procman.ProcessManagerRepository;
+import io.spine.server.route.EventRouting;
+
+import static io.spine.server.route.EventRoute.withId;
+
 /**
- * This package contains projections for displaying Kanban board.
+ * Manages instances of {@link ColumnAdditionProcess}.
  */
+public class ColumnAdditionRepository
+        extends ProcessManagerRepository<ColumnId, ColumnAdditionProcess, ColumnAddition> {
 
-@CheckReturnValue
-@ParametersAreNonnullByDefault
-package io.spine.examples.kanban.server.view;
-
-import com.google.errorprone.annotations.CheckReturnValue;
-
-import javax.annotation.ParametersAreNonnullByDefault;
+    @Override
+    protected void setupEventRouting(EventRouting<ColumnId> routing) {
+        super.setupEventRouting(routing);
+        routing.route(ColumnAdditionRequested.class, (event, context) -> withId(event.getColumn()));
+    }
+}
