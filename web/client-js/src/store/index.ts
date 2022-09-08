@@ -25,11 +25,13 @@
  */
 
 import { createStore } from "vuex";
+import { KanbanState } from "./types";
+import state from "@/store/state";
+import mutations from "@/store/mutations";
+import actions from "@/store/actions";
 
-export default createStore({
-  state: {},
-  getters: {},
-  mutations: {},
-  actions: {},
-  modules: {},
+export default createStore<KanbanState>({
+  state,
+  mutations,
+  actions,
 });

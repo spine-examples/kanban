@@ -24,20 +24,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import BoardView from "@/views/Board.vue";
+import { KanbanState } from "@/store/types";
 
-const routes: Array<RouteRecordRaw> = [
-  {
-    path: "/",
-    name: "board",
-    component: BoardView,
-  },
-];
+const state: KanbanState = {
+  board: null,
+};
 
-const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes,
-});
-
-export default router;
+export default state;

@@ -24,20 +24,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import BoardView from "@/views/Board.vue";
+import { ActionContext, ActionTree } from "vuex";
+import { Action, BoardCreated, KanbanState, Mutation } from "@/store/types";
+import { client } from "@/dependency/container";
+import { AnyPacker } from "spine-web/client/any-packer";
+import { Type } from "spine-web/client/typed-message";
+import { Event } from "spine-web/proto/spine/core/event_pb";
+import { v4 as newUuid } from "uuid";
 
-const routes: Array<RouteRecordRaw> = [
-  {
-    path: "/",
-    name: "board",
-    component: BoardView,
+const actions: ActionTree<KanbanState, any> = {
+  [Action.CREATE_BOARD]: (ctx: ActionContext<KanbanState, any>): void => {
+    client
+      .subscribeToEvent(proto.spine_examples.kanban.BoardCreated)
+      .post()
+      .then(({ eventEmitted, unsubscribe }) => {
+        eventEmitted.subscribe((e: Event) => {
+          unsubscribe();
+          const innerEvent: BoardCreated = AnyPacker.unpack(e.getMessage()).as(
+            Type.forClass(proto.spine_examples.kanban.BoardCreated)
+          );
+          ctx.commit(Mutation.BOARD_CREATED, innerEvent);
+        });
+      });
+
+    const command = new proto.spine_examples.kanban.CreateBoard();
+    const board = new proto.spine_examples.kanban.BoardId();
+    board.setUuid(newUuid());
+    command.setBoard(board);
+
+    client.command(command).post();
   },
-];
+};
 
-const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes,
-});
-
-export default router;
+export default actions;

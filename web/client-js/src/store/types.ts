@@ -24,20 +24,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import BoardView from "@/views/Board.vue";
+export type Board = proto.spine_examples.kanban.BoardView;
+export type BoardCreated = proto.spine_examples.kanban.BoardCreated;
 
-const routes: Array<RouteRecordRaw> = [
-  {
-    path: "/",
-    name: "board",
-    component: BoardView,
-  },
-];
+export interface KanbanState {
+  board: Board | null;
+}
 
-const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes,
-});
+export const Mutation = {
+  BOARD_CREATED: "boardCreated",
+};
 
-export default router;
+export const Action = {
+  CREATE_BOARD: "createBoard",
+};
