@@ -24,8 +24,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "kanban"
+import io.spine.examples.kanban.dependency.Spine
 
-include("server")
-include("model")
-include("web:server")
+plugins {
+    id("java")
+    id("org.gretty") version ("3.0.3")
+    id("io.spine.tools.gradle.bootstrap")
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    implementation(Spine.Server.lib)
+    implementation(project(":server"))
+}
+
+spine {
+    enableJava().firebaseWebServer()
+}
+
+gretty {
+    contextPath = "/"
+    loggingLevel = "ALL"
+    fastReload = false
+}

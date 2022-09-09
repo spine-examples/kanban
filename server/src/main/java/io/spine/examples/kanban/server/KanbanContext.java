@@ -40,7 +40,7 @@ import io.spine.server.DefaultRepository;
 /**
  * Configures Kanban Bounded Context with repositories.
  */
-final class KanbanContext {
+public final class KanbanContext {
 
     static final String NAME = "Kanban";
 
@@ -54,7 +54,7 @@ final class KanbanContext {
      * Creates {@code BoundedContextBuilder} for the Kanban context and fills it with
      * repositories.
      */
-    static BoundedContextBuilder newBuilder() {
+    public static BoundedContextBuilder newBuilder() {
         return BoundedContext
                 .singleTenant(NAME)
                 .add(new BoardRepository())
