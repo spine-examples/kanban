@@ -93,7 +93,7 @@ class Application {
                 commandService,
                 queryService,
                 subscriptionService,
-                Firebase.client()
+                FirebaseClients.getInstance()
         );
         return application;
     }
