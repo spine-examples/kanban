@@ -30,7 +30,6 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.FirebaseDatabase;
-import io.spine.net.Url;
 import io.spine.web.firebase.FirebaseClient;
 import io.spine.web.firebase.FirebaseClientFactory;
 
@@ -51,11 +50,6 @@ import static io.spine.examples.kanban.web.server.Configuration.productionEnviro
  */
 final class FirebaseClients {
 
-    private static final Url DB_URL =
-            Url.newBuilder()
-               .setSpec(firebaseDatabaseUrl())
-               .vBuild();
-
     private static final FirebaseClient INSTANCE = createClient();
 
     /**
@@ -72,7 +66,7 @@ final class FirebaseClients {
         FirebaseOptions options =
                 FirebaseOptions.builder()
                                .setCredentials(credentials())
-                               .setDatabaseUrl(DB_URL.getSpec())
+                               .setDatabaseUrl(firebaseDatabaseUrl())
                                .build();
         FirebaseApp firebaseApp = FirebaseApp.initializeApp(options);
         FirebaseDatabase database = FirebaseDatabase.getInstance(firebaseApp);
