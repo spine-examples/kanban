@@ -54,17 +54,21 @@ class Application {
         return INSTANCE;
     }
 
-    private Application(CommandService commandService,
-                        QueryService queryService,
-                        SubscriptionService subscriptionService,
-                        FirebaseClient firebaseClient) {
+    private Application(
+            CommandService commandService,
+            QueryService queryService,
+            SubscriptionService subscriptionService,
+            FirebaseClient firebaseClient
+    ) {
         this.commandService = commandService;
         this.queryBridge = newQueryBridge(queryService, firebaseClient);
         this.subscriptionBridge = newSubscriptionBridge(subscriptionService, firebaseClient);
     }
 
-    private static FirebaseQueryBridge
-    newQueryBridge(QueryService queryService, FirebaseClient firebaseClient) {
+    private static FirebaseQueryBridge newQueryBridge(
+            QueryService queryService,
+            FirebaseClient firebaseClient
+    ) {
         return FirebaseQueryBridge
                 .newBuilder()
                 .setQueryService(queryService)
@@ -72,8 +76,10 @@ class Application {
                 .build();
     }
 
-    private static FirebaseSubscriptionBridge
-    newSubscriptionBridge(SubscriptionService subscriptionService, FirebaseClient firebaseClient) {
+    private static FirebaseSubscriptionBridge newSubscriptionBridge(
+            SubscriptionService subscriptionService,
+            FirebaseClient firebaseClient
+    ) {
         return FirebaseSubscriptionBridge
                 .newBuilder()
                 .setSubscriptionService(subscriptionService)
