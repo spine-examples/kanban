@@ -31,6 +31,7 @@ import com.google.cloud.secretmanager.v1.SecretVersionName;
 
 import java.io.IOException;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static io.spine.examples.kanban.web.server.Configuration.projectId;
 import static io.spine.util.Exceptions.newIllegalStateException;
 
@@ -49,6 +50,11 @@ final class RetrieveSecret {
     }
 
     static String withName(String name) {
+        checkArgument(
+                !name.isEmpty(),
+                "The secret name cannot be an empty string."
+        );
+
         SecretVersionName secret = SecretVersionName.of(projectId(), name, "latest");
         try (SecretManagerServiceClient client = SecretManagerServiceClient.create()) {
             return client

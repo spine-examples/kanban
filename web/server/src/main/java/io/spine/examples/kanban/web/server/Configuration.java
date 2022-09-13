@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static io.spine.util.Exceptions.illegalStateWithCauseOf;
 
@@ -72,7 +73,18 @@ class Configuration {
     }
 
     private static String get(Key key) {
-        return checkNotNull(properties.getProperty(key.literal));
+        String property = properties.getProperty(key.literal);
+
+        checkNotNull(
+                property,
+                String.format("The `%s` property is not set.", key.literal)
+        );
+        checkArgument(
+                !property.isEmpty(),
+                String.format("The `%s` property cannot be an empty string.", key.literal)
+        );
+
+        return property;
     }
 
     /**
