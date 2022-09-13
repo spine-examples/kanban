@@ -44,6 +44,9 @@ import static java.nio.charset.Charset.defaultCharset;
  */
 final class GoogleCredentialsFactory {
 
+    /**
+     * Prevents the utility class instantiation.
+     */
     private GoogleCredentialsFactory() {
 
     }
