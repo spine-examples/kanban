@@ -114,14 +114,11 @@ class Configuration {
     private enum Key {
 
         /**
-         * The name of the secret with service account key to access Firebase.
+         * The current environment.
+         *
+         * <p> Values should parseable to {@link Environment}.
          */
-        FIREBASE_SERVICE_ACCOUNT_SECRET("secret.firebase-service-account"),
-
-        /**
-         * The URL of the Firebase Realtime Database.
-         */
-        FIREBASE_DB_URL("firebase.database.url"),
+        ENV("env"),
 
         /**
          * The identifier of the Google Cloud project.
@@ -129,11 +126,14 @@ class Configuration {
         GCP_PROJECT_ID("gcp.project-id"),
 
         /**
-         * The current environment.
-         *
-         * <p> Values should parseable to {@link Environment}.
+         * The name of the secret with service account key to access Firebase.
          */
-        ENV("env");
+        FIREBASE_SERVICE_ACCOUNT_SECRET("secret.firebase-service-account"),
+
+        /**
+         * The URL of the Firebase Realtime Database.
+         */
+        FIREBASE_DB_URL("firebase.database.url");
 
         private final String literal;
 
