@@ -39,7 +39,7 @@ import io.spine.web.firebase.query.FirebaseQueryBridge;
 import io.spine.web.firebase.subscription.FirebaseSubscriptionBridge;
 
 /**
- * Serves to servlets as the entrypoint to the Kanban context.
+ * Acts as the entrypoint to the Kanban application.
  *
  * Configures the {@linkplain ServerEnvironment server environment} and initializes
  * the {@linkplain CommandService command service}, {@linkplain FirebaseQueryBridge query}
