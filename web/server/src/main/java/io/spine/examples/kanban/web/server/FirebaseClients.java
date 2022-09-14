@@ -50,7 +50,7 @@ import static io.spine.examples.kanban.web.server.Configuration.productionEnviro
  */
 final class FirebaseClients {
 
-    private static final FirebaseClient INSTANCE = createClient();
+    private static final FirebaseClient INSTANCE = create();
 
     /**
      * Prevents the utility class instantiation.
@@ -65,7 +65,7 @@ final class FirebaseClients {
         return INSTANCE;
     }
 
-    private static FirebaseClient createClient() {
+    private static FirebaseClient create() {
         FirebaseOptions options =
                 FirebaseOptions.builder()
                                .setCredentials(credentials())
