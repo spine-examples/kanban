@@ -50,5 +50,5 @@ spine {
 
 gretty {
     contextPath = "/"
-    loggingLevel = "ALL"
+    loggingLevel = "ERROR"
 }
