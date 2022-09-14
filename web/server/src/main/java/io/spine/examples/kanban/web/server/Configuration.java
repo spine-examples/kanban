@@ -43,7 +43,7 @@ import static io.spine.util.Exceptions.illegalStateWithCauseOf;
 class Configuration {
 
     private static final String CONFIG_FILE = "config.properties";
-    private static final Properties properties = loadProperties();
+    private static final Properties PROPERTIES = loadProperties();
 
     /**
      * Prevents the utility class instantiation.
@@ -73,7 +73,7 @@ class Configuration {
     }
 
     private static String get(Key key) {
-        String property = properties.getProperty(key.literal);
+        String property = PROPERTIES.getProperty(key.literal);
 
         checkNotNull(
                 property,
