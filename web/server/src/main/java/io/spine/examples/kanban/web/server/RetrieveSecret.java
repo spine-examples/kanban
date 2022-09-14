@@ -52,7 +52,7 @@ final class RetrieveSecret {
     static String withName(String name) {
         checkArgument(
                 !name.isEmpty(),
-                "The secret name cannot be an empty string."
+                "A secret's name cannot be an empty string."
         );
 
         SecretVersionName secret = SecretVersionName.of(projectId(), name, "latest");
