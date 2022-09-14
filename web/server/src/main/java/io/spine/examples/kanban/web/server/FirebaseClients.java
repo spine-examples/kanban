@@ -43,7 +43,7 @@ import static io.spine.examples.kanban.web.server.Configuration.productionEnviro
  * <p> The creation process depends on the server's environment.
  * <ul>
  *     <li> In the production environment retrieves the service account JSON key from
- *     Secret Manager to access Firebase resources.
+ *     Secret Manager to access Firebase Database.
  *     <li> In the development environment assumes that a database emulator is used
  *     and mocks credentials to access the emulator.
  * </ul>
@@ -58,7 +58,10 @@ final class FirebaseClients {
     private FirebaseClients() {
     }
 
-    static FirebaseClient getInstance() {
+    /**
+     * Returns the instance of {@link FirebaseClient}.
+     */
+    static FirebaseClient instance() {
         return INSTANCE;
     }
 

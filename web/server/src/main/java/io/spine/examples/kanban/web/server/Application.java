@@ -39,13 +39,17 @@ import io.spine.web.firebase.FirebaseClient;
 import io.spine.web.firebase.query.FirebaseQueryBridge;
 import io.spine.web.firebase.subscription.FirebaseSubscriptionBridge;
 
+/**
+ * Configures the {@link ServerEnvironment server environment} and initializes
+ * and provides access to the {@link CommandService command service},
+ * {@link FirebaseQueryBridge query} and {@link FirebaseSubscriptionBridge subscription bridge}
+ * for the {@link KanbanContext}.
+ */
 class Application {
 
-    private final CommandService commandService;
-    private final FirebaseQueryBridge queryBridge;
-    private final FirebaseSubscriptionBridge subscriptionBridge;
-
-    private static final Application INSTANCE = create();
+    private static final CommandService commandService;
+    private static final FirebaseQueryBridge queryBridge;
+    private static final FirebaseSubscriptionBridge subscriptionBridge;
 
     /**
      * Returns the application instance.

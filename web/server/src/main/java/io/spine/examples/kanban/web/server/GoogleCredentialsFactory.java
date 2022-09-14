@@ -52,8 +52,8 @@ final class GoogleCredentialsFactory {
     }
 
     /**
-     * Creates {@link GoogleCredentials} from the JSON representation of an OAuth2
-     * token.
+     * Creates {@link GoogleCredentials} from a JSON representation of OAuth2
+     * credentials.
      */
     static GoogleCredentials fromJson(String json) {
         try {

@@ -36,8 +36,8 @@ import static io.spine.examples.kanban.web.server.Configuration.projectId;
 import static io.spine.util.Exceptions.newIllegalStateException;
 
 /**
- * Retrieves the {@code latest} version of the secret with the provided name from
- * the Secret Manager.
+ * Retrieves from the Secret Manager the {@code latest} version of the secret
+ * with the provided name.
  *
  * <p> Secret is assumed to belong to {@link Configuration#projectId()}.
  */
