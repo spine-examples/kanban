@@ -31,8 +31,6 @@ import io.spine.web.subscription.servlet.SubscribeServlet;
 
 import javax.servlet.annotation.WebServlet;
 
-import static io.spine.examples.kanban.web.server.Application.application;
-
 /**
  * The {@code /subscription/create} endpoint of the Kanban system.
  */
@@ -42,6 +40,6 @@ public final class KanbanSubscribeServlet extends SubscribeServlet<FirebaseSubsc
     private static final long serialVersionUID = 0L;
 
     public KanbanSubscribeServlet() {
-        super(application().subscriptionBridge());
+        super(Application.subscriptionBridge());
     }
 }

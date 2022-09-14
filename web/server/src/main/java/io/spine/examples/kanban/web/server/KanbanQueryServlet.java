@@ -31,8 +31,6 @@ import io.spine.web.query.QueryServlet;
 
 import javax.servlet.annotation.WebServlet;
 
-import static io.spine.examples.kanban.web.server.Application.application;
-
 /**
  * The {@code /query} endpoint of the Kanban system.
  */
@@ -42,6 +40,6 @@ public final class KanbanQueryServlet extends QueryServlet<FirebaseQueryResponse
     private static final long serialVersionUID = 0L;
 
     public KanbanQueryServlet() {
-        super(application().queryBridge());
+        super(Application.queryBridge());
     }
 }

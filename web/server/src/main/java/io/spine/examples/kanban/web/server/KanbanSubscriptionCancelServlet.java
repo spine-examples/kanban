@@ -31,8 +31,6 @@ import io.spine.web.subscription.servlet.SubscriptionCancelServlet;
 
 import javax.servlet.annotation.WebServlet;
 
-import static io.spine.examples.kanban.web.server.Application.application;
-
 /**
  * The {@code /subscription/cancel} endpoint of the Kanban system.
  */
@@ -42,6 +40,6 @@ public final class KanbanSubscriptionCancelServlet extends SubscriptionCancelSer
     private static final long serialVersionUID = 0L;
 
     public KanbanSubscriptionCancelServlet() {
-        super(application().subscriptionBridge());
+        super(Application.subscriptionBridge());
     }
 }

@@ -31,8 +31,6 @@ import io.spine.web.subscription.servlet.SubscriptionKeepUpServlet;
 
 import javax.servlet.annotation.WebServlet;
 
-import static io.spine.examples.kanban.web.server.Application.application;
-
 /**
  * The {@code /subscription/keep-up} endpoint of the Kanban system.
  */
@@ -42,6 +40,6 @@ public class KanbanSubscriptionKeepUpServlet extends SubscriptionKeepUpServlet<R
     private static final long serialVersionUID = 0L;
 
     public KanbanSubscriptionKeepUpServlet() {
-        super(application().subscriptionBridge());
+        super(Application.subscriptionBridge());
     }
 }

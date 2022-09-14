@@ -30,8 +30,6 @@ import io.spine.web.command.CommandServlet;
 
 import javax.servlet.annotation.WebServlet;
 
-import static io.spine.examples.kanban.web.server.Application.application;
-
 /**
  * The {@code /command} endpoint of the Kanban system.
  */
@@ -41,6 +39,6 @@ public final class KanbanCommandServlet extends CommandServlet {
     private static final long serialVersionUID = 0L;
 
     public KanbanCommandServlet() {
-        super(application().commandService());
+        super(Application.commandService());
     }
 }

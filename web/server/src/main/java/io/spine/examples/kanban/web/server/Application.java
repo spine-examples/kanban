@@ -35,7 +35,6 @@ import io.spine.server.ServerEnvironment;
 import io.spine.server.SubscriptionService;
 import io.spine.server.storage.memory.InMemoryStorageFactory;
 import io.spine.server.transport.memory.InMemoryTransportFactory;
-import io.spine.web.firebase.FirebaseClient;
 import io.spine.web.firebase.query.FirebaseQueryBridge;
 import io.spine.web.firebase.subscription.FirebaseSubscriptionBridge;
 
@@ -52,60 +51,27 @@ class Application {
     private static final FirebaseSubscriptionBridge subscriptionBridge;
 
     /**
-     * Returns the application instance.
+     * Prevents the utility class instantiation.
      */
-    static Application application() {
-        return INSTANCE;
+    private Application() {
     }
 
-    private Application(
-            CommandService commandService,
-            QueryService queryService,
-            SubscriptionService subscriptionService,
-            FirebaseClient firebaseClient
-    ) {
-        this.commandService = commandService;
-        this.queryBridge = newQueryBridge(queryService, firebaseClient);
-        this.subscriptionBridge = newSubscriptionBridge(subscriptionService, firebaseClient);
-    }
-
-    private static FirebaseQueryBridge newQueryBridge(
-            QueryService queryService,
-            FirebaseClient firebaseClient
-    ) {
-        return FirebaseQueryBridge
-                .newBuilder()
-                .setQueryService(queryService)
-                .setFirebaseClient(firebaseClient)
-                .build();
-    }
-
-    private static FirebaseSubscriptionBridge newSubscriptionBridge(
-            SubscriptionService subscriptionService,
-            FirebaseClient firebaseClient
-    ) {
-        return FirebaseSubscriptionBridge
-                .newBuilder()
-                .setSubscriptionService(subscriptionService)
-                .setFirebaseClient(firebaseClient)
-                .build();
-    }
-
-    private static Application create() {
+    static {
         configureEnvironment();
-
         BoundedContext context = KanbanContext.newBuilder().build();
-        CommandService commandService = CommandService.withSingle(context);
-        QueryService queryService = QueryService.withSingle(context);
-        SubscriptionService subscriptionService = SubscriptionService.withSingle(context);
-
-        Application application = new Application(
-                commandService,
-                queryService,
-                subscriptionService,
-                FirebaseClients.getInstance()
-        );
-        return application;
+        commandService = CommandService.withSingle(context);
+        queryBridge =
+                FirebaseQueryBridge
+                        .newBuilder()
+                        .setQueryService(QueryService.withSingle(context))
+                        .setFirebaseClient(FirebaseClients.instance())
+                        .build();
+        subscriptionBridge =
+                FirebaseSubscriptionBridge
+                        .newBuilder()
+                        .setSubscriptionService(SubscriptionService.withSingle(context))
+                        .setFirebaseClient(FirebaseClients.instance())
+                        .build();
     }
 
     private static void configureEnvironment() {
@@ -115,15 +81,15 @@ class Application {
                 .use(InMemoryTransportFactory.newInstance());
     }
 
-    FirebaseQueryBridge queryBridge() {
-        return queryBridge;
-    }
-
-    CommandService commandService() {
+    static CommandService commandService() {
         return commandService;
     }
 
-    FirebaseSubscriptionBridge subscriptionBridge() {
+    static FirebaseQueryBridge queryBridge() {
+        return queryBridge;
+    }
+
+    static FirebaseSubscriptionBridge subscriptionBridge() {
         return subscriptionBridge;
     }
 }
