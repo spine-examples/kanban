@@ -40,6 +40,6 @@ public final class KanbanQueryServlet extends QueryServlet<FirebaseQueryResponse
     private static final long serialVersionUID = 0L;
 
     public KanbanQueryServlet() {
-        super(Application.queryBridge());
+        super(Application.instance().queryBridge());
     }
 }

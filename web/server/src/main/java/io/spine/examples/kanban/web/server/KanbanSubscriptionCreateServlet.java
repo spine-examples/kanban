@@ -40,6 +40,6 @@ public final class KanbanSubscriptionCreateServlet extends SubscribeServlet<Fire
     private static final long serialVersionUID = 0L;
 
     public KanbanSubscriptionCreateServlet() {
-        super(Application.subscriptionBridge());
+        super(Application.instance().subscriptionBridge());
     }
 }

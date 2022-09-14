@@ -39,6 +39,6 @@ public final class KanbanCommandServlet extends CommandServlet {
     private static final long serialVersionUID = 0L;
 
     public KanbanCommandServlet() {
-        super(Application.commandService());
+        super(Application.instance().commandService());
     }
 }

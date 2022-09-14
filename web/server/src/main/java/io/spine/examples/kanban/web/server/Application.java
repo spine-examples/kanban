@@ -39,38 +39,56 @@ import io.spine.web.firebase.query.FirebaseQueryBridge;
 import io.spine.web.firebase.subscription.FirebaseSubscriptionBridge;
 
 /**
- * Configures the {@link ServerEnvironment server environment} and initializes
- * the {@link CommandService command service}, {@link FirebaseQueryBridge query} and
- * {@link FirebaseSubscriptionBridge subscription bridge} for the {@link KanbanContext}.
+ * Serves to servlets as the entrypoint to the Kanban context.
+ *
+ * Configures the {@linkplain ServerEnvironment server environment} and initializes
+ * the {@linkplain CommandService command service}, {@linkplain FirebaseQueryBridge query}
+ * and {@linkplain FirebaseSubscriptionBridge subscription bridge} for the {@link KanbanContext}.
  */
 final class Application {
 
-    private static final CommandService commandService;
-    private static final FirebaseQueryBridge queryBridge;
-    private static final FirebaseSubscriptionBridge subscriptionBridge;
+    private static final Application INSTANCE = create();
 
-    /**
-     * Prevents the utility class instantiation.
-     */
-    private Application() {
+    private final CommandService commandService;
+    private final FirebaseQueryBridge queryBridge;
+    private final FirebaseSubscriptionBridge subscriptionBridge;
+
+    private Application(
+            CommandService commandService,
+            FirebaseQueryBridge queryBridge,
+            FirebaseSubscriptionBridge subscriptionBridge
+    ) {
+        this.commandService = commandService;
+        this.queryBridge = queryBridge;
+        this.subscriptionBridge = subscriptionBridge;
     }
 
-    static {
+    /**
+     * Returns the application instance.
+     */
+    static Application instance() {
+        return INSTANCE;
+    }
+
+    private static Application create() {
         configureEnvironment();
+
         BoundedContext context = KanbanContext.newBuilder().build();
-        commandService = CommandService.withSingle(context);
-        queryBridge =
+        CommandService commandService = CommandService.withSingle(context);
+        FirebaseQueryBridge queryBridge =
                 FirebaseQueryBridge
                         .newBuilder()
                         .setQueryService(QueryService.withSingle(context))
                         .setFirebaseClient(FirebaseClients.instance())
                         .build();
-        subscriptionBridge =
+        FirebaseSubscriptionBridge subscriptionBridge =
                 FirebaseSubscriptionBridge
                         .newBuilder()
                         .setSubscriptionService(SubscriptionService.withSingle(context))
                         .setFirebaseClient(FirebaseClients.instance())
                         .build();
+
+        return new Application(commandService, queryBridge, subscriptionBridge);
     }
 
     private static void configureEnvironment() {
@@ -83,21 +101,21 @@ final class Application {
     /**
      * Returns the command service.
      */
-    static CommandService commandService() {
+    CommandService commandService() {
         return commandService;
     }
 
     /**
      * Returns the query bridge.
      */
-    static FirebaseQueryBridge queryBridge() {
+    FirebaseQueryBridge queryBridge() {
         return queryBridge;
     }
 
     /**
      * Returns the subscription bridge.
      */
-    static FirebaseSubscriptionBridge subscriptionBridge() {
+    FirebaseSubscriptionBridge subscriptionBridge() {
         return subscriptionBridge;
     }
 }

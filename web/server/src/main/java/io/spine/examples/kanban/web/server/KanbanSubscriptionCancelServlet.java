@@ -40,6 +40,6 @@ public final class KanbanSubscriptionCancelServlet extends SubscriptionCancelSer
     private static final long serialVersionUID = 0L;
 
     public KanbanSubscriptionCancelServlet() {
-        super(Application.subscriptionBridge());
+        super(Application.instance().subscriptionBridge());
     }
 }

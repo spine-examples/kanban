@@ -40,6 +40,6 @@ public class KanbanSubscriptionKeepUpServlet extends SubscriptionKeepUpServlet<R
     private static final long serialVersionUID = 0L;
 
     public KanbanSubscriptionKeepUpServlet() {
-        super(Application.subscriptionBridge());
+        super(Application.instance().subscriptionBridge());
     }
 }
