@@ -67,7 +67,7 @@ class Configuration {
                 .getResourceAsStream(CONFIG_FILE);
     }
 
-    static boolean productionEnvironment() {
+    static boolean productionEnv() {
         Environment currentEnvironment = Environment.valueOf(get(Key.ENV));
         return currentEnvironment == Environment.PRODUCTION;
     }

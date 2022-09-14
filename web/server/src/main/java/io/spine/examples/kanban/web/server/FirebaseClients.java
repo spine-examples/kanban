@@ -35,7 +35,7 @@ import io.spine.web.firebase.FirebaseClientFactory;
 
 import static io.spine.examples.kanban.web.server.Configuration.firebaseDatabaseUrl;
 import static io.spine.examples.kanban.web.server.Configuration.firebaseServiceAccountSecret;
-import static io.spine.examples.kanban.web.server.Configuration.productionEnvironment;
+import static io.spine.examples.kanban.web.server.Configuration.productionEnv;
 
 /**
  * Creates a singleton of the {@link FirebaseClient}.
@@ -78,7 +78,7 @@ final class FirebaseClients {
     }
 
     private static GoogleCredentials credentials() {
-        if (productionEnvironment()) {
+        if (productionEnv()) {
             String key = RetrieveSecret.withName(firebaseServiceAccountSecret());
             return GoogleCredentialsFactory.fromJson(key);
         } else {
