@@ -24,32 +24,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.examples.kanban.dependency.Spine
-import io.spine.examples.kanban.dependency.GoogleCloud
+package io.spine.examples.kanban.dependency
 
-plugins {
-    id("java")
-    id("org.gretty") version ("3.0.3")
-    id("io.spine.tools.gradle.bootstrap")
-}
+object GoogleCloud {
+    private const val group = "com.google.cloud"
 
-repositories {
-    mavenCentral()
-    jcenter()
-}
+    // https://github.com/googleapis/java-secretmanager
+    object SecretManager {
+        const val version = "2.3.3"
 
-dependencies {
-    implementation(Spine.Server.lib)
-    implementation(project(":server"))
-    implementation(GoogleCloud.SecretManager.lib)
-}
-
-spine {
-    enableJava().firebaseWebServer()
-}
-
-gretty {
-    contextPath = "/"
-    loggingLevel = "ALL"
-    fastReload = false
+        const val lib = "${group}:google-cloud-secretmanager:${version}"
+    }
 }
