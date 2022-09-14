@@ -24,8 +24,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "kanban"
+package io.spine.examples.kanban.web.server;
 
-include("server")
-include("model")
-include("web:server")
+import io.spine.core.Response;
+import io.spine.web.subscription.servlet.SubscriptionCancelServlet;
+
+import javax.servlet.annotation.WebServlet;
+
+/**
+ * The {@code /subscription/cancel} endpoint of the Kanban system.
+ */
+@WebServlet("/subscription/cancel")
+public final class KanbanSubscriptionCancelServlet extends SubscriptionCancelServlet<Response> {
+
+    private static final long serialVersionUID = 0L;
+
+    public KanbanSubscriptionCancelServlet() {
+        super(Application.instance().subscriptionBridge());
+    }
+}

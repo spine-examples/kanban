@@ -24,8 +24,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "kanban"
+package io.spine.examples.kanban.web.server;
 
-include("server")
-include("model")
-include("web:server")
+import io.spine.web.AllowAnyOriginFilter;
+import javax.servlet.annotation.WebFilter;
+
+/**
+ * A {@linkplain javax.servlet.Filter filter} which appends the CORS headers to
+ * the HTTP responses.
+ *
+ * @see AllowAnyOriginFilter
+ */
+@WebFilter(
+        filterName = AllowAnyOriginFilter.NAME,
+        urlPatterns = AllowAnyOriginFilter.ANY_URL
+)
+public final class CorsFilter extends AllowAnyOriginFilter {
+}

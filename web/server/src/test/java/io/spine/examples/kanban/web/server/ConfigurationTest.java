@@ -24,8 +24,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "kanban"
+package io.spine.examples.kanban.web.server;
 
-include("server")
-include("model")
-include("web:server")
+import io.spine.testing.UtilityClassTest;
+import org.junit.jupiter.api.DisplayName;
+
+@DisplayName("`Configuration` should")
+class ConfigurationTest extends UtilityClassTest<Configuration> {
+
+    ConfigurationTest() {
+        super(Configuration.class);
+    }
+}

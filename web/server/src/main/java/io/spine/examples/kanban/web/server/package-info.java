@@ -24,8 +24,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "kanban"
+/**
+ * Declares the web API of the {@code Kanban} context.
+ */
+@CheckReturnValue
+@ParametersAreNonnullByDefault
+package io.spine.examples.kanban.web.server;
 
-include("server")
-include("model")
-include("web:server")
+import com.google.errorprone.annotations.CheckReturnValue;
+import javax.annotation.ParametersAreNonnullByDefault;

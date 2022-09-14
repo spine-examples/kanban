@@ -24,8 +24,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "kanban"
+package io.spine.examples.kanban.web.server;
 
-include("server")
-include("model")
-include("web:server")
+import io.spine.web.firebase.subscription.FirebaseSubscription;
+import io.spine.web.subscription.servlet.SubscribeServlet;
+
+import javax.servlet.annotation.WebServlet;
+
+/**
+ * The {@code /subscription/create} endpoint of the Kanban system.
+ */
+@WebServlet("/subscription/create")
+public final class KanbanSubscriptionCreateServlet extends SubscribeServlet<FirebaseSubscription> {
+
+    private static final long serialVersionUID = 0L;
+
+    public KanbanSubscriptionCreateServlet() {
+        super(Application.instance().subscriptionBridge());
+    }
+}

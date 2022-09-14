@@ -24,8 +24,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "kanban"
+package io.spine.examples.kanban.dependency
 
-include("server")
-include("model")
-include("web:server")
+object GoogleCloud {
+    private const val group = "com.google.cloud"
+
+    // https://github.com/googleapis/java-secretmanager
+    object SecretManager {
+        const val version = "2.3.3"
+
+        const val lib = "${group}:google-cloud-secretmanager:${version}"
+    }
+}

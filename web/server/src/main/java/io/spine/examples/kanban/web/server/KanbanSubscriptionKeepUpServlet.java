@@ -24,8 +24,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "kanban"
+package io.spine.examples.kanban.web.server;
 
-include("server")
-include("model")
-include("web:server")
+import io.spine.core.Response;
+import io.spine.web.subscription.servlet.SubscriptionKeepUpServlet;
+
+import javax.servlet.annotation.WebServlet;
+
+/**
+ * The {@code /subscription/keep-up} endpoint of the Kanban system.
+ */
+@WebServlet("/subscription/keep-up")
+public class KanbanSubscriptionKeepUpServlet extends SubscriptionKeepUpServlet<Response> {
+
+    private static final long serialVersionUID = 0L;
+
+    public KanbanSubscriptionKeepUpServlet() {
+        super(Application.instance().subscriptionBridge());
+    }
+}

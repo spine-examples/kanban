@@ -1,0 +1,9 @@
+version: "3.9"
+services:
+  firebase-emulator:
+    image: spine3/firebase-emulator
+    ports:
+      - "9999:9999"
+      - "4000:4000"
+    volumes:
+      - ./firebase.json:/firebase/firebase.json

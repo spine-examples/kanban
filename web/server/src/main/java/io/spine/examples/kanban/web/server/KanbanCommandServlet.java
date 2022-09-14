@@ -24,8 +24,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "kanban"
+package io.spine.examples.kanban.web.server;
 
-include("server")
-include("model")
-include("web:server")
+import io.spine.web.command.CommandServlet;
+
+import javax.servlet.annotation.WebServlet;
+
+/**
+ * The {@code /command} endpoint of the Kanban system.
+ */
+@WebServlet("/command")
+public final class KanbanCommandServlet extends CommandServlet {
+
+    private static final long serialVersionUID = 0L;
+
+    public KanbanCommandServlet() {
+        super(Application.instance().commandService());
+    }
+}
