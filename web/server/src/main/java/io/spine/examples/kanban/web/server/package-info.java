@@ -26,14 +26,10 @@
 
 /**
  * Declares the web API of the {@code Kanban} context.
- *
- * <p> Declares servlets which adhere to the {@code spine-web} contract and serve
- * the {@code Kanban} context.
  */
 @CheckReturnValue
 @ParametersAreNonnullByDefault
 package io.spine.examples.kanban.web.server;
 
 import com.google.errorprone.annotations.CheckReturnValue;
-
 import javax.annotation.ParametersAreNonnullByDefault;
