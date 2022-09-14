@@ -80,14 +80,23 @@ class Application {
                 .use(InMemoryTransportFactory.newInstance());
     }
 
+    /**
+     * Returns the command service.
+     */
     static CommandService commandService() {
         return commandService;
     }
 
+    /**
+     * Returns the query bridge.
+     */
     static FirebaseQueryBridge queryBridge() {
         return queryBridge;
     }
 
+    /**
+     * Returns the subscription bridge.
+     */
     static FirebaseSubscriptionBridge subscriptionBridge() {
         return subscriptionBridge;
     }

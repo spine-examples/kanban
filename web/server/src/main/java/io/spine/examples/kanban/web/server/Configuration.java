@@ -67,6 +67,10 @@ class Configuration {
                 .getResourceAsStream(CONFIG_FILE);
     }
 
+    /**
+     * Tells whether the current environment is production.
+     * @return {@code true} if the current environment is production.
+     */
     static boolean productionEnv() {
         Environment currentEnvironment = Environment.valueOf(get(Key.ENV));
         return currentEnvironment == Environment.PRODUCTION;
