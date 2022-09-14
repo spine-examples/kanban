@@ -36,7 +36,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
-import static io.spine.util.Exceptions.newIllegalStateException;
+import static io.spine.util.Exceptions.newIllegalArgumentException;
 import static java.nio.charset.Charset.defaultCharset;
 
 /**
@@ -48,7 +48,6 @@ final class GoogleCredentialsFactory {
      * Prevents the utility class instantiation.
      */
     private GoogleCredentialsFactory() {
-
     }
 
     /**
@@ -59,7 +58,10 @@ final class GoogleCredentialsFactory {
         try {
             return GoogleCredentials.fromStream(streamFrom(json));
         } catch (IOException e) {
-            throw newIllegalStateException(e, "Unable to read `GoogleCredentials`.");
+            throw newIllegalArgumentException(
+                    e,
+                    String.format("Unable to create `GoogleCredentials` from \"%s\".", json)
+            );
         }
     }
 
