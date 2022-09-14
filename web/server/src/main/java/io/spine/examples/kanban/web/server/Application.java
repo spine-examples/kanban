@@ -40,9 +40,8 @@ import io.spine.web.firebase.subscription.FirebaseSubscriptionBridge;
 
 /**
  * Configures the {@link ServerEnvironment server environment} and initializes
- * and provides access to the {@link CommandService command service},
- * {@link FirebaseQueryBridge query} and {@link FirebaseSubscriptionBridge subscription bridge}
- * for the {@link KanbanContext}.
+ * the {@link CommandService command service}, {@link FirebaseQueryBridge query} and
+ * {@link FirebaseSubscriptionBridge subscription bridge} for the {@link KanbanContext}.
  */
 class Application {
 
