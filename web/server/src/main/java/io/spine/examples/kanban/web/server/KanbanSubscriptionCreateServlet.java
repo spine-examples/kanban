@@ -35,11 +35,11 @@ import javax.servlet.annotation.WebServlet;
  * The {@code /subscription/create} endpoint of the Kanban system.
  */
 @WebServlet("/subscription/create")
-public final class KanbanSubscribeServlet extends SubscribeServlet<FirebaseSubscription> {
+public final class KanbanSubscriptionCreateServlet extends SubscribeServlet<FirebaseSubscription> {
 
     private static final long serialVersionUID = 0L;
 
-    public KanbanSubscribeServlet() {
+    public KanbanSubscriptionCreateServlet() {
         super(Application.subscriptionBridge());
     }
 }
