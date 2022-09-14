@@ -51,5 +51,4 @@ spine {
 gretty {
     contextPath = "/"
     loggingLevel = "ALL"
-    fastReload = false
 }
