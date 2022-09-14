@@ -24,35 +24,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.examples.kanban.dependency.GoogleCloud
-import io.spine.examples.kanban.dependency.JUnit
+package io.spine.examples.kanban.web.server;
 
-plugins {
-    id("java")
-    id("org.gretty") version ("3.0.3")
-    id("io.spine.tools.gradle.bootstrap")
-}
+import io.spine.testing.UtilityClassTest;
+import org.junit.jupiter.api.DisplayName;
 
-repositories {
-    mavenCentral()
-    jcenter()
-}
+@DisplayName("`RetrieveSecret` should")
+class RetrieveSecretTest extends UtilityClassTest<RetrieveSecret> {
 
-dependencies {
-    implementation(project(":server"))
-    implementation(GoogleCloud.SecretManager.lib)
-    testImplementation(JUnit.Api.lib)
-    testRuntimeOnly(JUnit.Runner.lib)
-}
-
-spine {
-    enableJava {
-        server()
-        firebaseWebServer()
+    RetrieveSecretTest() {
+        super(RetrieveSecret.class);
     }
-}
-
-gretty {
-    contextPath = "/"
-    loggingLevel = "ERROR"
 }
