@@ -123,17 +123,17 @@ class Configuration {
         /**
          * The identifier of the Google Cloud project.
          */
-        GCP_PROJECT_ID("gcp.project-id"),
+        GCP_PROJECT_ID("gcp.projectId"),
 
         /**
          * The name of the secret with service account key to access Firebase.
          */
-        FIREBASE_SERVICE_ACCOUNT_SECRET("secret.firebase-service-account"),
+        FIREBASE_SERVICE_ACCOUNT_SECRET("secret.firebaseServiceAccount"),
 
         /**
          * The URL of the Firebase Realtime Database.
          */
-        FIREBASE_DB_URL("firebase.database.url");
+        FIREBASE_DB_URL("firebase.databaseUrl");
 
         private final String literal;
 
