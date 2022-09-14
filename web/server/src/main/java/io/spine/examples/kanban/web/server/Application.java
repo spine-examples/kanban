@@ -43,7 +43,7 @@ import io.spine.web.firebase.subscription.FirebaseSubscriptionBridge;
  * the {@link CommandService command service}, {@link FirebaseQueryBridge query} and
  * {@link FirebaseSubscriptionBridge subscription bridge} for the {@link KanbanContext}.
  */
-class Application {
+final class Application {
 
     private static final CommandService commandService;
     private static final FirebaseQueryBridge queryBridge;

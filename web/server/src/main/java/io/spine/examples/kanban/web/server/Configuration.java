@@ -40,7 +40,7 @@ import static io.spine.util.Exceptions.illegalStateWithCauseOf;
  *
  * <p> Configuration keys that can be set are present in the {@link Key}.
  */
-class Configuration {
+final class Configuration {
 
     private static final String CONFIG_FILE = "config.properties";
     private static final Properties PROPERTIES = loadProperties();
