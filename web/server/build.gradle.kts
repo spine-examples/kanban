@@ -40,7 +40,6 @@ repositories {
 dependencies {
     implementation(Spine.Server.lib)
     implementation(project(":server"))
-    implementation(platform("com.google.cloud:libraries-bom:26.1.1"))
     implementation("com.google.cloud:google-cloud-secretmanager:2.3.3")
 }
 
