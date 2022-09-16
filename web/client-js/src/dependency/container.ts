@@ -32,8 +32,8 @@ import Firebase from "firebase";
 import firebaseConfig from "@/dependency/firebase/config";
 
 const firebaseApp = Firebase.initializeApp(firebaseConfig);
+const actorProvider = new ActorProvider();
 
-export const actorProvider = new ActorProvider();
 export const client: Client = init({
   protoIndexFiles: [KanbanModel, SpineWebTypes],
   endpointUrl: spineConfig.backendUrl,
