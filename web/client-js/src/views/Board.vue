@@ -7,7 +7,7 @@
     />
   </div>
   <div v-if="!board" id="add-board">
-    <button v-on:click="this[Action.CREATE_BOARD]()">Add a board</button>
+    <button v-on:click="createBoard()">Add a board</button>
   </div>
 </template>
 
