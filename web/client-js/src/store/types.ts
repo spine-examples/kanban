@@ -25,7 +25,6 @@
  */
 
 export type Board = proto.spine_examples.kanban.BoardView;
-export type Column = proto.spine_examples.kanban.Column;
 export type BoardCreated = proto.spine_examples.kanban.BoardCreated;
 export type ColumnAdded = proto.spine_examples.kanban.ColumnAdded;
 
