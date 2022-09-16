@@ -29,6 +29,7 @@
     <div class="column-title">
       <h3>{{ column.getName() }}</h3>
     </div>
+    <hr class="separator" />
     <div class="cards"></div>
     <div class="add-card">
       <button>Add a card</button>
@@ -62,7 +63,11 @@ export default defineComponent({
   padding-left: 5px;
   width: 250px;
   text-align: center;
-  border-bottom: 1px solid black;
+  margin-bottom: 5px;
+}
+
+.separator {
+  border: 1px solid black;
 }
 
 .cards {
