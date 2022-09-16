@@ -6,7 +6,7 @@
       :column="column"
     />
   </div>
-  <div v-if="!board" id="add-board">
+  <div v-else id="add-board">
     <button v-on:click="createBoard()">Add a board</button>
   </div>
 </template>
