@@ -1,5 +1,5 @@
 <template>
-  <div v-if="board" id="board">
+  <div v-if="board" id="columns">
     <KanbanColumn
       v-for="(column, $columnIndex) of board.getColumnList()"
       :key="$columnIndex"
@@ -30,18 +30,25 @@ export default defineComponent({
 </script>
 
 <style scoped>
-#board {
+#columns {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   justify-content: flex-start;
+  padding-left: 30px;
+  overflow-x: auto;
 }
 
 #add-board {
+  padding-left: 30px;
+}
+
+#add-board button {
+  all: unset;
+  justify-content: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   height: 30px;
   width: 200px;
   background-color: #e2e4e6;
@@ -49,13 +56,8 @@ export default defineComponent({
   margin: 0.5rem;
 }
 
-#add-board:hover {
+#add-board button:hover {
   background-color: #cdd2d4;
   color: #4d4d4d;
-}
-
-#add-board button {
-  all: unset;
-  justify-content: center;
 }
 </style>
