@@ -24,15 +24,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-let host: string;
-
-switch (process.env.NODE_ENV) {
-  case "DEVELOPMENT":
-    host = "http://localhost:8080";
-    break;
-  default:
-    host = "";
-    break;
-}
-
-export default host;
+export default {
+  backendUrl: process.env.VUE_APP_SPINE_BACKEND_URL,
+};

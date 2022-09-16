@@ -27,16 +27,16 @@
 import { ActorProvider, Client, init } from "spine-web/index";
 import KanbanModel from "proto/index";
 import SpineWebTypes from "spine-web/proto/index";
-import host from "@/dependency/spine/host";
+import spineConfig from "@/dependency/spine/config";
 import Firebase from "firebase";
-import config from "@/dependency/firebase/config";
+import firebaseConfig from "@/dependency/firebase/config";
 
-const firebaseApp = Firebase.initializeApp(config);
+const firebaseApp = Firebase.initializeApp(firebaseConfig);
 
 export const actorProvider = new ActorProvider();
 export const client: Client = init({
   protoIndexFiles: [KanbanModel, SpineWebTypes],
-  endpointUrl: host,
+  endpointUrl: spineConfig.backendUrl,
   firebaseDatabase: firebaseApp.database(),
   actorProvider: actorProvider,
 });
