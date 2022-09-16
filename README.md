@@ -12,10 +12,11 @@ This example demonstrates:
 * Orchestrating Aggregates using Process Managers.
 * Building a Projection which is subscribed to both events and entity updates.
 
-# Spine client
+# Client
 
-Here is the [guide](spine-vue-client-setup.md) to setting up a Spine client project.
+This project contains [a Vue.js client](web/client-js). The client was created following 
+the [guide](spine-vue-client-setup.md).
 
 # Spine version
 
-The Spine version used in the project is stored [here](buildSrc/src/main/kotlin/io/spine/examples/kanban/dependency/Spine.kt).
+The Spine version used in the project is stored[here](buildSrc/src/main/kotlin/io/spine/examples/kanban/dependency/Spine.kt).
