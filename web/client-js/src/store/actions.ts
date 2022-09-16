@@ -25,7 +25,13 @@
  */
 
 import { ActionContext, ActionTree } from "vuex";
-import {Action, BoardCreated, ColumnAdded, KanbanState, Mutation} from "@/store/types";
+import {
+  Action,
+  BoardCreated,
+  ColumnAdded,
+  KanbanState,
+  Mutation,
+} from "@/store/types";
 import { client } from "@/dependency/container";
 import { AnyPacker } from "spine-web/client/any-packer";
 import { Type } from "spine-web/client/typed-message";
@@ -48,16 +54,16 @@ const actions: ActionTree<KanbanState, any> = {
       });
 
     client
-        .subscribeToEvent(proto.spine_examples.kanban.ColumnAdded)
-        .post()
-        .then(({ eventEmitted }) => {
-          eventEmitted.subscribe((e: Event) => {
-            const innerEvent: ColumnAdded = AnyPacker.unpack(e.getMessage()).as(
-                Type.forClass(proto.spine_examples.kanban.ColumnAdded)
-            );
-            ctx.commit(Mutation.COLUMN_ADDED, innerEvent);
-          });
+      .subscribeToEvent(proto.spine_examples.kanban.ColumnAdded)
+      .post()
+      .then(({ eventEmitted }) => {
+        eventEmitted.subscribe((e: Event) => {
+          const innerEvent: ColumnAdded = AnyPacker.unpack(e.getMessage()).as(
+            Type.forClass(proto.spine_examples.kanban.ColumnAdded)
+          );
+          ctx.commit(Mutation.COLUMN_ADDED, innerEvent);
         });
+      });
 
     const command = new proto.spine_examples.kanban.CreateBoard();
     const board = new proto.spine_examples.kanban.BoardId();

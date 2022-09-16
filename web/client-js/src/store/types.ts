@@ -35,7 +35,7 @@ export interface KanbanState {
 
 export const Mutation = {
   BOARD_CREATED: "boardCreated",
-  COLUMN_ADDED: "columnAdded"
+  COLUMN_ADDED: "columnAdded",
 };
 
 export const Action = {

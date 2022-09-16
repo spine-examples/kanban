@@ -1,15 +1,13 @@
 <template>
   <div v-if="board" id="board">
     <KanbanColumn
-        v-for="(column, $columnIndex) of board.getColumnList()"
-        :key="$columnIndex"
-        :column="column"
+      v-for="(column, $columnIndex) of board.getColumnList()"
+      :key="$columnIndex"
+      :column="column"
     />
   </div>
   <div v-if="!board" id="add-board">
-    <button v-on:click="this[Action.CREATE_BOARD]()">
-      Add a board
-    </button>
+    <button v-on:click="this[Action.CREATE_BOARD]()">Add a board</button>
   </div>
 </template>
 
@@ -39,7 +37,7 @@ export default defineComponent({
   justify-content: flex-start;
 }
 
-#add-board{
+#add-board {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -51,7 +49,7 @@ export default defineComponent({
   margin: 0.5rem;
 }
 
-#add-board:hover{
+#add-board:hover {
   background-color: #cdd2d4;
   color: #4d4d4d;
 }

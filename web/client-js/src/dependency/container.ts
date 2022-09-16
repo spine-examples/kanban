@@ -24,10 +24,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {ActorProvider, Client, init} from "spine-web/index";
+import { ActorProvider, Client, init } from "spine-web/index";
 import KanbanModel from "proto/index";
 import SpineWebTypes from "spine-web/proto/index";
-import host from "@/dependency/spine/host"
+import host from "@/dependency/spine/host";
 import Firebase from "firebase";
 import config from "@/dependency/firebase/config";
 
@@ -35,8 +35,8 @@ const firebaseApp = Firebase.initializeApp(config);
 
 export const actorProvider = new ActorProvider();
 export const client: Client = init({
-    protoIndexFiles: [KanbanModel, SpineWebTypes],
-    endpointUrl: host,
-    firebaseDatabase: firebaseApp.database(),
-    actorProvider: actorProvider
+  protoIndexFiles: [KanbanModel, SpineWebTypes],
+  endpointUrl: host,
+  firebaseDatabase: firebaseApp.database(),
+  actorProvider: actorProvider,
 });

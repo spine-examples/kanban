@@ -15,7 +15,7 @@ module.exports = {
   rules: {
     "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
     "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
-    "no-undef": "off"
+    "no-undef": "off",
   },
   overrides: [
     {
@@ -28,7 +28,5 @@ module.exports = {
       },
     },
   ],
-  ignorePatterns: [
-    "generated/main/js/**/*.js"
-  ]
+  ignorePatterns: ["generated/main/js/**/*.js"],
 };

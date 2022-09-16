@@ -25,5 +25,5 @@
  */
 
 export default {
-    databaseURL: "http://0.0.0.0:9999/?ns=fake-server",
-}
+  databaseURL: "http://0.0.0.0:9999/?ns=fake-server",
+};

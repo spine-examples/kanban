@@ -25,7 +25,12 @@
  */
 
 import { MutationTree } from "vuex";
-import {Mutation, KanbanState, BoardCreated, ColumnAdded} from "@/store/types";
+import {
+  Mutation,
+  KanbanState,
+  BoardCreated,
+  ColumnAdded,
+} from "@/store/types";
 
 const mutations: MutationTree<KanbanState> = {
   [Mutation.BOARD_CREATED]: (state: KanbanState, e: BoardCreated): void => {
@@ -33,7 +38,7 @@ const mutations: MutationTree<KanbanState> = {
     state.board.setId(e.getBoard());
   },
   [Mutation.COLUMN_ADDED]: (state: KanbanState, e: ColumnAdded): void => {
-    let column = new proto.spine_examples.kanban.Column();
+    const column = new proto.spine_examples.kanban.Column();
     column.setId(e.getColumn());
     column.setBoard(e.getBoard());
     column.setName(e.getName());
