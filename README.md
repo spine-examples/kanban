@@ -53,6 +53,8 @@ npm run serve
 
 The Spine version used in the project is stored [here](buildSrc/src/main/kotlin/io/spine/examples/kanban/dependency/Spine.kt).
 
-## VueJS Client
+## Helpful materials
 
-The [Vue.js client](web/client-js) was created following the [guide](spine-vue-client-setup.md).
+### Spine Vue client setup
+
+Here is the [guide](spine-vue-client-setup.md) to set up a Spine Vue client.
