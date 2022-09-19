@@ -41,7 +41,7 @@
 import { defineComponent } from "vue";
 
 /**
- * Displays column name and cards.
+ * Displays the column's name and cards.
  */
 export default defineComponent({
   name: "KanbanColumn",
