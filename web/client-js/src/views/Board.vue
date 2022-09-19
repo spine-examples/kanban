@@ -18,7 +18,7 @@ import { mapState, mapActions } from "vuex";
 import { Action } from "@/store/types";
 
 /**
- * Displays a Kanban board.
+ * Displays the Kanban board.
  */
 export default defineComponent({
   name: "KanbanBoard",
