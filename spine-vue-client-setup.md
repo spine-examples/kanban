@@ -41,9 +41,7 @@ the `.eslintrc.json`:
 
 ```JSON
 {
-    "ignorePatterns": [
-        "generated/main/js/**/*.js"
-    ]
+    "ignorePatterns": ["generated"]
 }
 ```
 

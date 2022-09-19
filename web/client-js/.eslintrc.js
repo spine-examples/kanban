@@ -43,5 +43,5 @@ module.exports = {
     "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
     "no-undef": "off",
   },
-  ignorePatterns: ["generated/main/js/**/*.js"],
+  ignorePatterns: ["generated"],
 };
