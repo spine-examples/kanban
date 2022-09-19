@@ -24,6 +24,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/**
+ * Spine configuration.
+ */
 export default {
   backendUrl: process.env.VUE_APP_SPINE_BACKEND_URL,
 };

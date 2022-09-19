@@ -30,6 +30,9 @@ import state from "@/store/state";
 import mutations from "@/store/mutations";
 import actions from "@/store/actions";
 
+/**
+ * The Vuex store for the Kanban web application.
+ */
 export default createStore<KanbanState>({
   state,
   mutations,

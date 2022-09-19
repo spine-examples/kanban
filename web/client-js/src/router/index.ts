@@ -35,6 +35,9 @@ const routes: Array<RouteRecordRaw> = [
   },
 ];
 
+/**
+ * The Vue router for the Kanban web application.
+ */
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,

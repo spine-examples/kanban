@@ -40,6 +40,9 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
+/**
+ * Displays column name and cards.
+ */
 export default defineComponent({
   name: "KanbanColumn",
   props: {

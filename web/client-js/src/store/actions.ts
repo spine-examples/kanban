@@ -38,6 +38,9 @@ import { Type } from "spine-web/client/typed-message";
 import { Event } from "spine-web/proto/spine/core/event_pb";
 import { v4 as newUuid } from "uuid";
 
+/**
+ * Actions on the Kanban web server.
+ */
 const actions: ActionTree<KanbanState, any> = {
   [Action.CREATE_BOARD]: (ctx: ActionContext<KanbanState, any>): void => {
     client

@@ -17,6 +17,9 @@ import KanbanColumn from "@/components/KanbanColumn.vue";
 import { mapState, mapActions } from "vuex";
 import { Action } from "@/store/types";
 
+/**
+ * Displays a Kanban board.
+ */
 export default defineComponent({
   name: "KanbanBoard",
   components: { KanbanColumn },

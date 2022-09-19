@@ -24,19 +24,48 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/**
+ * Alias for the {@code proto.spine_examples.kanban.BoardView} event.
+ */
 export type Board = proto.spine_examples.kanban.BoardView;
+/**
+ * Alias for the {@code proto.spine_examples.kanban.BoardCreated} event.
+ */
 export type BoardCreated = proto.spine_examples.kanban.BoardCreated;
+/**
+ * Alias for the {@code proto.spine_examples.kanban.ColumnAdded} event.
+ */
 export type ColumnAdded = proto.spine_examples.kanban.ColumnAdded;
 
+/**
+ * Keeps the state of the application.
+ */
 export interface KanbanState {
   board: Board | null;
 }
 
+/**
+ * Mutations of the {@link KanbanState}.
+ */
 export const Mutation = {
+  /**
+   * Adds the board extracted from the {@link BoardCreated} event to the state.
+   */
   BOARD_CREATED: "boardCreated",
+  /**
+   * Adds the column extracted from the {@link ColumnAdded} event to the board stored
+   * in the state.
+   */
   COLUMN_ADDED: "columnAdded",
 };
 
+/**
+ * Actions on the Kanban web server.
+ */
 export const Action = {
+  /**
+   * Subscribes to {@link BoardCreated} and {@link ColumnAdded} events and sends
+   * a {@code CreateBoard} command to create a board.
+   */
   CREATE_BOARD: "createBoard",
 };

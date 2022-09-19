@@ -26,6 +26,9 @@
 
 import { KanbanState } from "@/store/types";
 
+/**
+ * The initial state for the Kanban application.
+ */
 const state: KanbanState = {
   board: null,
 };

@@ -32,6 +32,9 @@ import {
   ColumnAdded,
 } from "@/store/types";
 
+/**
+ * Mutations of the {@link KanbanState}.
+ */
 const mutations: MutationTree<KanbanState> = {
   [Mutation.BOARD_CREATED]: (state: KanbanState, e: BoardCreated): void => {
     state.board = new proto.spine_examples.kanban.BoardView();
