@@ -33,12 +33,16 @@
 import TheHeader from "@/components/TheHeader";
 import "proto/index";
 
+/**
+ * The root component of the application.
+ */
 export default {
   components: {
     TheHeader,
   },
 };
 </script>
+
 <style>
 * {
   margin: 0;
