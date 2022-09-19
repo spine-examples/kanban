@@ -25,15 +25,15 @@
  */
 
 /**
- * Alias for the {@code proto.spine_examples.kanban.BoardView} event.
+ * An alias for the {@code proto.spine_examples.kanban.BoardView} event.
  */
 export type Board = proto.spine_examples.kanban.BoardView;
 /**
- * Alias for the {@code proto.spine_examples.kanban.BoardCreated} event.
+ * An alias for the {@code proto.spine_examples.kanban.BoardCreated} event.
  */
 export type BoardCreated = proto.spine_examples.kanban.BoardCreated;
 /**
- * Alias for the {@code proto.spine_examples.kanban.ColumnAdded} event.
+ * An alias for the {@code proto.spine_examples.kanban.ColumnAdded} event.
  */
 export type ColumnAdded = proto.spine_examples.kanban.ColumnAdded;
 
@@ -60,7 +60,7 @@ export const Mutation = {
 };
 
 /**
- * Actions on the Kanban web server.
+ * Interactions with the Kanban web server.
  */
 export const Action = {
   /**

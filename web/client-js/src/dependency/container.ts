@@ -39,7 +39,8 @@ const firebaseApp = Firebase.initializeApp(firebaseConfig);
 const actorProvider = new ActorProvider();
 
 /**
- * The singleton of the {@link Client} to interact with Kanban web server.
+ * The singleton of the {@link Client} to interact with the Kanban web server
+ * and Firebase Database.
  */
 export const client: Client = init({
   protoIndexFiles: [KanbanModel, SpineWebTypes],
