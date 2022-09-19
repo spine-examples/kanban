@@ -28,5 +28,5 @@
  * Spine configuration.
  */
 export default {
-  backendUrl: process.env.VUE_APP_SPINE_BACKEND_URL,
+  endpointUrl: process.env.VUE_APP_SPINE_ENDPOINT_URL,
 };
