@@ -21,7 +21,7 @@ import { Action } from "@/store/types";
  * Displays the Kanban board.
  */
 export default defineComponent({
-  name: "KanbanBoard",
+  name: "BoardView",
   components: { KanbanColumn },
   computed: {
     ...mapState(["board"]),

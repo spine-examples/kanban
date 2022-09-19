@@ -25,7 +25,7 @@
  */
 
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import BoardView from "@/views/Board.vue";
+import BoardView from "@/views/BoardView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
