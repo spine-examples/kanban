@@ -35,6 +35,7 @@
 </template>
 
 <script lang="ts">
+
 /**
  * Displays the website header with the Spine logo.
  */

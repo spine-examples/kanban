@@ -33,7 +33,7 @@ import {
 } from "@/store/types";
 
 /**
- * Mutations of the {@link KanbanState}.
+ * Exposes mutations of the local {@plain KanbanState state}.
  */
 const mutations: MutationTree<KanbanState> = {
   [Mutation.BOARD_CREATED]: (state: KanbanState, e: BoardCreated): void => {

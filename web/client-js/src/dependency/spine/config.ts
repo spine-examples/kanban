@@ -25,7 +25,7 @@
  */
 
 /**
- * Spine configuration.
+ * Spine web server configuration.
  */
 export default {
   endpointUrl: process.env.VUE_APP_SPINE_ENDPOINT_URL,

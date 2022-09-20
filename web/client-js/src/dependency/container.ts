@@ -40,7 +40,7 @@ const actorProvider = new ActorProvider();
 
 /**
  * The singleton of the {@link Client} to interact with the Kanban web server
- * and Firebase Database.
+ * and Firebase Realtime Database.
  */
 export const client: Client = init({
   protoIndexFiles: [KanbanModel, SpineWebTypes],

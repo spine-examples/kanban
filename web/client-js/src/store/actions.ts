@@ -39,7 +39,8 @@ import { Event } from "spine-web/proto/spine/core/event_pb";
 import { v4 as newUuid } from "uuid";
 
 /**
- * Interactions with the Kanban web server.
+ * Exposes possible interactions with the Kanban web server, e.g.
+ * send a command and subscribe to produced events.
  */
 const actions: ActionTree<KanbanState, any> = {
   [Action.CREATE_BOARD]: (ctx: ActionContext<KanbanState, any>): void => {
