@@ -24,9 +24,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "kanban"
-
-include("server")
-include("model")
-include("web:server")
-include("web:client-js")
+/**
+ * Helps TypeScript compiler with resolving imports to {@code .vue} files.
+ */
+declare module '*.vue' {
+  import type { DefineComponent } from 'vue'
+  const component: DefineComponent<{}, {}, any>
+  export default component
+}

@@ -24,9 +24,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "kanban"
+import Firebase from "firebase";
+import firebaseConfig from "@/dependency/firebase/config";
+import { ActorProvider, Client, init } from "spine-web/index";
+import KanbanModel from "proto/index";
+import SpineWebTypes from "spine-web/proto/index";
+import spineConfig from "@/dependency/spine/config";
 
-include("server")
-include("model")
-include("web:server")
-include("web:client-js")
+/**
+ * Serves as a dependency container that can be injected in any part of the application.
+ */
+
+const firebaseApp = Firebase.initializeApp(firebaseConfig);
+const actorProvider = new ActorProvider();
+
+/**
+ * The singleton of the {@link Client} to interact with the Kanban web server
+ * and Firebase Realtime Database.
+ */
+export const client: Client = init({
+  protoIndexFiles: [KanbanModel, SpineWebTypes],
+  endpointUrl: spineConfig.endpointUrl,
+  firebaseDatabase: firebaseApp.database(),
+  actorProvider: actorProvider,
+});

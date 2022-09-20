@@ -24,9 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "kanban"
-
-include("server")
-include("model")
-include("web:server")
-include("web:client-js")
+module.exports = {
+  presets: ["@vue/cli-plugin-babel/preset"],
+  exclude: ["./generated"],
+};

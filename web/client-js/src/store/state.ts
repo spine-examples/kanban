@@ -24,9 +24,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "kanban"
+import { KanbanState } from "@/store/types";
 
-include("server")
-include("model")
-include("web:server")
-include("web:client-js")
+/**
+ * The local state of the Kanban web application.
+ */
+const state: KanbanState = {
+  board: null,
+};
+
+export default state;

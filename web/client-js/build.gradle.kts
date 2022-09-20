@@ -24,9 +24,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "kanban"
+import com.google.protobuf.gradle.protobuf
 
-include("server")
-include("model")
-include("web:server")
-include("web:client-js")
+/*
+ * Add the Gradle plugin for bootstrapping projects built with Spine.
+ */
+plugins {
+    id("io.spine.tools.gradle.bootstrap")
+}
+
+spine {
+    enableJavaScript()
+}
+
+dependencies {
+    protobuf(project(":model"))
+}

@@ -24,9 +24,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "kanban"
+const { defineConfig } = require("@vue/cli-service");
+const webpackConfig = require("./webpack.config.js");
 
-include("server")
-include("model")
-include("web:server")
-include("web:client-js")
+module.exports = defineConfig({
+  transpileDependencies: true,
+  configureWebpack: {
+    ...webpackConfig,
+  },
+});

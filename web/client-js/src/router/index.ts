@@ -24,9 +24,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "kanban"
+import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
+import BoardView from "@/views/BoardView.vue";
 
-include("server")
-include("model")
-include("web:server")
-include("web:client-js")
+const routes: Array<RouteRecordRaw> = [
+  {
+    path: "/",
+    name: "board",
+    component: BoardView,
+  },
+];
+
+/**
+ * The Vue router for the Kanban web application.
+ */
+const router = createRouter({
+  history: createWebHistory(process.env.BASE_URL),
+  routes,
+});
+
+export default router;

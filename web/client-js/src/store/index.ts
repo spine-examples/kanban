@@ -24,9 +24,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "kanban"
+import { createStore } from "vuex";
+import { KanbanState } from "./types";
+import state from "@/store/state";
+import mutations from "@/store/mutations";
+import actions from "@/store/actions";
 
-include("server")
-include("model")
-include("web:server")
-include("web:client-js")
+/**
+ * The Vuex store for the Kanban web application.
+ */
+export default createStore<KanbanState>({
+  state,
+  mutations,
+  actions,
+});

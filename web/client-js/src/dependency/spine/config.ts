@@ -24,9 +24,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "kanban"
-
-include("server")
-include("model")
-include("web:server")
-include("web:client-js")
+/**
+ * Spine web server configuration.
+ */
+export default {
+  endpointUrl: process.env.VUE_APP_SPINE_ENDPOINT_URL,
+};
