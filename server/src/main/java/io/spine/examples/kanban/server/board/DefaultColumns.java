@@ -68,11 +68,11 @@ final class DefaultColumns {
         DefaultColumn[] columns = DefaultColumn.values();
         int total = columns.length - 1;
 
-        for (int i = 1; i <= total; i++) {
-            DefaultColumn column = columns[i];
+        for (int oneBasedIndex = 1; oneBasedIndex <= total; oneBasedIndex++) {
+            DefaultColumn column = columns[oneBasedIndex - 1];
             ColumnPosition position =
                     ColumnPosition.newBuilder()
-                                  .setIndex(i)
+                                  .setIndex(oneBasedIndex)
                                   .setOfTotal(total)
                                   .vBuild();
 
