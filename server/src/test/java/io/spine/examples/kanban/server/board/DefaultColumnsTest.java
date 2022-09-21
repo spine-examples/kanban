@@ -59,17 +59,32 @@ class DefaultColumnsTest extends UtilityClassTest<DefaultColumns> {
     @DisplayName("produce commands to add 'To Do', 'In Progress', 'Review' and 'Done' columns")
     void additionCommandsProducesRightCommands() {
         BoardId board = BoardId.generate();
-        AddColumn toDo = additionCommand(board, "To Do", position(1,4));
-        AddColumn inProgress = additionCommand(board, "In Progress", position(2,4));
-        AddColumn review = additionCommand(board, "Review", position(3,4));
-        AddColumn done = additionCommand(board, "Done", position(4,4));
-        ImmutableList<AddColumn> expected = ImmutableList.of(toDo, inProgress, review, done);
-        ImmutableList<AddColumn> actual = DefaultColumns.additionCommands(board)
-                                                        .stream()
-                                                        .map(AddColumnCommands::clearId)
-                                                        .collect(toImmutableList());
+        ImmutableList<AddColumn> expected = expectedAdditionCommands(board);
+        ImmutableList<AddColumn> actual =
+                DefaultColumns.additionCommands(board)
+                              .stream()
+                              .map(AddColumnCommands::clearId)
+                              .collect(toImmutableList());
 
         assertThat(actual).isEqualTo(expected);
+    }
+
+    /**
+     * Returns the expected list of commands for adding defaults columns to the
+     * provided board that should completely match the output list from the
+     * {@link DefaultColumns#additionCommands(BoardId)} considering both methods get
+     * the same input.
+     *
+     * <p> Produced commands do not have column IDs as they are supposed to be used
+     * for comparison with an actual output of the mentioned method.
+     */
+    private static ImmutableList<AddColumn> expectedAdditionCommands(BoardId board) {
+        AddColumn toDo = additionCommand(board, "To Do", position(1, 4));
+        AddColumn inProgress = additionCommand(board, "In Progress", position(2, 4));
+        AddColumn review = additionCommand(board, "Review", position(3, 4));
+        AddColumn done = additionCommand(board, "Done", position(4, 4));
+
+        return ImmutableList.of(toDo, inProgress, review, done);
     }
 
     private static AddColumn additionCommand(
