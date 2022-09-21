@@ -26,11 +26,17 @@
 
 package io.spine.examples.kanban.server.board;
 
-import io.spine.examples.kanban.BoardInit;
+import com.google.common.collect.ImmutableList;
+import io.spine.examples.kanban.BoardId;
+import io.spine.examples.kanban.ColumnPosition;
+import io.spine.examples.kanban.command.AddColumn;
 import io.spine.testing.UtilityClassTest;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static com.google.common.collect.ImmutableList.toImmutableList;
+import static io.spine.examples.kanban.BoardInit.DefaultColumn;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("`DefaultColumns` should")
 class DefaultColumnsTest extends UtilityClassTest<DefaultColumns> {
@@ -43,8 +49,69 @@ class DefaultColumnsTest extends UtilityClassTest<DefaultColumns> {
     @DisplayName("convert an enum value to the Title Case")
     void nameForConvertsToTitleCase() {
         String expected = "To Do";
-        String actual = DefaultColumns.nameFor(BoardInit.DefaultColumn.TO_DO);
+        String actual = DefaultColumns.nameFor(DefaultColumn.TO_DO);
 
-        Assertions.assertEquals(expected, actual);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("produce commands to add 'To Do', 'In Progress', 'Review' and 'Done' columns")
+    void additionCommandsProducesRightCommands() {
+        BoardId board = BoardId.generate();
+        AddColumn toDo =
+                AddColumn.newBuilder()
+                         .setBoard(board)
+                         .setName("To Do")
+                         .setDesiredPosition(
+                                 ColumnPosition.newBuilder()
+                                               .setIndex(1)
+                                               .setOfTotal(4)
+                                               .vBuild()
+                         )
+                         .buildPartial();
+
+        AddColumn inProgress =
+                AddColumn.newBuilder()
+                         .setBoard(board)
+                         .setName("In Progress")
+                         .setDesiredPosition(
+                                 ColumnPosition.newBuilder()
+                                               .setIndex(2)
+                                               .setOfTotal(4)
+                                               .vBuild()
+                         )
+                         .buildPartial();
+
+        AddColumn review =
+                AddColumn.newBuilder()
+                         .setBoard(board)
+                         .setName("Review")
+                         .setDesiredPosition(
+                                 ColumnPosition.newBuilder()
+                                               .setIndex(3)
+                                               .setOfTotal(4)
+                                               .vBuild()
+                         )
+                         .buildPartial();
+
+        AddColumn done =
+                AddColumn.newBuilder()
+                         .setBoard(board)
+                         .setName("Done")
+                         .setDesiredPosition(
+                                 ColumnPosition.newBuilder()
+                                               .setIndex(4)
+                                               .setOfTotal(4)
+                                               .vBuild()
+                         )
+                         .buildPartial();
+
+        ImmutableList<AddColumn> expected = ImmutableList.of(toDo, inProgress, review, done);
+        ImmutableList<AddColumn> actual = DefaultColumns.additionCommands(board)
+                                                        .stream()
+                                                        .map(AddColumnCommands::clearId)
+                                                        .collect(toImmutableList());
+
+        assertEquals(expected, actual);
     }
 }
