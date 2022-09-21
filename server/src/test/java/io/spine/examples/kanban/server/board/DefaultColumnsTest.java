@@ -59,54 +59,10 @@ class DefaultColumnsTest extends UtilityClassTest<DefaultColumns> {
     @DisplayName("produce commands to add 'To Do', 'In Progress', 'Review' and 'Done' columns")
     void additionCommandsProducesRightCommands() {
         BoardId board = BoardId.generate();
-        AddColumn toDo =
-                AddColumn.newBuilder()
-                         .setBoard(board)
-                         .setName("To Do")
-                         .setDesiredPosition(
-                                 ColumnPosition.newBuilder()
-                                               .setIndex(1)
-                                               .setOfTotal(4)
-                                               .vBuild()
-                         )
-                         .buildPartial();
-
-        AddColumn inProgress =
-                AddColumn.newBuilder()
-                         .setBoard(board)
-                         .setName("In Progress")
-                         .setDesiredPosition(
-                                 ColumnPosition.newBuilder()
-                                               .setIndex(2)
-                                               .setOfTotal(4)
-                                               .vBuild()
-                         )
-                         .buildPartial();
-
-        AddColumn review =
-                AddColumn.newBuilder()
-                         .setBoard(board)
-                         .setName("Review")
-                         .setDesiredPosition(
-                                 ColumnPosition.newBuilder()
-                                               .setIndex(3)
-                                               .setOfTotal(4)
-                                               .vBuild()
-                         )
-                         .buildPartial();
-
-        AddColumn done =
-                AddColumn.newBuilder()
-                         .setBoard(board)
-                         .setName("Done")
-                         .setDesiredPosition(
-                                 ColumnPosition.newBuilder()
-                                               .setIndex(4)
-                                               .setOfTotal(4)
-                                               .vBuild()
-                         )
-                         .buildPartial();
-
+        AddColumn toDo = additionCommand(board, "To Do", position(1,4));
+        AddColumn inProgress = additionCommand(board, "In Progress", position(2,4));
+        AddColumn review = additionCommand(board, "Review", position(3,4));
+        AddColumn done = additionCommand(board, "Done", position(4,4));
         ImmutableList<AddColumn> expected = ImmutableList.of(toDo, inProgress, review, done);
         ImmutableList<AddColumn> actual = DefaultColumns.additionCommands(board)
                                                         .stream()
@@ -114,5 +70,26 @@ class DefaultColumnsTest extends UtilityClassTest<DefaultColumns> {
                                                         .collect(toImmutableList());
 
         assertThat(actual).isEqualTo(expected);
+    }
+
+    private static AddColumn additionCommand(
+            BoardId board,
+            String name,
+            ColumnPosition position
+    ) {
+        return AddColumn
+                .newBuilder()
+                .setBoard(board)
+                .setName(name)
+                .setDesiredPosition(position)
+                .buildPartial();
+    }
+
+    private static ColumnPosition position(int index, int ofTotal) {
+        return ColumnPosition
+                .newBuilder()
+                .setIndex(index)
+                .setOfTotal(ofTotal)
+                .vBuild();
     }
 }
