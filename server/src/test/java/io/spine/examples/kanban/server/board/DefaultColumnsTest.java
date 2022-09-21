@@ -35,8 +35,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.truth.Truth.assertThat;
 import static io.spine.examples.kanban.BoardInit.DefaultColumn;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("`DefaultColumns` should")
 class DefaultColumnsTest extends UtilityClassTest<DefaultColumns> {
@@ -51,7 +51,8 @@ class DefaultColumnsTest extends UtilityClassTest<DefaultColumns> {
         String expected = "To Do";
         String actual = DefaultColumns.nameFor(DefaultColumn.TO_DO);
 
-        assertEquals(expected, actual);
+        assertThat(actual)
+                .isEqualTo(expected);
     }
 
     @Test
@@ -112,6 +113,6 @@ class DefaultColumnsTest extends UtilityClassTest<DefaultColumns> {
                                                         .map(AddColumnCommands::clearId)
                                                         .collect(toImmutableList());
 
-        assertEquals(expected, actual);
+        assertThat(actual).isEqualTo(expected);
     }
 }
