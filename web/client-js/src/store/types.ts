@@ -68,8 +68,13 @@ export const Mutation = {
  */
 export const Action = {
   /**
-   * Subscribes to {@link BoardCreated} and {@link ColumnAdded} events and sends
-   * a {@code CreateBoard} command to create a board.
+   * Subscribes to the {@link BoardCreated} and {@link ColumnAdded} events and sends
+   * the {@code proto.spine_examples.kanban.CreateBoard} command to create a board.
    */
   CREATE_BOARD: "createBoard",
+
+  /**
+   * Sends the {@code proto.spine_examples.kanban.AddColumn} command to add the column.
+   */
+  ADD_COLUMN: "addColumn",
 };

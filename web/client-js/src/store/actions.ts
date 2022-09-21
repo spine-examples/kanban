@@ -76,6 +76,27 @@ const actions: ActionTree<KanbanState, any> = {
 
     client.command(command).post();
   },
+  [Action.ADD_COLUMN]: (
+    ctx: ActionContext<KanbanState, any>,
+    name: string
+  ): void => {
+    const command = new proto.spine_examples.kanban.AddColumn();
+
+    const column = new proto.spine_examples.kanban.ColumnId();
+    column.setUuid(newUuid());
+    command.setColumn(column);
+
+    command.setName(name);
+    command.setBoard(ctx.state.board!.getId());
+
+    const position = new proto.spine_examples.kanban.ColumnPosition();
+    const numberOfColumns = ctx.state.board!.getColumnList().length;
+    position.setIndex(numberOfColumns);
+    position.setOfTotal(numberOfColumns);
+    command.setDesiredPosition(position);
+
+    client.command(command).post();
+  },
 };
 
 export default actions;
