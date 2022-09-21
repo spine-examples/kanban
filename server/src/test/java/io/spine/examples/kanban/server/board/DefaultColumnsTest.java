@@ -51,8 +51,7 @@ class DefaultColumnsTest extends UtilityClassTest<DefaultColumns> {
         String expected = "To Do";
         String actual = DefaultColumns.nameFor(DefaultColumn.TO_DO);
 
-        assertThat(actual)
-                .isEqualTo(expected);
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
