@@ -38,7 +38,6 @@ final class AddColumnCommands {
      * Prevents utility class instantiation.
      */
     private AddColumnCommands() {
-
     }
 
     /**
