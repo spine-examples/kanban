@@ -29,9 +29,9 @@ package io.spine.examples.kanban.server.board;
 import com.google.common.collect.ImmutableList;
 import io.spine.examples.kanban.Column;
 import io.spine.examples.kanban.command.AddColumn;
-import io.spine.examples.kanban.command.CreateColumn;
 import io.spine.examples.kanban.event.BoardInitialized;
 import io.spine.examples.kanban.server.KanbanContextTest;
+import io.spine.examples.kanban.server.board.given.AddColumnCommands;
 import io.spine.testing.server.CommandSubject;
 import io.spine.testing.server.EventSubject;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,7 +60,7 @@ class BoardInitProcessTest extends KanbanContextTest {
         ImmutableList<AddColumn> expectedCommands =
                 DefaultColumns.additionCommands(board())
                               .stream()
-                              .map(BoardInitProcessTest::clearId)
+                              .map(AddColumnCommands::clearId)
                               .collect(toImmutableList());
 
         for (int i = 0; i < expectedCount; i++) {
@@ -70,11 +70,6 @@ class BoardInitProcessTest extends KanbanContextTest {
         }
     }
 
-    private static AddColumn clearId(AddColumn c) {
-        return c.toBuilder()
-                .clearColumn()
-                .buildPartial();
-    }
 
     @Test
     @DisplayName("add default columns")

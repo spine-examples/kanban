@@ -26,11 +26,19 @@
 
 package io.spine.examples.kanban.server.board;
 
-import io.spine.examples.kanban.BoardInit;
+import com.google.common.collect.ImmutableList;
+import io.spine.examples.kanban.BoardId;
+import io.spine.examples.kanban.ColumnPosition;
+import io.spine.examples.kanban.command.AddColumn;
+import io.spine.examples.kanban.server.board.given.AddColumnCommands;
 import io.spine.testing.UtilityClassTest;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.truth.Truth.assertThat;
+import static io.spine.examples.kanban.BoardInit.DefaultColumn;
+import static io.spine.examples.kanban.server.KanbanTest.columnPosition;
 
 @DisplayName("`DefaultColumns` should")
 class DefaultColumnsTest extends UtilityClassTest<DefaultColumns> {
@@ -43,8 +51,53 @@ class DefaultColumnsTest extends UtilityClassTest<DefaultColumns> {
     @DisplayName("convert an enum value to the Title Case")
     void nameForConvertsToTitleCase() {
         String expected = "To Do";
-        String actual = DefaultColumns.nameFor(BoardInit.DefaultColumn.TO_DO);
+        String actual = DefaultColumns.nameFor(DefaultColumn.TO_DO);
 
-        Assertions.assertEquals(expected, actual);
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("produce commands to add 'To Do', 'In Progress', 'Review' and 'Done' columns")
+    void additionCommandsProducesRightCommands() {
+        BoardId board = BoardId.generate();
+        ImmutableList<AddColumn> expected = expectedAdditionCommands(board);
+        ImmutableList<AddColumn> actual =
+                DefaultColumns.additionCommands(board)
+                              .stream()
+                              .map(AddColumnCommands::clearId)
+                              .collect(toImmutableList());
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    /**
+     * Returns the expected list of commands for adding defaults columns to the
+     * provided board that should completely match the output list from the
+     * {@link DefaultColumns#additionCommands(BoardId)} considering both methods get
+     * the same input.
+     *
+     * <p> Produced commands do not have column IDs as they are supposed to be used
+     * for comparison with an actual output of the mentioned method.
+     */
+    private static ImmutableList<AddColumn> expectedAdditionCommands(BoardId board) {
+        AddColumn toDo = additionCommand(board, "To Do", columnPosition(1, 4));
+        AddColumn inProgress = additionCommand(board, "In Progress", columnPosition(2, 4));
+        AddColumn review = additionCommand(board, "Review", columnPosition(3, 4));
+        AddColumn done = additionCommand(board, "Done", columnPosition(4, 4));
+
+        return ImmutableList.of(toDo, inProgress, review, done);
+    }
+
+    private static AddColumn additionCommand(
+            BoardId board,
+            String name,
+            ColumnPosition position
+    ) {
+        return AddColumn
+                .newBuilder()
+                .setBoard(board)
+                .setName(name)
+                .setDesiredPosition(position)
+                .buildPartial();
     }
 }
