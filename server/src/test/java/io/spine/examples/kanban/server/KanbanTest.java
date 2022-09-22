@@ -50,15 +50,6 @@ public abstract class KanbanTest {
     private CardId card;
 
     /**
-     * Creates a limit instance with the passed value.
-     */
-    public static WipLimit wipLimit(int limit) {
-        return WipLimit.newBuilder()
-                       .setValue(limit)
-                       .vBuild();
-    }
-
-    /**
      * Generates identifiers used by the test suite.
      */
     @BeforeEach

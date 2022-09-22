@@ -37,6 +37,7 @@ import io.spine.examples.kanban.event.WipLimitSet;
 import io.spine.examples.kanban.rejection.Rejections.WipLimitAlreadySet;
 import io.spine.examples.kanban.rejection.Rejections.WipLimitExceeded;
 import io.spine.examples.kanban.server.KanbanContextTest;
+import io.spine.examples.kanban.server.given.WipLimits;
 import io.spine.testing.server.EventSubject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -71,7 +72,7 @@ class ColumnTest extends KanbanContextTest {
             WipLimitSet expected = WipLimitSet
                     .newBuilder()
                     .setColumn(column())
-                    .setLimit(wipLimit(limit))
+                    .setLimit(WipLimits.of(limit))
                     .vBuild();
             assertEvents.message(0)
                         .isEqualTo(expected);
@@ -95,8 +96,8 @@ class ColumnTest extends KanbanContextTest {
             WipLimitChanged expected = WipLimitChanged
                     .newBuilder()
                     .setColumn(column)
-                    .setPreviousValue(wipLimit(initialLimit))
-                    .setNewValue(wipLimit(updatedLimit))
+                    .setPreviousValue(WipLimits.of(initialLimit))
+                    .setNewValue(WipLimits.of(updatedLimit))
                     .vBuild();
             assertEvents.message(0)
                         .isEqualTo(expected);
@@ -118,7 +119,7 @@ class ColumnTest extends KanbanContextTest {
             WipLimitRemoved expected = WipLimitRemoved
                     .newBuilder()
                     .setColumn(column)
-                    .setPreviousLimit(wipLimit(initialLimit))
+                    .setPreviousLimit(WipLimits.of(initialLimit))
                     .vBuild();
             assertEvents.message(0)
                         .isEqualTo(expected);
@@ -140,7 +141,7 @@ class ColumnTest extends KanbanContextTest {
             WipLimitAlreadySet expected = WipLimitAlreadySet
                     .newBuilder()
                     .setColumn(column)
-                    .setLimit(wipLimit(limit))
+                    .setLimit(WipLimits.of(limit))
                     .vBuild();
             assertEvents.message(0)
                         .isEqualTo(expected);
@@ -196,7 +197,7 @@ class ColumnTest extends KanbanContextTest {
                     .newBuilder()
                     .setColumn(columnWithLimit)
                     .setCard(cardToBeRejected)
-                    .setLimit(wipLimit(LIMIT))
+                    .setLimit(WipLimits.of(LIMIT))
                     .vBuild();
             assertRejections.message(0)
                             .isEqualTo(expectedRejection);

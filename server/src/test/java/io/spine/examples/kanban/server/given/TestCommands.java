@@ -35,7 +35,6 @@ import io.spine.examples.kanban.command.CreateBoard;
 import io.spine.examples.kanban.command.CreateCard;
 import io.spine.examples.kanban.command.SetWipLimit;
 
-import static io.spine.examples.kanban.server.KanbanTest.wipLimit;
 import static io.spine.testing.TestValues.randomString;
 
 /**
@@ -95,7 +94,7 @@ public final class TestCommands {
         return SetWipLimit
                 .newBuilder()
                 .setColumn(column)
-                .setLimit(wipLimit(limit))
+                .setLimit(WipLimits.of(limit))
                 .vBuild();
     }
 }
