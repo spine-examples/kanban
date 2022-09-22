@@ -40,7 +40,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 
 import static io.spine.client.ConnectionConstants.DEFAULT_CLIENT_SERVICE_PORT;
-import static io.spine.examples.kanban.server.TestCommands.createBoard;
+import static io.spine.examples.kanban.server.given.TestCommands.createBoard;
 import static io.spine.testing.core.given.GivenUserId.newUuid;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;

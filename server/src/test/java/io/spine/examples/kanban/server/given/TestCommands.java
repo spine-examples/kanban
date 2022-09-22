@@ -24,13 +24,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.examples.kanban.server;
+package io.spine.examples.kanban.server.given;
 
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.CardId;
 import io.spine.examples.kanban.ColumnId;
 import io.spine.examples.kanban.ColumnPosition;
-import io.spine.examples.kanban.WipLimit;
 import io.spine.examples.kanban.command.AddColumn;
 import io.spine.examples.kanban.command.CreateBoard;
 import io.spine.examples.kanban.command.CreateCard;
@@ -42,22 +41,28 @@ import static io.spine.testing.TestValues.randomString;
 /**
  * Static factories for test command messages.
  */
-final class TestCommands {
+public final class TestCommands {
 
-    /** Prevents instantiation. */
+    /**
+     * Prevents instantiation.
+     */
     private TestCommands() {
     }
 
-    /** Create a board with the passed ID. */
-    static CreateBoard createBoard(BoardId board) {
+    /**
+     * Create a board with the passed ID.
+     */
+    public static CreateBoard createBoard(BoardId board) {
         return CreateBoard
                 .newBuilder()
                 .setBoard(board)
                 .vBuild();
     }
 
-    /** Add the column to the board. */
-    static AddColumn addColumn(
+    /**
+     * Add the column to the board.
+     */
+    public static AddColumn addColumn(
             BoardId board,
             ColumnId column,
             ColumnPosition columnPosition
@@ -71,8 +76,10 @@ final class TestCommands {
                 .vBuild();
     }
 
-    /** Create the card on the specified board. */
-    static CreateCard createCard(BoardId board, CardId card) {
+    /**
+     * Create the card on the specified board.
+     */
+    public static CreateCard createCard(BoardId board, CardId card) {
         return CreateCard
                 .newBuilder()
                 .setCard(card)
@@ -83,12 +90,8 @@ final class TestCommands {
 
     /**
      * Set the WIP limit for the column.
-     *
-     * <p>Passing zero clears the limit.
-     *
-     * @see WipLimit
      */
-    static SetWipLimit setWipLimit(ColumnId column, int limit) {
+    public static SetWipLimit setWipLimit(ColumnId column, int limit) {
         return SetWipLimit
                 .newBuilder()
                 .setColumn(column)
