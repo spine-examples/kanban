@@ -30,6 +30,7 @@ import com.google.common.collect.ImmutableList;
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.ColumnPosition;
 import io.spine.examples.kanban.command.AddColumn;
+import io.spine.examples.kanban.server.board.given.AddColumnCommands;
 import io.spine.testing.UtilityClassTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

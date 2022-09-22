@@ -31,6 +31,7 @@ import io.spine.examples.kanban.Column;
 import io.spine.examples.kanban.command.AddColumn;
 import io.spine.examples.kanban.event.BoardInitialized;
 import io.spine.examples.kanban.server.KanbanContextTest;
+import io.spine.examples.kanban.server.board.given.AddColumnCommands;
 import io.spine.testing.server.CommandSubject;
 import io.spine.testing.server.EventSubject;
 import org.junit.jupiter.api.BeforeEach;

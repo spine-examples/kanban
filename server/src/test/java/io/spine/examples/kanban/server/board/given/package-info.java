@@ -24,28 +24,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.examples.kanban.server.board;
-
-import io.spine.examples.kanban.Column;
-import io.spine.examples.kanban.command.AddColumn;
-
 /**
- * Provides utility methods for {@link AddColumn} for testing purposes.
+ * Test environment classes for testing the {@link io.spine.examples.kanban.server} package.
  */
-final class AddColumnCommands {
 
-    /**
-     * Prevents utility class instantiation.
-     */
-    private AddColumnCommands() {
-    }
+@CheckReturnValue
+@ParametersAreNonnullByDefault
+package io.spine.examples.kanban.server.board.given;
 
-    /**
-     * Clears the column's ID.
-     */
-    static AddColumn clearId(AddColumn c) {
-        return c.toBuilder()
-                .clearColumn()
-                .buildPartial();
-    }
-}
+import com.google.errorprone.annotations.CheckReturnValue;
+
+import javax.annotation.ParametersAreNonnullByDefault;
