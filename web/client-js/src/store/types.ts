@@ -40,8 +40,8 @@ export type BoardCreated = proto.spine_examples.kanban.BoardCreated;
 export type ColumnAdded = proto.spine_examples.kanban.ColumnAdded;
 
 /**
-* The local state of the Kanban web application.
-*/
+ * The local state of the Kanban web application.
+ */
 export interface KanbanState {
   board: Board | null;
 }
@@ -50,7 +50,6 @@ export interface KanbanState {
  * Exposes mutations of the local {@plain KanbanState state}.
  */
 export const Mutation = {
-
   /**
    * Adds the board extracted from the {@link BoardCreated} event to the state.
    */
@@ -68,10 +67,14 @@ export const Mutation = {
  * send a command and subscribe to produced events.
  */
 export const Action = {
-
   /**
-   * Subscribes to {@link BoardCreated} and {@link ColumnAdded} events and sends
-   * a {@code CreateBoard} command to create a board.
+   * Subscribes to the {@link BoardCreated} and {@link ColumnAdded} events and sends
+   * the {@code proto.spine_examples.kanban.CreateBoard} command to create a board.
    */
   CREATE_BOARD: "createBoard",
+
+  /**
+   * Sends the {@code proto.spine_examples.kanban.AddColumn} command to add the column.
+   */
+  ADD_COLUMN: "addColumn",
 };
