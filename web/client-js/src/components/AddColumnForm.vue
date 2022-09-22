@@ -1,8 +1,8 @@
 <template>
-  <div id="add-column-menu">
+  <div id="add-column-form">
     <input type="text" placeholder="Enter column's name" v-model="name" />
-    <button v-on:click="submitForm()">Add column</button>
-    <button v-on:click="closeForm()">Close</button>
+    <button v-on:click="submit()">Add column</button>
+    <button v-on:click="close()">Close</button>
   </div>
 </template>
 
@@ -11,23 +11,23 @@ import { defineComponent } from "vue";
 import { Action } from "@/store/types";
 
 /**
- * Displays the form to add a column.
+ * Displays the form to add a new column.
  */
 export default defineComponent({
-  name: "AddColumn",
+  name: "AddColumnForm",
   data() {
     return {
       name: "",
     };
   },
   methods: {
-    submitForm() {
+    submit() {
       if (this.name.length > 0) {
         this.$store.dispatch(Action.ADD_COLUMN, this.name);
-        this.closeForm();
+        this.close();
       }
     },
-    closeForm() {
+    close() {
       this.$emit("closed");
     },
   },
@@ -35,7 +35,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-#add-column-menu {
+#add-column-form {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -47,7 +47,7 @@ export default defineComponent({
   padding: 10px;
 }
 
-#add-column-menu input {
+#add-column-form input {
   display: flex;
   justify-content: center;
   font-size: 16px;
@@ -56,7 +56,7 @@ export default defineComponent({
   margin-left: 2px;
 }
 
-#add-column-menu button {
+#add-column-form button {
   all: unset;
   display: flex;
   justify-content: center;
@@ -68,7 +68,7 @@ export default defineComponent({
   margin: 0.5rem;
 }
 
-#add-column-menu button:hover {
+#add-column-form button:hover {
   background-color: #cdd2d4;
   color: #4d4d4d;
 }

@@ -6,12 +6,12 @@
       :column="column"
     />
     <div id="add-column">
-      <button v-if="!addColumnMenuOpened" v-on:click="openAddColumnMenu()">
+      <button v-if="!addColumnFormOpened" v-on:click="openAddColumnForm()">
         Add a column
       </button>
       <AddColumnForm
-        v-if="addColumnMenuOpened"
-        @closed="closeAddColumnMenu()"
+        v-if="addColumnFormOpened"
+        @closed="closeAddColumnForm()"
       />
     </div>
   </div>
@@ -25,7 +25,7 @@ import { defineComponent } from "vue";
 import KanbanColumn from "@/components/KanbanColumn.vue";
 import { mapState, mapActions } from "vuex";
 import { Action } from "@/store/types";
-import AddColumnForm from "@/components/AddColumn.vue";
+import AddColumnForm from "@/components/AddColumnForm.vue";
 
 /**
  * Displays the Kanban board.
@@ -35,7 +35,7 @@ export default defineComponent({
   components: { AddColumnForm, KanbanColumn },
   data() {
     return {
-      addColumnMenuOpened: false,
+      addColumnFormOpened: false,
     };
   },
   computed: {
@@ -43,11 +43,11 @@ export default defineComponent({
   },
   methods: {
     ...mapActions([Action.CREATE_BOARD]),
-    openAddColumnMenu() {
-      this.addColumnMenuOpened = true;
+    openAddColumnForm() {
+      this.addColumnFormOpened = true;
     },
-    closeAddColumnMenu() {
-      this.addColumnMenuOpened = false;
+    closeAddColumnForm() {
+      this.addColumnFormOpened = false;
     },
   },
 });
