@@ -31,6 +31,7 @@ import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.ColumnPosition;
 import io.spine.examples.kanban.command.AddColumn;
 import io.spine.examples.kanban.server.board.given.AddColumnCommands;
+import io.spine.examples.kanban.server.given.ColumnPositions;
 import io.spine.testing.UtilityClassTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,7 +39,6 @@ import org.junit.jupiter.api.Test;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.truth.Truth.assertThat;
 import static io.spine.examples.kanban.BoardInit.DefaultColumn;
-import static io.spine.examples.kanban.server.KanbanTest.columnPosition;
 
 @DisplayName("`DefaultColumns` should")
 class DefaultColumnsTest extends UtilityClassTest<DefaultColumns> {
@@ -80,10 +80,10 @@ class DefaultColumnsTest extends UtilityClassTest<DefaultColumns> {
      * for comparison with an actual output of the mentioned method.
      */
     private static ImmutableList<AddColumn> expectedAdditionCommands(BoardId board) {
-        AddColumn toDo = additionCommand(board, "To Do", columnPosition(1, 4));
-        AddColumn inProgress = additionCommand(board, "In Progress", columnPosition(2, 4));
-        AddColumn review = additionCommand(board, "Review", columnPosition(3, 4));
-        AddColumn done = additionCommand(board, "Done", columnPosition(4, 4));
+        AddColumn toDo = additionCommand(board, "To Do", ColumnPositions.of(1, 4));
+        AddColumn inProgress = additionCommand(board, "In Progress", ColumnPositions.of(2, 4));
+        AddColumn review = additionCommand(board, "Review", ColumnPositions.of(3, 4));
+        AddColumn done = additionCommand(board, "Done", ColumnPositions.of(4, 4));
 
         return ImmutableList.of(toDo, inProgress, review, done);
     }

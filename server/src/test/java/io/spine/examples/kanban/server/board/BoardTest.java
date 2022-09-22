@@ -32,6 +32,7 @@ import io.spine.examples.kanban.ColumnPosition;
 import io.spine.examples.kanban.command.AddColumn;
 import io.spine.examples.kanban.event.BoardCreated;
 import io.spine.examples.kanban.server.KanbanContextTest;
+import io.spine.examples.kanban.server.given.ColumnPositions;
 import io.spine.testing.server.EventSubject;
 import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
@@ -86,7 +87,7 @@ class BoardTest extends KanbanContextTest {
         @BeforeEach
         void sendCommands() {
             String name = randomString();
-            ColumnPosition position = columnPosition(
+            ColumnPosition position = ColumnPositions.of(
                     DefaultColumns.count() + 1,
                     DefaultColumns.count() + 1
             );
@@ -97,7 +98,7 @@ class BoardTest extends KanbanContextTest {
                              .setName(name)
                              .setDesiredPosition(position)
                              .vBuild();
-            position = columnPosition(
+            position = ColumnPositions.of(
                     DefaultColumns.count() + 2,
                     DefaultColumns.count() + 2
             );
