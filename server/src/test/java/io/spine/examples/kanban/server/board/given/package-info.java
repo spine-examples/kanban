@@ -33,5 +33,4 @@
 package io.spine.examples.kanban.server.board.given;
 
 import com.google.errorprone.annotations.CheckReturnValue;
-
 import javax.annotation.ParametersAreNonnullByDefault;
