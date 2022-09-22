@@ -37,6 +37,7 @@ import org.junit.jupiter.api.Test;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.truth.Truth.assertThat;
 import static io.spine.examples.kanban.BoardInit.DefaultColumn;
+import static io.spine.examples.kanban.server.KanbanTest.columnPosition;
 
 @DisplayName("`DefaultColumns` should")
 class DefaultColumnsTest extends UtilityClassTest<DefaultColumns> {
@@ -78,10 +79,10 @@ class DefaultColumnsTest extends UtilityClassTest<DefaultColumns> {
      * for comparison with an actual output of the mentioned method.
      */
     private static ImmutableList<AddColumn> expectedAdditionCommands(BoardId board) {
-        AddColumn toDo = additionCommand(board, "To Do", position(1, 4));
-        AddColumn inProgress = additionCommand(board, "In Progress", position(2, 4));
-        AddColumn review = additionCommand(board, "Review", position(3, 4));
-        AddColumn done = additionCommand(board, "Done", position(4, 4));
+        AddColumn toDo = additionCommand(board, "To Do", columnPosition(1, 4));
+        AddColumn inProgress = additionCommand(board, "In Progress", columnPosition(2, 4));
+        AddColumn review = additionCommand(board, "Review", columnPosition(3, 4));
+        AddColumn done = additionCommand(board, "Done", columnPosition(4, 4));
 
         return ImmutableList.of(toDo, inProgress, review, done);
     }
@@ -97,13 +98,5 @@ class DefaultColumnsTest extends UtilityClassTest<DefaultColumns> {
                 .setName(name)
                 .setDesiredPosition(position)
                 .buildPartial();
-    }
-
-    private static ColumnPosition position(int index, int ofTotal) {
-        return ColumnPosition
-                .newBuilder()
-                .setIndex(index)
-                .setOfTotal(ofTotal)
-                .vBuild();
     }
 }

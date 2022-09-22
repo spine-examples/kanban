@@ -56,7 +56,9 @@ public abstract class KanbanTest {
                        .vBuild();
     }
 
-    /** Creates a column position with the passed index and total number of columns. */
+    /**
+     * Creates a column position with the passed index and total number of columns.
+     */
     public static ColumnPosition columnPosition(int index, int ofTotal) {
         return ColumnPosition.newBuilder()
                              .setIndex(index)
