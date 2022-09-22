@@ -25,7 +25,8 @@
  */
 
 /**
- * Test environment classes for testing the {@link io.spine.examples.kanban.server} package.
+ * Test environment classes for testing the
+ * {@link io.spine.examples.kanban.server.board} package.
  */
 
 @CheckReturnValue
