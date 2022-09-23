@@ -59,6 +59,13 @@ class CardTest extends KanbanContextTest {
         }
 
         @Test
+        @DisplayName("as entity with the `Card` state")
+        void entity() {
+            context().assertEntityWithState(card(), Card.class)
+                     .exists();
+        }
+
+        @Test
         @DisplayName("emitting the `CardCreated` event")
         void event() {
             EventSubject assertEvents = assertEvents(CardCreated.class);
@@ -72,13 +79,6 @@ class CardTest extends KanbanContextTest {
             assertEvents.message(0)
                         .comparingExpectedFieldsOnly()
                         .isEqualTo(expected);
-        }
-
-        @Test
-        @DisplayName("as entity with the `Card` state")
-        void entity() {
-            context().assertEntityWithState(card(), Card.class)
-                     .exists();
         }
     }
 }
