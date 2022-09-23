@@ -67,6 +67,15 @@ class BoardProjectionTest extends KanbanContextTest {
         entityState = assertState();
     }
 
+    private <T extends CommandMessage> Stream<T> commands(Class<T> commandClass) {
+        return context()
+                .assertCommands()
+                .withType(commandClass)
+                .actual()
+                .stream()
+                .map(c -> unpack(c.getMessage(), commandClass));
+    }
+
     @Test
     @DisplayName("have the state with the ID of the board")
     void id() {
