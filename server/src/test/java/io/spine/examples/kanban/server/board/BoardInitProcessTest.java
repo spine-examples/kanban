@@ -40,7 +40,7 @@ import org.junit.jupiter.api.Test;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
-@DisplayName("BoardInitProcess should")
+@DisplayName("`BoardInitProcess` should")
 class BoardInitProcessTest extends KanbanContextTest {
 
     @BeforeEach

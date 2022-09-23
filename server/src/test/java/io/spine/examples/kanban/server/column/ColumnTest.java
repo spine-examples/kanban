@@ -47,7 +47,7 @@ import org.junit.jupiter.api.Test;
 
 import static io.spine.testing.Tests.repeat;
 
-@DisplayName("Column logic should")
+@DisplayName("`Column` should")
 class ColumnTest extends KanbanContextTest {
 
     @BeforeEach
@@ -56,7 +56,6 @@ class ColumnTest extends KanbanContextTest {
     }
 
     @Nested
-    @DisplayName("support WIP limit")
     class SettingWipLimit {
         private final WipLimit limit = WipLimits.of(5);
 
@@ -66,7 +65,7 @@ class ColumnTest extends KanbanContextTest {
         }
 
         @Test
-        @DisplayName("setting non-zero value to previously unlimited column")
+        @DisplayName("set a non-zero WIP limit to previously unlimited column")
         void setLimit() {
             EventSubject assertEvents = assertEvents(WipLimitSet.class);
             assertEvents.hasSize(1);
@@ -81,7 +80,7 @@ class ColumnTest extends KanbanContextTest {
         }
 
         @Test
-        @DisplayName("changing limit value")
+        @DisplayName("change the WIP limit")
         void changeLimit() {
             WipLimit newLimit = WipLimits.of(6);
             context().receivesCommand(setWipLimit(column(), newLimit));
@@ -100,7 +99,7 @@ class ColumnTest extends KanbanContextTest {
         }
 
         @Test
-        @DisplayName("clearing limit value")
+        @DisplayName("remove the WIP limit")
         void clearLimit() {
             context().receivesCommand(setWipLimit(column(), WipLimits.of(0)));
 
@@ -117,7 +116,7 @@ class ColumnTest extends KanbanContextTest {
         }
 
         @Test
-        @DisplayName("not allowing the same value")
+        @DisplayName("reject setting the WIP limit to the same value")
         void rejectSameValue() {
             context().receivesCommand(setWipLimit(column(), limit));
 
@@ -135,7 +134,7 @@ class ColumnTest extends KanbanContextTest {
     }
 
     @Nested
-    @DisplayName("protect WIP limit")
+    @DisplayName("guard the WIP limit by")
     class GuardingWipLimit {
 
         private final WipLimit limit = WipLimits.of(5);
@@ -171,7 +170,7 @@ class ColumnTest extends KanbanContextTest {
         }
 
         @Test
-        @DisplayName("prohibit adding a card when the limit reached")
+        @DisplayName("rejecting card addition when the limit reached")
         void rejection() {
             fillUpToTheLimit();
             CardId rejectedCard = addCard();

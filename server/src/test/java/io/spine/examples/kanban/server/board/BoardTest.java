@@ -43,7 +43,7 @@ import org.junit.jupiter.api.Test;
 import static io.spine.examples.kanban.rejection.Rejections.ColumnNameAlreadyTaken;
 import static io.spine.testing.TestValues.randomString;
 
-@DisplayName("Kanban Context Board logic should")
+@DisplayName("`Board` should")
 @Ignore("Restore the tests when move card API is defined")
 class BoardTest extends KanbanContextTest {
 
@@ -114,7 +114,7 @@ class BoardTest extends KanbanContextTest {
         }
 
         @Test
-        @DisplayName("by rejecting the addition of the column with a duplicate name")
+        @DisplayName("by rejecting addition of the column with a duplicate name")
         void rejection() {
             EventSubject assertRejections = assertEvents(ColumnNameAlreadyTaken.class);
             assertRejections.hasSize(1);
@@ -123,14 +123,14 @@ class BoardTest extends KanbanContextTest {
                     ColumnNameAlreadyTaken.newBuilder()
                                           .setColumn(rejectedCommand.getColumn())
                                           .setName(rejectedCommand.getName())
-                                          .build();
+                                          .vBuild();
             assertRejections.message(0)
                             .isEqualTo(expected);
         }
     }
 
     @Nested
-    @DisplayName("Move card emitting")
+    @DisplayName("move card emitting")
     class MoveCard {
 
         @BeforeEach

@@ -35,7 +35,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("Card logic should")
+@DisplayName("`Card` should")
 class CardTest extends KanbanContextTest {
 
     /**
@@ -50,7 +50,7 @@ class CardTest extends KanbanContextTest {
      * Verifies that a command to create a card generates corresponding event.
      */
     @Nested
-    @DisplayName("create new card")
+    @DisplayName("create a card")
     class Creation {
 
         @BeforeEach
@@ -59,7 +59,7 @@ class CardTest extends KanbanContextTest {
         }
 
         @Test
-        @DisplayName("generating `CardCreated` event")
+        @DisplayName("emitting the `CardCreated` event")
         void event() {
             EventSubject assertEvents = assertEvents(CardCreated.class);
             assertEvents.hasSize(1);

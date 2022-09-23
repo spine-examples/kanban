@@ -45,7 +45,7 @@ import java.util.List;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.truth.Truth.assertThat;
 
-@DisplayName("BoardProjection should")
+@DisplayName("`BoardProjection` should")
 class BoardProjectionTest extends KanbanContextTest {
 
     private ImmutableList<ColumnId> columns;
