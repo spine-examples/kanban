@@ -24,7 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.examples.kanban.server;
+package io.spine.examples.kanban.server.given;
 
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.CardId;
@@ -36,28 +36,34 @@ import io.spine.examples.kanban.command.CreateBoard;
 import io.spine.examples.kanban.command.CreateCard;
 import io.spine.examples.kanban.command.SetWipLimit;
 
-import static io.spine.examples.kanban.server.KanbanTest.wipLimit;
 import static io.spine.testing.TestValues.randomString;
 
 /**
- * Static factories for test command messages.
+ * Provides factory methods for test commands.
  */
-final class TestCommands {
+public final class TestCommands {
 
-    /** Prevents instantiation. */
+    /**
+     * Prevents utility class instantiation.
+     */
     private TestCommands() {
     }
 
-    /** Create a board with the passed ID. */
-    static CreateBoard createBoard(BoardId board) {
+    /**
+     * Creates the {@link CreateBoard} command with the provided board ID.
+     */
+    public static CreateBoard createBoard(BoardId board) {
         return CreateBoard
                 .newBuilder()
                 .setBoard(board)
                 .vBuild();
     }
 
-    /** Add the column to the board. */
-    static AddColumn addColumn(
+    /**
+     * Creates the {@link AddColumn} command with the provided board ID,
+     * column ID, position and a generated column name.
+     */
+    public static AddColumn addColumn(
             BoardId board,
             ColumnId column,
             ColumnPosition columnPosition
@@ -66,33 +72,33 @@ final class TestCommands {
                 .newBuilder()
                 .setBoard(board)
                 .setColumn(column)
-                .setName("Generated column" + randomString())
+                .setName(randomString())
                 .setDesiredPosition(columnPosition)
                 .vBuild();
     }
 
-    /** Create the card on the specified board. */
-    static CreateCard createCard(BoardId board, CardId card) {
+    /**
+     * Creates the {@link CreateCard} command with the provided board ID,
+     * card ID and a generated card name.
+     */
+    public static CreateCard createCard(BoardId board, CardId card) {
         return CreateCard
                 .newBuilder()
                 .setCard(card)
                 .setBoard(board)
-                .setName("Generated card " + randomString())
+                .setName(randomString())
                 .vBuild();
     }
 
     /**
-     * Set the WIP limit for the column.
-     *
-     * <p>Passing zero clears the limit.
-     *
-     * @see WipLimit
+     * Creates the {@link SetWipLimit} command with the provided column ID
+     * and WIP limit.
      */
-    static SetWipLimit setWipLimit(ColumnId column, int limit) {
+    public static SetWipLimit setWipLimit(ColumnId column, WipLimit limit) {
         return SetWipLimit
                 .newBuilder()
                 .setColumn(column)
-                .setLimit(wipLimit(limit))
+                .setLimit(limit)
                 .vBuild();
     }
 }

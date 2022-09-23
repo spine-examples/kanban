@@ -39,23 +39,21 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static io.spine.protobuf.AnyPacker.unpack;
 
-@DisplayName("BoardInitProcess should")
+@DisplayName("`BoardInitProcess` should")
 class BoardInitProcessTest extends KanbanContextTest {
 
     @BeforeEach
-    void sendCommand() {
+    void setupBoard() {
         context().receivesCommand(createBoard());
     }
 
     @Test
     @DisplayName("issue addition commands for all default columns")
     void issuesCommands() {
-        CommandSubject issuedCommands = context().assertCommands()
-                                                 .withType(AddColumn.class);
+        CommandSubject assertCommands = assertCommands(AddColumn.class);
         int expectedCount = DefaultColumns.count();
-        issuedCommands.hasSize(expectedCount);
+        assertCommands.hasSize(expectedCount);
 
         ImmutableList<AddColumn> expectedCommands =
                 DefaultColumns.additionCommands(board())
@@ -64,33 +62,18 @@ class BoardInitProcessTest extends KanbanContextTest {
                               .collect(toImmutableList());
 
         for (int i = 0; i < expectedCount; i++) {
-            issuedCommands.message(i)
+            assertCommands.message(i)
                           .comparingExpectedFieldsOnly()
                           .isEqualTo(expectedCommands.get(i));
         }
     }
 
-
     @Test
     @DisplayName("add default columns")
     void addsColumns() {
-        ImmutableList<Column> expectedColumns = expectedColumns();
-        expectedColumns.forEach(
-                c -> context().assertEntityWithState(c.getId(), Column.class)
-                              .hasStateThat()
-                              .comparingExpectedFieldsOnly()
-                              .isEqualTo(c)
-        );
-    }
-
-    private ImmutableList<Column> expectedColumns() {
-        return context().assertCommands()
-                        .withType(AddColumn.class)
-                        .actual()
-                        .stream()
-                        .map(c -> unpack(c.getMessage(), AddColumn.class))
-                        .map(BoardInitProcessTest::toColumn)
-                        .collect(toImmutableList());
+        receivedCommands(AddColumn.class)
+                .map(BoardInitProcessTest::toColumn)
+                .forEach(this::assertColumnExists);
     }
 
     private static Column toColumn(AddColumn c) {
@@ -102,19 +85,28 @@ class BoardInitProcessTest extends KanbanContextTest {
                 .vBuild();
     }
 
+    private void assertColumnExists(Column column) {
+        context().assertEntityWithState(column.getId(), Column.class)
+                 .hasStateThat()
+                 .comparingExpectedFieldsOnly()
+                 .isEqualTo(column);
+    }
+
+
+
     @Test
     @DisplayName("emit the `BoardInitialized` event when terminated")
     void emitsEvent() {
-        EventSubject events = context().assertEvents()
-                                       .withType(BoardInitialized.class);
-        events.hasSize(1);
-        BoardInitialized expected = BoardInitialized
-                .newBuilder()
-                .setBoard(board())
-                .vBuild();
-        events.message(0)
-              .comparingExpectedFieldsOnly()
-              .isEqualTo(expected);
+        EventSubject assertEvents = assertEvents(BoardInitialized.class);
+        assertEvents.hasSize(1);
+
+        BoardInitialized expected =
+                BoardInitialized.newBuilder()
+                                .setBoard(board())
+                                .vBuild();
+        assertEvents.message(0)
+                    .comparingExpectedFieldsOnly()
+                    .isEqualTo(expected);
     }
 
     @Test

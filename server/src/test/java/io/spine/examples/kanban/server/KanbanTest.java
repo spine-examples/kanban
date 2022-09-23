@@ -35,6 +35,8 @@ import io.spine.examples.kanban.command.AddColumn;
 import io.spine.examples.kanban.command.CreateBoard;
 import io.spine.examples.kanban.command.CreateCard;
 import io.spine.examples.kanban.command.SetWipLimit;
+import io.spine.examples.kanban.server.given.ColumnPositions;
+import io.spine.examples.kanban.server.given.TestCommands;
 import org.junit.jupiter.api.BeforeEach;
 
 /**
@@ -44,27 +46,8 @@ public abstract class KanbanTest {
 
     private BoardId board;
     private ColumnId column;
-    private final ColumnPosition defaultPosition = columnPosition(1, 1);
+    private final ColumnPosition defaultPosition = ColumnPositions.of(1, 1);
     private CardId card;
-
-    /**
-     * Creates a limit instance with the passed value.
-     */
-    public static WipLimit wipLimit(int limit) {
-        return WipLimit.newBuilder()
-                       .setValue(limit)
-                       .vBuild();
-    }
-
-    /**
-     * Creates a column position with the passed index and total number of columns.
-     */
-    public static ColumnPosition columnPosition(int index, int ofTotal) {
-        return ColumnPosition.newBuilder()
-                             .setIndex(index)
-                             .setOfTotal(ofTotal)
-                             .vBuild();
-    }
 
     /**
      * Generates identifiers used by the test suite.
@@ -112,7 +95,7 @@ public abstract class KanbanTest {
         return TestCommands.createCard(board, card);
     }
 
-    protected static SetWipLimit setWipLimit(ColumnId column, int limit) {
+    protected static SetWipLimit setWipLimit(ColumnId column, WipLimit limit) {
         return TestCommands.setWipLimit(column, limit);
     }
 }

@@ -24,14 +24,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+package io.spine.examples.kanban.server.given;
+
+import io.spine.examples.kanban.WipLimit;
+
 /**
- * Test environment classes for testing the
- * {@link io.spine.examples.kanban.server.board} package.
+ * Provides utility methods for {@link WipLimit} for testing purposes.
  */
+public final class WipLimits {
 
-@CheckReturnValue
-@ParametersAreNonnullByDefault
-package io.spine.examples.kanban.server.board.given;
+    /**
+     * Prevents utility class instantiation.
+     */
+    private WipLimits() {
+    }
 
-import com.google.errorprone.annotations.CheckReturnValue;
-import javax.annotation.ParametersAreNonnullByDefault;
+    /**
+     * Creates a limit instance with the passed value.
+     */
+    public static WipLimit of(int value) {
+        return WipLimit
+                .newBuilder()
+                .setValue(value)
+                .vBuild();
+    }
+}

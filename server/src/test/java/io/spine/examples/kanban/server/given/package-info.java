@@ -26,12 +26,12 @@
 
 /**
  * Test environment classes for testing the
- * {@link io.spine.examples.kanban.server.board} package.
+ * {@link io.spine.examples.kanban.server} package.
  */
 
 @CheckReturnValue
 @ParametersAreNonnullByDefault
-package io.spine.examples.kanban.server.board.given;
+package io.spine.examples.kanban.server.given;
 
 import com.google.errorprone.annotations.CheckReturnValue;
 import javax.annotation.ParametersAreNonnullByDefault;

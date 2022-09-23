@@ -35,7 +35,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("Card logic should")
+@DisplayName("`Card` should")
 class CardTest extends KanbanContextTest {
 
     /**
@@ -50,7 +50,7 @@ class CardTest extends KanbanContextTest {
      * Verifies that a command to create a card generates corresponding event.
      */
     @Nested
-    @DisplayName("create new card")
+    @DisplayName("create a card")
     class Creation {
 
         @BeforeEach
@@ -58,31 +58,27 @@ class CardTest extends KanbanContextTest {
             context().receivesCommand(createCard());
         }
 
-
-        @Test
-        @DisplayName("generating `CardCreated` event")
-        void event() {
-            EventSubject assertEvents =
-                    context().assertEvents()
-                             .withType(CardCreated.class);
-            assertEvents.hasSize(1);
-            CardCreated expected = CardCreated
-                    .newBuilder()
-                    .setBoard(board())
-                    .setCard(card())
-                    // We call `buildPartial()` instead of `vBuild()` to be able to omit
-                    // the `name` and `description` fields that are `required` in the event.
-                    .buildPartial();
-            assertEvents.message(0)
-                        .ignoringFields(3 /* name */, 4 /* description */)
-                        .isEqualTo(expected);
-        }
-
         @Test
         @DisplayName("as entity with the `Card` state")
         void entity() {
             context().assertEntityWithState(card(), Card.class)
                      .exists();
+        }
+
+        @Test
+        @DisplayName("emitting the `CardCreated` event")
+        void event() {
+            EventSubject assertEvents = assertEvents(CardCreated.class);
+            assertEvents.hasSize(1);
+
+            CardCreated expected =
+                    CardCreated.newBuilder()
+                               .setBoard(board())
+                               .setCard(card())
+                               .buildPartial();
+            assertEvents.message(0)
+                        .comparingExpectedFieldsOnly()
+                        .isEqualTo(expected);
         }
     }
 }

@@ -32,6 +32,7 @@ import io.spine.examples.kanban.ColumnPosition;
 import io.spine.examples.kanban.command.AddColumn;
 import io.spine.examples.kanban.event.BoardCreated;
 import io.spine.examples.kanban.server.KanbanContextTest;
+import io.spine.examples.kanban.server.given.ColumnPositions;
 import io.spine.testing.server.EventSubject;
 import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,7 +43,7 @@ import org.junit.jupiter.api.Test;
 import static io.spine.examples.kanban.rejection.Rejections.ColumnNameAlreadyTaken;
 import static io.spine.testing.TestValues.randomString;
 
-@DisplayName("Kanban Context Board logic should")
+@DisplayName("`Board` should")
 @Ignore("Restore the tests when move card API is defined")
 class BoardTest extends KanbanContextTest {
 
@@ -70,10 +71,9 @@ class BoardTest extends KanbanContextTest {
                                 .setBoard(board())
                                 .build();
 
-            context().assertEvents()
-                     .withType(BoardCreated.class)
-                     .message(0)
-                     .isEqualTo(expected);
+            assertEvents(BoardCreated.class)
+                    .message(0)
+                    .isEqualTo(expected);
         }
     }
 
@@ -86,7 +86,7 @@ class BoardTest extends KanbanContextTest {
         @BeforeEach
         void sendCommands() {
             String name = randomString();
-            ColumnPosition position = columnPosition(
+            ColumnPosition position = ColumnPositions.of(
                     DefaultColumns.count() + 1,
                     DefaultColumns.count() + 1
             );
@@ -97,41 +97,40 @@ class BoardTest extends KanbanContextTest {
                              .setName(name)
                              .setDesiredPosition(position)
                              .vBuild();
-            position = columnPosition(
+            position = ColumnPositions.of(
                     DefaultColumns.count() + 2,
                     DefaultColumns.count() + 2
             );
-            rejectedCommand = AddColumn.newBuilder()
-                                       .setBoard(board())
-                                       .setColumn(ColumnId.generate())
-                                       .setName(name)
-                                       .setDesiredPosition(position)
-                                       .vBuild();
+            rejectedCommand =
+                    AddColumn.newBuilder()
+                             .setBoard(board())
+                             .setColumn(ColumnId.generate())
+                             .setName(name)
+                             .setDesiredPosition(position)
+                             .vBuild();
 
             context().receivesCommand(successfulCommand);
             context().receivesCommand(rejectedCommand);
         }
 
         @Test
-        @DisplayName("by rejecting the addition of the column with a duplicate name")
+        @DisplayName("by rejecting addition of the column with a duplicate name")
         void rejection() {
-            EventSubject assertRejections =
-                    context().assertEvents()
-                             .withType(ColumnNameAlreadyTaken.class);
+            EventSubject assertRejections = assertEvents(ColumnNameAlreadyTaken.class);
             assertRejections.hasSize(1);
 
             ColumnNameAlreadyTaken expected =
-                    ColumnNameAlreadyTaken
-                            .newBuilder()
-                            .setColumn(rejectedCommand.getColumn())
-                            .setName(rejectedCommand.getName())
-                            .build();
-            assertRejections.message(0).isEqualTo(expected);
+                    ColumnNameAlreadyTaken.newBuilder()
+                                          .setColumn(rejectedCommand.getColumn())
+                                          .setName(rejectedCommand.getName())
+                                          .vBuild();
+            assertRejections.message(0)
+                            .isEqualTo(expected);
         }
     }
 
     @Nested
-    @DisplayName("Move card emitting")
+    @DisplayName("move card emitting")
     class MoveCard {
 
         @BeforeEach

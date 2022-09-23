@@ -28,7 +28,6 @@ package io.spine.examples.kanban.server.view;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.truth.extensions.proto.ProtoSubject;
-import io.spine.base.CommandMessage;
 import io.spine.examples.kanban.Card;
 import io.spine.examples.kanban.CardId;
 import io.spine.examples.kanban.Column;
@@ -42,13 +41,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static io.spine.protobuf.AnyPacker.unpack;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static com.google.common.truth.Truth.assertThat;
 
-@DisplayName("BoardProjection should")
+@DisplayName("`BoardProjection` should")
 class BoardProjectionTest extends KanbanContextTest {
 
     private ImmutableList<ColumnId> columns;
@@ -56,25 +53,32 @@ class BoardProjectionTest extends KanbanContextTest {
     private ProtoSubject entityState;
 
     @BeforeEach
-    void initBoard() {
+    void setupBoard() {
         context().receivesCommand(createBoard());
-        columns = commands(AddColumn.class)
+        columns = receivedCommands(AddColumn.class)
                 .map(AddColumn::getColumn)
                 .collect(toImmutableList());
-        cards = commands(CreateCard.class)
+        cards = receivedCommands(CreateCard.class)
                 .map(CreateCard::getCard)
                 .collect(toImmutableList());
         entityState = assertState();
     }
 
+    private ProtoSubject assertState() {
+        return context().assertEntity(board(), BoardProjection.class)
+                        .hasStateThat();
+    }
+
     @Test
     @DisplayName("have the state with the ID of the board")
-    void id() {
+    void entity() {
+        BoardView expected =
+                BoardView.newBuilder()
+                         .setId(board())
+                         .build();
         entityState.isInstanceOf(BoardView.class);
         entityState.comparingExpectedFieldsOnly()
-                   .isEqualTo(BoardView.newBuilder()
-                                       .setId(board())
-                                       .build());
+                   .isEqualTo(expected);
     }
 
     @Test
@@ -84,16 +88,16 @@ class BoardProjectionTest extends KanbanContextTest {
                 columns.stream()
                        .map(c -> Column.newBuilder()
                                        .setId(c)
-                                       .build())
+                                       .buildPartial())
                        .collect(toImmutableList());
 
-        assertFalse(expectedColumns.isEmpty());
+        assertThat(expectedColumns).isNotEmpty();
 
-        BoardView expected = BoardView
-                .newBuilder()
-                .setId(board())
-                .addAllColumn(expectedColumns)
-                .vBuild();
+        BoardView expected =
+                BoardView.newBuilder()
+                         .setId(board())
+                         .addAllColumn(expectedColumns)
+                         .vBuild();
 
         entityState.comparingExpectedFieldsOnly()
                    .isEqualTo(expected);
@@ -106,29 +110,15 @@ class BoardProjectionTest extends KanbanContextTest {
                 cards.stream()
                      .map(c -> Card.newBuilder()
                                    .setId(c)
-                                   .build())
+                                   .buildPartial())
                      .collect(toImmutableList());
-        BoardView expected = BoardView
-                .newBuilder()
-                .setId(board())
-                .addAllCard(expectedCards)
-                .vBuild();
+        BoardView expected =
+                BoardView.newBuilder()
+                         .setId(board())
+                         .addAllCard(expectedCards)
+                         .vBuild();
 
         entityState.comparingExpectedFieldsOnly()
                    .isEqualTo(expected);
-    }
-
-    private ProtoSubject assertState() {
-        return context().assertEntity(board(), BoardProjection.class)
-                        .hasStateThat();
-    }
-
-    private <T extends CommandMessage> Stream<T> commands(Class<T> commandClass) {
-        return context()
-                .assertCommands()
-                .actual()
-                .stream()
-                .filter(c -> c.is(commandClass))
-                .map(c -> unpack(c.getMessage(), commandClass));
     }
 }

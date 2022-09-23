@@ -24,14 +24,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+package io.spine.examples.kanban.server.given;
+
+import io.spine.examples.kanban.ColumnPosition;
+
 /**
- * Test environment classes for testing the
- * {@link io.spine.examples.kanban.server.board} package.
+ * Provides utility methods for {@link ColumnPosition} for testing purposes.
  */
+public final class ColumnPositions {
 
-@CheckReturnValue
-@ParametersAreNonnullByDefault
-package io.spine.examples.kanban.server.board.given;
+    /**
+     * Prevents utility class instantiation.
+     */
+    private ColumnPositions() {
+    }
 
-import com.google.errorprone.annotations.CheckReturnValue;
-import javax.annotation.ParametersAreNonnullByDefault;
+    /**
+     * Creates a column position with the passed index and total number of columns.
+     */
+    public static ColumnPosition of(int index, int ofTotal) {
+        return ColumnPosition
+                .newBuilder()
+                .setIndex(index)
+                .setOfTotal(ofTotal)
+                .vBuild();
+    }
+}
