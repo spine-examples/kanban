@@ -52,10 +52,9 @@ class BoardInitProcessTest extends KanbanContextTest {
     @Test
     @DisplayName("issue addition commands for all default columns")
     void issuesCommands() {
-        CommandSubject issuedCommands = context().assertCommands()
-                                                 .withType(AddColumn.class);
+        CommandSubject assertCommands = assertCommands(AddColumn.class);
         int expectedCount = DefaultColumns.count();
-        issuedCommands.hasSize(expectedCount);
+        assertCommands.hasSize(expectedCount);
 
         ImmutableList<AddColumn> expectedCommands =
                 DefaultColumns.additionCommands(board())
@@ -64,12 +63,11 @@ class BoardInitProcessTest extends KanbanContextTest {
                               .collect(toImmutableList());
 
         for (int i = 0; i < expectedCount; i++) {
-            issuedCommands.message(i)
+            assertCommands.message(i)
                           .comparingExpectedFieldsOnly()
                           .isEqualTo(expectedCommands.get(i));
         }
     }
-
 
     @Test
     @DisplayName("add default columns")
@@ -84,13 +82,9 @@ class BoardInitProcessTest extends KanbanContextTest {
     }
 
     private ImmutableList<Column> expectedColumns() {
-        return context().assertCommands()
-                        .withType(AddColumn.class)
-                        .actual()
-                        .stream()
-                        .map(c -> unpack(c.getMessage(), AddColumn.class))
-                        .map(BoardInitProcessTest::toColumn)
-                        .collect(toImmutableList());
+        return receivedCommands(AddColumn.class)
+                .map(BoardInitProcessTest::toColumn)
+                .collect(toImmutableList());
     }
 
     private static Column toColumn(AddColumn c) {
@@ -105,14 +99,14 @@ class BoardInitProcessTest extends KanbanContextTest {
     @Test
     @DisplayName("emit the `BoardInitialized` event when terminated")
     void emitsEvent() {
-        EventSubject events = context().assertEvents()
-                                       .withType(BoardInitialized.class);
-        events.hasSize(1);
-        BoardInitialized expected = BoardInitialized
-                .newBuilder()
-                .setBoard(board())
-                .vBuild();
-        events.message(0)
+        EventSubject assertEvents = assertEvents(BoardInitialized.class);
+        assertEvents.hasSize(1);
+
+        BoardInitialized expected =
+                BoardInitialized.newBuilder()
+                                .setBoard(board())
+                                .vBuild();
+        assertEvents.message(0)
               .comparingExpectedFieldsOnly()
               .isEqualTo(expected);
     }

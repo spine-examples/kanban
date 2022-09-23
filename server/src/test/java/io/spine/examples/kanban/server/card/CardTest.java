@@ -58,23 +58,19 @@ class CardTest extends KanbanContextTest {
             context().receivesCommand(createCard());
         }
 
-
         @Test
         @DisplayName("generating `CardCreated` event")
         void event() {
-            EventSubject assertEvents =
-                    context().assertEvents()
-                             .withType(CardCreated.class);
+            EventSubject assertEvents = assertEvents(CardCreated.class);
             assertEvents.hasSize(1);
-            CardCreated expected = CardCreated
-                    .newBuilder()
-                    .setBoard(board())
-                    .setCard(card())
-                    // We call `buildPartial()` instead of `vBuild()` to be able to omit
-                    // the `name` and `description` fields that are `required` in the event.
-                    .buildPartial();
+
+            CardCreated expected =
+                    CardCreated.newBuilder()
+                               .setBoard(board())
+                               .setCard(card())
+                               .buildPartial();
             assertEvents.message(0)
-                        .ignoringFields(3 /* name */, 4 /* description */)
+                        .comparingExpectedFieldsOnly()
                         .isEqualTo(expected);
         }
 

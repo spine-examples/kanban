@@ -71,10 +71,9 @@ class BoardTest extends KanbanContextTest {
                                 .setBoard(board())
                                 .build();
 
-            context().assertEvents()
-                     .withType(BoardCreated.class)
-                     .message(0)
-                     .isEqualTo(expected);
+            assertEvents(BoardCreated.class)
+                    .message(0)
+                    .isEqualTo(expected);
         }
     }
 
@@ -102,12 +101,13 @@ class BoardTest extends KanbanContextTest {
                     DefaultColumns.count() + 2,
                     DefaultColumns.count() + 2
             );
-            rejectedCommand = AddColumn.newBuilder()
-                                       .setBoard(board())
-                                       .setColumn(ColumnId.generate())
-                                       .setName(name)
-                                       .setDesiredPosition(position)
-                                       .vBuild();
+            rejectedCommand =
+                    AddColumn.newBuilder()
+                             .setBoard(board())
+                             .setColumn(ColumnId.generate())
+                             .setName(name)
+                             .setDesiredPosition(position)
+                             .vBuild();
 
             context().receivesCommand(successfulCommand);
             context().receivesCommand(rejectedCommand);
@@ -116,18 +116,16 @@ class BoardTest extends KanbanContextTest {
         @Test
         @DisplayName("by rejecting the addition of the column with a duplicate name")
         void rejection() {
-            EventSubject assertRejections =
-                    context().assertEvents()
-                             .withType(ColumnNameAlreadyTaken.class);
+            EventSubject assertRejections = assertEvents(ColumnNameAlreadyTaken.class);
             assertRejections.hasSize(1);
 
             ColumnNameAlreadyTaken expected =
-                    ColumnNameAlreadyTaken
-                            .newBuilder()
-                            .setColumn(rejectedCommand.getColumn())
-                            .setName(rejectedCommand.getName())
-                            .build();
-            assertRejections.message(0).isEqualTo(expected);
+                    ColumnNameAlreadyTaken.newBuilder()
+                                          .setColumn(rejectedCommand.getColumn())
+                                          .setName(rejectedCommand.getName())
+                                          .build();
+            assertRejections.message(0)
+                            .isEqualTo(expected);
         }
     }
 

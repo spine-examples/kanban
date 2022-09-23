@@ -48,20 +48,19 @@ class ColumnAdditionProcessTest extends KanbanContextTest {
         context().assertEntityWithState(column(), Column.class)
                  .exists();
     }
+
     @Test
     @DisplayName("emit the `ColumnAdded` event when terminated")
     void event() {
-        EventSubject assertEvents = context().assertEvents()
-                                             .withType(ColumnAdded.class);
+        EventSubject assertEvents = assertEvents(ColumnAdded.class);
         assertEvents.hasSize(1);
 
-        ColumnAdded expected = ColumnAdded
-                .newBuilder()
-                .setBoard(board())
-                .setColumn(column())
-                .setPosition(defaultPosition())
-                // We call `buildPartial()` instead of `vBuild()` to omit `required` fields.
-                .buildPartial();
+        ColumnAdded expected =
+                ColumnAdded.newBuilder()
+                           .setBoard(board())
+                           .setColumn(column())
+                           .setPosition(defaultPosition())
+                           .buildPartial();
         assertEvents.message(0)
                     .comparingExpectedFieldsOnly()
                     .isEqualTo(expected);

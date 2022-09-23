@@ -26,11 +26,18 @@
 
 package io.spine.examples.kanban.server;
 
+import io.spine.base.CommandMessage;
+import io.spine.base.EventMessage;
+import io.spine.testing.server.CommandSubject;
+import io.spine.testing.server.EventSubject;
 import io.spine.testing.server.blackbox.BlackBoxContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
+import java.util.stream.Stream;
+
 import static com.google.common.base.Preconditions.checkNotNull;
+import static io.spine.protobuf.AnyPacker.unpack;
 
 /**
  * Abstract base for tests in Kanban Bounded Context.
@@ -51,5 +58,35 @@ public abstract class KanbanContextTest extends KanbanTest {
 
     protected BlackBoxContext context() {
         return checkNotNull(context);
+    }
+
+    /**
+     * Check commands of the provided type received by the bounded context during tests.
+     */
+    protected final <T extends CommandMessage> CommandSubject assertCommands(Class<T> commandClass) {
+        return context()
+                .assertCommands()
+                .withType(commandClass);
+    }
+
+    /**
+     * Stream commands of the provided type received by the bounded context during tests.
+     */
+    protected final <T extends CommandMessage> Stream<T> receivedCommands(Class<T> commandClass) {
+        return context()
+                .assertCommands()
+                .withType(commandClass)
+                .actual()
+                .stream()
+                .map(c -> unpack(c.getMessage(), commandClass));
+    }
+
+    /**
+     * Check events of the provided type emitted by the bounded context during tests.
+     */
+    protected final <T extends EventMessage> EventSubject assertEvents(Class<T> eventClass) {
+        return context()
+                .assertEvents()
+                .withType(eventClass);
     }
 }

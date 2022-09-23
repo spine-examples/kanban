@@ -64,16 +64,14 @@ class ColumnTest extends KanbanContextTest {
             int limit = 3;
             context().receivesCommand(setWipLimit(column(), limit));
 
-            EventSubject assertEvents =
-                    context().assertEvents()
-                             .withType(WipLimitSet.class);
-
+            EventSubject assertEvents = assertEvents(WipLimitSet.class);
             assertEvents.hasSize(1);
-            WipLimitSet expected = WipLimitSet
-                    .newBuilder()
-                    .setColumn(column())
-                    .setLimit(WipLimits.of(limit))
-                    .vBuild();
+
+            WipLimitSet expected =
+                    WipLimitSet.newBuilder()
+                               .setColumn(column())
+                               .setLimit(WipLimits.of(limit))
+                               .vBuild();
             assertEvents.message(0)
                         .isEqualTo(expected);
         }
@@ -88,17 +86,15 @@ class ColumnTest extends KanbanContextTest {
             context().receivesCommand(setWipLimit(column, initialLimit))
                      .receivesCommand(setWipLimit(column, updatedLimit));
 
-            EventSubject assertEvents =
-                    context().assertEvents()
-                             .withType(WipLimitChanged.class);
-
+            EventSubject assertEvents = assertEvents(WipLimitChanged.class);
             assertEvents.hasSize(1);
-            WipLimitChanged expected = WipLimitChanged
-                    .newBuilder()
-                    .setColumn(column)
-                    .setPreviousValue(WipLimits.of(initialLimit))
-                    .setNewValue(WipLimits.of(updatedLimit))
-                    .vBuild();
+
+            WipLimitChanged expected =
+                    WipLimitChanged.newBuilder()
+                                   .setColumn(column)
+                                   .setPreviousValue(WipLimits.of(initialLimit))
+                                   .setNewValue(WipLimits.of(updatedLimit))
+                                   .vBuild();
             assertEvents.message(0)
                         .isEqualTo(expected);
         }
@@ -111,16 +107,14 @@ class ColumnTest extends KanbanContextTest {
             context().receivesCommand(setWipLimit(column, initialLimit))
                      .receivesCommand(setWipLimit(column, 0));
 
-            EventSubject assertEvents =
-                    context().assertEvents()
-                             .withType(WipLimitRemoved.class);
-
+            EventSubject assertEvents = assertEvents(WipLimitRemoved.class);
             assertEvents.hasSize(1);
-            WipLimitRemoved expected = WipLimitRemoved
-                    .newBuilder()
-                    .setColumn(column)
-                    .setPreviousLimit(WipLimits.of(initialLimit))
-                    .vBuild();
+
+            WipLimitRemoved expected =
+                    WipLimitRemoved.newBuilder()
+                                   .setColumn(column)
+                                   .setPreviousLimit(WipLimits.of(initialLimit))
+                                   .vBuild();
             assertEvents.message(0)
                         .isEqualTo(expected);
         }
@@ -133,16 +127,14 @@ class ColumnTest extends KanbanContextTest {
             context().receivesCommand(setWipLimit(column, limit))
                      .receivesCommand(setWipLimit(column, limit));
 
-            EventSubject assertEvents =
-                    context().assertEvents()
-                             .withType(WipLimitAlreadySet.class);
-
+            EventSubject assertEvents = assertEvents(WipLimitAlreadySet.class);
             assertEvents.hasSize(1);
-            WipLimitAlreadySet expected = WipLimitAlreadySet
-                    .newBuilder()
-                    .setColumn(column)
-                    .setLimit(WipLimits.of(limit))
-                    .vBuild();
+
+            WipLimitAlreadySet expected =
+                    WipLimitAlreadySet.newBuilder()
+                                      .setColumn(column)
+                                      .setLimit(WipLimits.of(limit))
+                                      .vBuild();
             assertEvents.message(0)
                         .isEqualTo(expected);
         }
@@ -188,19 +180,19 @@ class ColumnTest extends KanbanContextTest {
         @DisplayName("prohibit adding a card when the limit reached")
         void rejection() {
             fillUpToTheLimit();
-            CardId cardToBeRejected = addCard();
-            EventSubject assertRejections =
-                    context().assertEvents()
-                             .withType(WipLimitExceeded.class);
+            CardId rejectedCard = addCard();
+
+            EventSubject assertRejections = assertEvents(WipLimitExceeded.class);
             assertRejections.hasSize(1);
-            WipLimitExceeded expectedRejection = WipLimitExceeded
-                    .newBuilder()
-                    .setColumn(columnWithLimit)
-                    .setCard(cardToBeRejected)
-                    .setLimit(WipLimits.of(LIMIT))
-                    .vBuild();
+
+            WipLimitExceeded expected =
+                    WipLimitExceeded.newBuilder()
+                                    .setColumn(columnWithLimit)
+                                    .setCard(rejectedCard)
+                                    .setLimit(WipLimits.of(LIMIT))
+                                    .vBuild();
             assertRejections.message(0)
-                            .isEqualTo(expectedRejection);
+                            .isEqualTo(expected);
         }
 
         private AddCardToColumn addCardToColumn(CardId card) {
