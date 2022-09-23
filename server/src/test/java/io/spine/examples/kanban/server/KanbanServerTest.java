@@ -39,10 +39,10 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
+import static com.google.common.truth.Truth.assertThat;
 import static io.spine.client.ConnectionConstants.DEFAULT_CLIENT_SERVICE_PORT;
 import static io.spine.examples.kanban.server.given.TestCommands.createBoard;
 import static io.spine.testing.core.given.GivenUserId.newUuid;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /**
@@ -58,7 +58,7 @@ class KanbanServerTest {
     private BoardId boardId;
 
     @BeforeEach
-    void setup(){
+    void setup() {
         server = KanbanServer.create();
         client = new TestClient(newUuid(), HOST, DEFAULT_CLIENT_SERVICE_PORT);
         startServer();
@@ -89,7 +89,7 @@ class KanbanServerTest {
             client.post(createBoard(boardId));
 
             QueryResponse response = client.queryAll(Board.class);
-            assertEquals(1, response.getMessageCount());
+            assertThat(response.getMessageCount()).isEqualTo(1);
         }
     }
 }

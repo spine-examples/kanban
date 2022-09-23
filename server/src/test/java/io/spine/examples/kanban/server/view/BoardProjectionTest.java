@@ -45,8 +45,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.truth.Truth.assertThat;
 import static io.spine.protobuf.AnyPacker.unpack;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @DisplayName("BoardProjection should")
 class BoardProjectionTest extends KanbanContextTest {
@@ -87,7 +87,7 @@ class BoardProjectionTest extends KanbanContextTest {
                                        .build())
                        .collect(toImmutableList());
 
-        assertFalse(expectedColumns.isEmpty());
+        assertThat(expectedColumns).isNotEmpty();
 
         BoardView expected = BoardView
                 .newBuilder()
