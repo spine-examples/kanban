@@ -38,7 +38,7 @@ import org.junit.jupiter.api.Test;
 class ColumnAdditionProcessTest extends KanbanContextTest {
 
     @BeforeEach
-    void setup() {
+    void setupColumn() {
         context().receivesCommand(addColumn());
     }
 

@@ -141,7 +141,7 @@ class ColumnTest extends KanbanContextTest {
         private ColumnId columnWithLimit;
 
         @BeforeEach
-        void initColumn() {
+        void setupColumnWithLimit() {
             columnWithLimit = ColumnId.generate();
             context().receivesCommand(addColumn(columnWithLimit))
                      .receivesCommand(setWipLimit(columnWithLimit, limit));

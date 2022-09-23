@@ -53,7 +53,7 @@ class BoardProjectionTest extends KanbanContextTest {
     private ProtoSubject entityState;
 
     @BeforeEach
-    void initBoard() {
+    void setupBoard() {
         context().receivesCommand(createBoard());
         columns = receivedCommands(AddColumn.class)
                 .map(AddColumn::getColumn)
@@ -66,7 +66,7 @@ class BoardProjectionTest extends KanbanContextTest {
 
     @Test
     @DisplayName("have the state with the ID of the board")
-    void id() {
+    void entity() {
         BoardView expected =
                 BoardView.newBuilder()
                          .setId(board())

@@ -44,7 +44,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 class BoardInitProcessTest extends KanbanContextTest {
 
     @BeforeEach
-    void sendCommand() {
+    void setupBoard() {
         context().receivesCommand(createBoard());
     }
 
