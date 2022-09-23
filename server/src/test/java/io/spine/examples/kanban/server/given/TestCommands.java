@@ -30,6 +30,7 @@ import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.CardId;
 import io.spine.examples.kanban.ColumnId;
 import io.spine.examples.kanban.ColumnPosition;
+import io.spine.examples.kanban.WipLimit;
 import io.spine.examples.kanban.command.AddColumn;
 import io.spine.examples.kanban.command.CreateBoard;
 import io.spine.examples.kanban.command.CreateCard;
@@ -90,11 +91,11 @@ public final class TestCommands {
     /**
      * Set the WIP limit for the column.
      */
-    public static SetWipLimit setWipLimit(ColumnId column, int limit) {
+    public static SetWipLimit setWipLimit(ColumnId column, WipLimit limit) {
         return SetWipLimit
                 .newBuilder()
                 .setColumn(column)
-                .setLimit(WipLimits.of(limit))
+                .setLimit(limit)
                 .vBuild();
     }
 }

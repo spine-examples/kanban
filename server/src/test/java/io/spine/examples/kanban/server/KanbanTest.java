@@ -95,7 +95,7 @@ public abstract class KanbanTest {
         return TestCommands.createCard(board, card);
     }
 
-    protected static SetWipLimit setWipLimit(ColumnId column, int limit) {
+    protected static SetWipLimit setWipLimit(ColumnId column, WipLimit limit) {
         return TestCommands.setWipLimit(column, limit);
     }
 }
