@@ -31,7 +31,7 @@ import io.spine.examples.kanban.WipLimit;
 /**
  * Provides utility methods for {@link WipLimit} for testing purposes.
  */
-public class WipLimits {
+public final class WipLimits {
 
     /**
      * Prevents utility class instantiation.

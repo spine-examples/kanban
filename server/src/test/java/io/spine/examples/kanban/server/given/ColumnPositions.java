@@ -31,7 +31,7 @@ import io.spine.examples.kanban.ColumnPosition;
 /**
  * Provides utility methods for {@link ColumnPosition} for testing purposes.
  */
-public class ColumnPositions {
+public final class ColumnPositions {
 
     /**
      * Prevents utility class instantiation.
