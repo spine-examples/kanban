@@ -64,6 +64,11 @@ class BoardProjectionTest extends KanbanContextTest {
         entityState = assertState();
     }
 
+    private ProtoSubject assertState() {
+        return context().assertEntity(board(), BoardProjection.class)
+                        .hasStateThat();
+    }
+
     @Test
     @DisplayName("have the state with the ID of the board")
     void entity() {
@@ -115,10 +120,5 @@ class BoardProjectionTest extends KanbanContextTest {
 
         entityState.comparingExpectedFieldsOnly()
                    .isEqualTo(expected);
-    }
-
-    private ProtoSubject assertState() {
-        return context().assertEntity(board(), BoardProjection.class)
-                        .hasStateThat();
     }
 }
