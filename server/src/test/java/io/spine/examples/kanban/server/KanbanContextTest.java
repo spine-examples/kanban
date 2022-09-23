@@ -61,7 +61,7 @@ public abstract class KanbanContextTest extends KanbanTest {
     }
 
     /**
-     * Check commands of the provided type received by the bounded context during tests.
+     * Checks for commands of the provided type received by the bounded context under the test.
      */
     protected final <T extends CommandMessage> CommandSubject assertCommands(Class<T> commandClass) {
         return context()
@@ -70,7 +70,7 @@ public abstract class KanbanContextTest extends KanbanTest {
     }
 
     /**
-     * Stream commands of the provided type received by the bounded context during tests.
+     * Streams commands of the provided type received by the bounded context during tests.
      */
     protected final <T extends CommandMessage> Stream<T> receivedCommands(Class<T> commandClass) {
         return context()
@@ -82,7 +82,7 @@ public abstract class KanbanContextTest extends KanbanTest {
     }
 
     /**
-     * Check events of the provided type emitted by the bounded context during tests.
+     * Checks for events of the provided type emitted by the bounded context under the test.
      */
     protected final <T extends EventMessage> EventSubject assertEvents(Class<T> eventClass) {
         return context()

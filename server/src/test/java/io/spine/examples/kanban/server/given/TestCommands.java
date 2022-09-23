@@ -39,18 +39,18 @@ import io.spine.examples.kanban.command.SetWipLimit;
 import static io.spine.testing.TestValues.randomString;
 
 /**
- * Static factories for test command messages.
+ * Provides factory methods for test commands.
  */
 public final class TestCommands {
 
     /**
-     * Prevents instantiation.
+     * Prevents utility class instantiation.
      */
     private TestCommands() {
     }
 
     /**
-     * Create a board with the passed ID.
+     * Creates the {@link CreateBoard} command with the provided board ID.
      */
     public static CreateBoard createBoard(BoardId board) {
         return CreateBoard
@@ -60,7 +60,8 @@ public final class TestCommands {
     }
 
     /**
-     * Add the column to the board.
+     * Creates the {@link AddColumn} command with the provided board ID,
+     * column ID, position and a generated column name.
      */
     public static AddColumn addColumn(
             BoardId board,
@@ -71,25 +72,27 @@ public final class TestCommands {
                 .newBuilder()
                 .setBoard(board)
                 .setColumn(column)
-                .setName("Generated column" + randomString())
+                .setName(randomString())
                 .setDesiredPosition(columnPosition)
                 .vBuild();
     }
 
     /**
-     * Create the card on the specified board.
+     * Creates the {@link CreateCard} command with the provided board ID,
+     * card ID and a generated card name.
      */
     public static CreateCard createCard(BoardId board, CardId card) {
         return CreateCard
                 .newBuilder()
                 .setCard(card)
                 .setBoard(board)
-                .setName("Generated card " + randomString())
+                .setName(randomString())
                 .vBuild();
     }
 
     /**
-     * Set the WIP limit for the column.
+     * Creates the {@link SetWipLimit} command with the provided column ID
+     * and WIP limit.
      */
     public static SetWipLimit setWipLimit(ColumnId column, WipLimit limit) {
         return SetWipLimit
