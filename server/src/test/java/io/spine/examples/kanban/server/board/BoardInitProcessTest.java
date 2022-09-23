@@ -39,7 +39,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static io.spine.protobuf.AnyPacker.unpack;
 
 @DisplayName("BoardInitProcess should")
 class BoardInitProcessTest extends KanbanContextTest {
@@ -72,19 +71,9 @@ class BoardInitProcessTest extends KanbanContextTest {
     @Test
     @DisplayName("add default columns")
     void addsColumns() {
-        ImmutableList<Column> expectedColumns = expectedColumns();
-        expectedColumns.forEach(
-                c -> context().assertEntityWithState(c.getId(), Column.class)
-                              .hasStateThat()
-                              .comparingExpectedFieldsOnly()
-                              .isEqualTo(c)
-        );
-    }
-
-    private ImmutableList<Column> expectedColumns() {
-        return receivedCommands(AddColumn.class)
+        receivedCommands(AddColumn.class)
                 .map(BoardInitProcessTest::toColumn)
-                .collect(toImmutableList());
+                .forEach(this::assertColumnExists);
     }
 
     private static Column toColumn(AddColumn c) {
@@ -95,6 +84,15 @@ class BoardInitProcessTest extends KanbanContextTest {
                 .setName(c.getName())
                 .vBuild();
     }
+
+    private void assertColumnExists(Column column) {
+        context().assertEntityWithState(column.getId(), Column.class)
+                 .hasStateThat()
+                 .comparingExpectedFieldsOnly()
+                 .isEqualTo(column);
+    }
+
+
 
     @Test
     @DisplayName("emit the `BoardInitialized` event when terminated")
@@ -107,8 +105,8 @@ class BoardInitProcessTest extends KanbanContextTest {
                                 .setBoard(board())
                                 .vBuild();
         assertEvents.message(0)
-              .comparingExpectedFieldsOnly()
-              .isEqualTo(expected);
+                    .comparingExpectedFieldsOnly()
+                    .isEqualTo(expected);
     }
 
     @Test
