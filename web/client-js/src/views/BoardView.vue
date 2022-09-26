@@ -24,7 +24,7 @@
 import { defineComponent } from "vue";
 import KanbanColumn from "@/components/KanbanColumn.vue";
 import { mapState, mapActions } from "vuex";
-import { Action } from "@/store/types";
+import { Action, BOARD } from "@/store/board/types";
 import AddColumnForm from "@/components/AddColumnForm.vue";
 
 /**
@@ -39,10 +39,10 @@ export default defineComponent({
     };
   },
   computed: {
-    ...mapState(["board"]),
+    ...mapState(BOARD, ["board"]),
   },
   methods: {
-    ...mapActions([Action.CREATE_BOARD]),
+    ...mapActions(BOARD, [Action.CREATE_BOARD]),
     openAddColumnForm() {
       this.addColumnFormOpened = true;
     },

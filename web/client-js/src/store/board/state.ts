@@ -24,16 +24,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { createStore } from "vuex";
-import { RootState } from "@/store/root/types";
-import { BOARD } from "@/store/board/types";
-import board from "@/store/board";
+import { BoardState } from "@/store/board/types";
 
 /**
- * The Vuex store for the Kanban web application.
+ * The local state of the Kanban board.
  */
-export default createStore<RootState>({
-  modules: {
-    [BOARD]: board,
-  },
-});
+const state: BoardState = {
+  board: null,
+};
+
+export default state;

@@ -29,9 +29,10 @@ import {
   Action,
   BoardCreated,
   ColumnAdded,
-  KanbanState,
+  BoardState,
   Mutation,
-} from "@/store/types";
+} from "@/store/board/types";
+import { RootState } from "@/store/root/types";
 import { client } from "@/dependency/container";
 import { AnyPacker } from "spine-web/client/any-packer";
 import { Type } from "spine-web/client/typed-message";
@@ -42,8 +43,8 @@ import { v4 as newUuid } from "uuid";
  * Exposes possible interactions with the Kanban web server, e.g.
  * send a command and subscribe to produced events.
  */
-const actions: ActionTree<KanbanState, any> = {
-  [Action.CREATE_BOARD]: (ctx: ActionContext<KanbanState, any>): void => {
+const actions: ActionTree<BoardState, RootState> = {
+  [Action.CREATE_BOARD]: (ctx: ActionContext<BoardState, RootState>): void => {
     client
       .subscribeToEvent(proto.spine_examples.kanban.BoardCreated)
       .post()
@@ -77,7 +78,7 @@ const actions: ActionTree<KanbanState, any> = {
     client.command(command).post();
   },
   [Action.ADD_COLUMN]: (
-    ctx: ActionContext<KanbanState, any>,
+    ctx: ActionContext<BoardState, RootState>,
     name: string
   ): void => {
     const command = new proto.spine_examples.kanban.AddColumn();

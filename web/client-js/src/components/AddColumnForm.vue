@@ -8,7 +8,7 @@
 
 <script>
 import { defineComponent } from "vue";
-import { Action } from "@/store/types";
+import { Action, BOARD } from "@/store/board/types";
 
 /**
  * Displays the form to add a new column.
@@ -23,7 +23,7 @@ export default defineComponent({
   methods: {
     submit() {
       if (this.name.length > 0) {
-        this.$store.dispatch(Action.ADD_COLUMN, this.name);
+        this.$store.dispatch(`${BOARD}/${Action.ADD_COLUMN}`, this.name);
         this.close();
       }
     },

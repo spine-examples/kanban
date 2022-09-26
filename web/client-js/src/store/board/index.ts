@@ -24,30 +24,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { MutationTree } from "vuex";
-import {
-  Mutation,
-  KanbanState,
-  BoardCreated,
-  ColumnAdded,
-} from "@/store/types";
+import { Module } from "vuex";
+import { BoardState } from "./types";
+import { RootState } from "@/store/root/types";
+import state from "@/store/board/state";
+import mutations from "@/store/board/mutations";
+import actions from "@/store/board/actions";
+
+const namespaced = true;
 
 /**
- * Exposes mutations of the local {@plain KanbanState state}.
+ * The Vuex store module with Kanban board.
  */
-const mutations: MutationTree<KanbanState> = {
-  [Mutation.BOARD_CREATED]: (state: KanbanState, e: BoardCreated): void => {
-    state.board = new proto.spine_examples.kanban.BoardView();
-    state.board.setId(e.getBoard());
-  },
-  [Mutation.COLUMN_ADDED]: (state: KanbanState, e: ColumnAdded): void => {
-    const column = new proto.spine_examples.kanban.Column();
-    column.setId(e.getColumn());
-    column.setBoard(e.getBoard());
-    column.setName(e.getName());
-    column.setPosition(e.getPosition());
-    state.board!.addColumn(column);
-  },
+const board: Module<BoardState, RootState> = {
+  namespaced,
+  state,
+  mutations,
+  actions,
 };
 
-export default mutations;
+export default board;

@@ -24,13 +24,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { KanbanState } from "@/store/types";
+import { MutationTree } from "vuex";
+import {
+  Mutation,
+  BoardState,
+  BoardCreated,
+  ColumnAdded,
+} from "@/store/board/types";
 
 /**
- * The local state of the Kanban web application.
+ * Exposes mutations of the local {@linkplain BoardState Kanban board}.
  */
-const state: KanbanState = {
-  board: null,
+const mutations: MutationTree<BoardState> = {
+  [Mutation.BOARD_CREATED]: (state: BoardState, e: BoardCreated): void => {
+    state.board = new proto.spine_examples.kanban.BoardView();
+    state.board.setId(e.getBoard());
+  },
+  [Mutation.COLUMN_ADDED]: (state: BoardState, e: ColumnAdded): void => {
+    const column = new proto.spine_examples.kanban.Column();
+    column.setId(e.getColumn());
+    column.setBoard(e.getBoard());
+    column.setName(e.getName());
+    column.setPosition(e.getPosition());
+    state.board!.addColumn(column);
+  },
 };
 
-export default state;
+export default mutations;
