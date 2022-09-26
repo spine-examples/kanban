@@ -24,8 +24,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { ActionContext } from 'vuex';
-import {RootState} from "@/store/root/types";
+import { ActionContext } from "vuex";
+import { RootState } from "@/store/root/types";
 
 /**
  * Abstract base for Vuex actions.
@@ -38,7 +38,6 @@ import {RootState} from "@/store/root/types";
  *         the return type of the action
  */
 export default abstract class Action<S, P, R> {
-
   private readonly actionContext: ActionContext<S, RootState>;
   private readonly payload: P | null;
 

@@ -23,7 +23,9 @@ export default defineComponent({
   methods: {
     submit() {
       if (this.name.length > 0) {
-        this.$store.dispatch(`${BOARD}/${Action.ADD_COLUMN}`, this.name);
+        this.$store.dispatch(`${BOARD}/${Action.ADD_COLUMN}`, {
+          name: this.name,
+        });
         this.close();
       }
     },
