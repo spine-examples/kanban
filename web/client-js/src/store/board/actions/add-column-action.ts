@@ -36,7 +36,7 @@ import { RootState } from "@/store/root/types";
  *
  * <p> Contains the name of a new column.
  */
-export type AddColumnPayload = {
+export type AddColumnActionPayload = {
   name: string;
 };
 
@@ -46,7 +46,10 @@ type AddColumn = proto.spine_examples.kanban.AddColumn;
 /**
  * Adds a column.
  */
-export default class AddColumnAction extends BoardAction<AddColumnPayload, void> {
+export default class AddColumnAction extends BoardAction<
+  AddColumnActionPayload,
+  void
+> {
   /**
    * Sends the command to add a column.
    *
@@ -90,7 +93,7 @@ export default class AddColumnAction extends BoardAction<AddColumnPayload, void>
   public static handler(): ActionHandler<BoardState, RootState> {
     return (
       ctx: ActionContext<BoardState, RootState>,
-      p: AddColumnPayload
+      p: AddColumnActionPayload
     ): void => {
       new AddColumnAction(ctx, p).execute();
     };
