@@ -6,9 +6,11 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from "vue";
 import { Action, BOARD } from "@/store/board/types";
+import { AddColumnActionPayload } from "@/store/board/actions/add-column-action";
+import store from "@/store";
 
 /**
  * Displays the form to add a new column.
@@ -23,9 +25,10 @@ export default defineComponent({
   methods: {
     submit() {
       if (this.name.length > 0) {
-        this.$store.dispatch(`${BOARD}/${Action.ADD_COLUMN}`, {
+        const payload: AddColumnActionPayload = {
           name: this.name,
-        });
+        };
+        store.dispatch(`${BOARD}/${Action.ADD_COLUMN}`, payload);
         this.close();
       }
     },
