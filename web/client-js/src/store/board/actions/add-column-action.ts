@@ -62,7 +62,8 @@ export default class AddColumnAction extends BoardAction<
   }
 
   /**
-   * Assembles the {@link AddColumn} command.
+   * Assembles the {@link AddColumn} command using the provided payload and local
+   * board state.
    * @private
    */
   private command(): AddColumn {
@@ -88,9 +89,9 @@ export default class AddColumnAction extends BoardAction<
   }
 
   /**
-   * Creates an {@link ActionHandler} to be used by the store.
+   * Creates the {@link ActionHandler} to be used by the store.
    */
-  public static handler(): ActionHandler<BoardState, RootState> {
+  public static newHandler(): ActionHandler<BoardState, RootState> {
     return (
       ctx: ActionContext<BoardState, RootState>,
       p: AddColumnActionPayload

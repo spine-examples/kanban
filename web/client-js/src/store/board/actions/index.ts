@@ -34,8 +34,8 @@ import AddColumnAction from "@/store/board/actions/add-column-action";
  * Exposes interactions with the remote board state.
  */
 const actions: ActionTree<BoardState, RootState> = {
-  [Action.CREATE_BOARD]: CreateBoardAction.handler(),
-  [Action.ADD_COLUMN]: AddColumnAction.handler(),
+  [Action.CREATE_BOARD]: CreateBoardAction.newHandler(),
+  [Action.ADD_COLUMN]: AddColumnAction.newHandler(),
 };
 
 export default actions;

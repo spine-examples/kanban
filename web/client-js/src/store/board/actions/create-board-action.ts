@@ -98,7 +98,7 @@ export default class CreateBoardAction extends BoardAction<null, void> {
   }
 
   /**
-   * Assembles a {@link CreateBoard} command.
+   * Assembles the {@link CreateBoard} command.
    * @private
    */
   private command(): CreateBoard {
@@ -108,9 +108,9 @@ export default class CreateBoardAction extends BoardAction<null, void> {
   }
 
   /**
-   * Creates an {@link ActionHandler} to be used by the store.
+   * Creates the {@link ActionHandler} to be used by the store.
    */
-  public static handler(): ActionHandler<BoardState, RootState> {
+  public static newHandler(): ActionHandler<BoardState, RootState> {
     return (ctx: ActionContext<BoardState, RootState>, p: null): void => {
       new CreateBoardAction(ctx, p).execute();
     };

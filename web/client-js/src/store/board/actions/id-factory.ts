@@ -31,7 +31,7 @@ import { v4 as newUuid } from "uuid";
  */
 
 /**
- * Creates a {@linkplain ColumnId}.
+ * Creates a {@code proto.spine_examples.kanban.ColumnId}.
  */
 export function newColumnId() {
   const id = new proto.spine_examples.kanban.ColumnId();
@@ -40,7 +40,7 @@ export function newColumnId() {
 }
 
 /**
- * Creates a {@linkplain BoardId}.
+ * Creates a {@code proto.spine_examples.kanban.BoardId}.
  */
 export function newBoardId() {
   const id = new proto.spine_examples.kanban.BoardId();

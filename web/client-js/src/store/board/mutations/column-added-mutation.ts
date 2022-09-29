@@ -33,10 +33,12 @@ import { BoardState, ColumnAdded } from "@/store/board/types";
  */
 export default class ColumnAddedMutation {
   /**
-   * Adds the column extracted from the {@link ColumnAdded} event to the board stored
+   * Creates the mutation handler to be used by the store.
+   *
+   * <p> Adds the column extracted from the {@link ColumnAdded} event to the board stored
    * in the {@linkplain BoardState local state}.
    */
-  public static handler(): Mutation<BoardState> {
+  public static newHandler(): Mutation<BoardState> {
     return (s: BoardState, e: ColumnAdded) => {
       const column = new proto.spine_examples.kanban.Column();
       column.setId(e.getColumn());

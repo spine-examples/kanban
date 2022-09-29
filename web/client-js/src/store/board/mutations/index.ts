@@ -33,8 +33,8 @@ import ColumnAddedMutation from "@/store/board/mutations/column-added-mutation";
  * Exposes mutations of the local {@linkplain BoardState board state}.
  */
 const mutations: MutationTree<BoardState> = {
-  [Mutation.BOARD_CREATED]: BoardCreatedMutation.handler(),
-  [Mutation.COLUMN_ADDED]: ColumnAddedMutation.handler(),
+  [Mutation.BOARD_CREATED]: BoardCreatedMutation.newHandler(),
+  [Mutation.COLUMN_ADDED]: ColumnAddedMutation.newHandler(),
 };
 
 export default mutations;

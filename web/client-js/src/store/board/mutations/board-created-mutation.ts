@@ -33,10 +33,12 @@ import { BoardCreated, BoardState } from "@/store/board/types";
  */
 export default class BoardCreatedMutation {
   /**
-   * Adds the board extracted from the {@link BoardCreated} event to the
+   * Creates the mutation handler to be used by the store.
+   *
+   * <p> Adds the board extracted from the {@link BoardCreated} event to the
    * {@linkplain BoardState local state}.
    */
-  public static handler(): Mutation<BoardState> {
+  public static newHandler(): Mutation<BoardState> {
     return (s: BoardState, e: BoardCreated) => {
       s.board = new proto.spine_examples.kanban.BoardView();
       s.board.setId(e.getBoard());

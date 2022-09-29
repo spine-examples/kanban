@@ -55,9 +55,7 @@ export default abstract class Action<S, P, R> {
   }
 
   /**
-   * Executes action.
-   *
-   * <p> Must be overridden by specific actions.
+   * Executes the action.
    * @abstract
    * @protected
    */
