@@ -25,11 +25,6 @@
  */
 
 /**
- * Module name.
- */
-export const BOARD = "BOARD";
-
-/**
  * Aliases for frequently used types.
  */
 

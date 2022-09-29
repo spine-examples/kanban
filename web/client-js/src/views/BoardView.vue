@@ -24,7 +24,8 @@
 import { defineComponent } from "vue";
 import KanbanColumn from "@/components/KanbanColumn.vue";
 import { mapState, mapActions } from "vuex";
-import { Action, BOARD } from "@/store/board/types";
+import { BOARD } from "@/store/board";
+import { Action } from "@/store/board/types";
 import AddColumnForm from "@/components/AddColumnForm.vue";
 
 /**

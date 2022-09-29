@@ -44,3 +44,8 @@ const board: Module<BoardState, RootState> = {
 };
 
 export default board;
+
+/**
+ * Module name.
+ */
+export const BOARD = "BOARD";

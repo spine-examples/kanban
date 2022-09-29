@@ -26,8 +26,7 @@
 
 import { createStore } from "vuex";
 import { RootState } from "@/store/root/types";
-import { BOARD } from "@/store/board/types";
-import board from "@/store/board";
+import board, { BOARD } from "@/store/board";
 
 /**
  * The Vuex store for the Kanban web application.
