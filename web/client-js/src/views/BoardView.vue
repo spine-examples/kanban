@@ -21,12 +21,14 @@
 </template>
 
 <script lang="ts">
+import { createNamespacedHelpers } from "vuex";
+import Board from "@/store/board";
 import { defineComponent } from "vue";
-import KanbanColumn from "@/components/KanbanColumn.vue";
-import { mapState, mapActions } from "vuex";
-import { BOARD } from "@/store/board";
-import { Action } from "@/store/board/types";
 import AddColumnForm from "@/components/AddColumnForm.vue";
+import KanbanColumn from "@/components/KanbanColumn.vue";
+import { Action } from "@/store/board/types";
+
+const { mapState, mapActions } = createNamespacedHelpers(Board.MODULE_NAME);
 
 /**
  * Displays the Kanban board.
@@ -40,10 +42,10 @@ export default defineComponent({
     };
   },
   computed: {
-    ...mapState(BOARD, ["board"]),
+    ...mapState(["board"]),
   },
   methods: {
-    ...mapActions(BOARD, [Action.CREATE_BOARD]),
+    ...mapActions([Action.CREATE_BOARD]),
     openAddColumnForm() {
       this.addColumnFormOpened = true;
     },

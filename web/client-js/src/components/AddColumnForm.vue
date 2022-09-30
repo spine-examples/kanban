@@ -7,10 +7,13 @@
 </template>
 
 <script lang="ts">
+import { createNamespacedHelpers } from "vuex";
+import Board from "@/store/board";
 import { defineComponent } from "vue";
-import { Action, BOARD } from "@/store/board/types";
+import { Action } from "@/store/board/types";
 import { AddColumnActionPayload } from "@/store/board/actions/add-column-action";
-import store from "@/store";
+
+const { mapActions } = createNamespacedHelpers(Board.MODULE_NAME);
 
 /**
  * Displays the form to add a new column.
@@ -23,12 +26,15 @@ export default defineComponent({
     };
   },
   methods: {
+    ...mapActions({
+      addColumn: Action.ADD_COLUMN,
+    }),
     submit() {
       if (this.name.length > 0) {
         const payload: AddColumnActionPayload = {
           name: this.name,
         };
-        store.dispatch(`${BOARD}/${Action.ADD_COLUMN}`, payload);
+        this.addColumn(payload);
         this.close();
       }
     },

@@ -31,21 +31,22 @@ import state from "@/store/board/state";
 import mutations from "@/store/board/mutations";
 import actions from "@/store/board/actions";
 
-const namespaced = true;
-
 /**
  * The Vuex store module with Kanban board.
  */
-const board: Module<BoardState, RootState> = {
-  namespaced,
-  state,
-  mutations,
-  actions,
-};
+export default class {
+  /**
+   * The name of the module.
+   */
+  public static MODULE_NAME = "BOARD";
 
-export default board;
-
-/**
- * Module name.
- */
-export const BOARD = "BOARD";
+  /**
+   * Vuex module definition.
+   */
+  public static MODULE: Module<BoardState, RootState> = {
+    namespaced: true,
+    state,
+    mutations,
+    actions,
+  };
+}
