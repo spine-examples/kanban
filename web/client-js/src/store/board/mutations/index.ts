@@ -25,29 +25,16 @@
  */
 
 import { MutationTree } from "vuex";
-import {
-  Mutation,
-  KanbanState,
-  BoardCreated,
-  ColumnAdded,
-} from "@/store/types";
+import { BoardState, Mutation } from "@/store/board/types";
+import BoardCreatedMutation from "@/store/board/mutations/board-created-mutation";
+import ColumnAddedMutation from "@/store/board/mutations/column-added-mutation";
 
 /**
- * Exposes mutations of the local {@plain KanbanState state}.
+ * Exposes mutations of the local {@linkplain BoardState board state}.
  */
-const mutations: MutationTree<KanbanState> = {
-  [Mutation.BOARD_CREATED]: (state: KanbanState, e: BoardCreated): void => {
-    state.board = new proto.spine_examples.kanban.BoardView();
-    state.board.setId(e.getBoard());
-  },
-  [Mutation.COLUMN_ADDED]: (state: KanbanState, e: ColumnAdded): void => {
-    const column = new proto.spine_examples.kanban.Column();
-    column.setId(e.getColumn());
-    column.setBoard(e.getBoard());
-    column.setName(e.getName());
-    column.setPosition(e.getPosition());
-    state.board!.addColumn(column);
-  },
+const mutations: MutationTree<BoardState> = {
+  [Mutation.BOARD_CREATED]: BoardCreatedMutation.newHandler(),
+  [Mutation.COLUMN_ADDED]: ColumnAddedMutation.newHandler(),
 };
 
 export default mutations;

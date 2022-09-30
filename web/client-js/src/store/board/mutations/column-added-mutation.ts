@@ -24,15 +24,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { createStore } from "vuex";
-import { RootState } from "@/store/root/types";
-import Board from "@/store/board";
+import { Mutation } from "vuex";
+import { BoardState, ColumnAdded } from "@/store/board/types";
 
 /**
- * The Vuex store for the Kanban web application.
+ * Mutates the local {@linkplain BoardState board state} in response
+ * to the {@link ColumnAdded} event.
  */
-export default createStore<RootState>({
-  modules: {
-    [Board.MODULE_NAME]: Board.MODULE,
-  },
-});
+export default class ColumnAddedMutation {
+  /**
+   * Creates the mutation handler to be used by the store.
+   *
+   * <p> Adds the column extracted from the {@link ColumnAdded} event to the board stored
+   * in the {@linkplain BoardState local state}.
+   */
+  public static newHandler(): Mutation<BoardState> {
+    return (s: BoardState, e: ColumnAdded) => {
+      const column = new proto.spine_examples.kanban.Column();
+      column.setId(e.getColumn());
+      column.setBoard(e.getBoard());
+      column.setName(e.getName());
+      column.setPosition(e.getPosition());
+      s.board!.addColumn(column);
+    };
+  }
+}

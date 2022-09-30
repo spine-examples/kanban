@@ -24,15 +24,58 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { createStore } from "vuex";
+import { ActionContext } from "vuex";
 import { RootState } from "@/store/root/types";
-import Board from "@/store/board";
 
 /**
- * The Vuex store for the Kanban web application.
+ * Abstract base for Vuex actions.
+ *
+ * @param S
+ *         the state of the module where the action belongs to
+ * @param P
+ *         the payload that is provided to the action
+ * @param R
+ *         the return type of the action
  */
-export default createStore<RootState>({
-  modules: {
-    [Board.MODULE_NAME]: Board.MODULE,
-  },
-});
+export default abstract class Action<S, P, R> {
+  private readonly actionContext: ActionContext<S, RootState>;
+  private readonly payload: P | null;
+
+  /**
+   * Creates a new instance of the action with the provided {@link ActionContext}
+   * and payload.
+   *
+   * @param ctx the context of the action that contains reference to the store
+   * @param payload the data needed for the action to execute
+   * @protected
+   */
+  protected constructor(ctx: ActionContext<S, RootState>, payload: P | null) {
+    this.actionContext = ctx;
+    this.payload = payload;
+  }
+
+  /**
+   * Executes the action.
+   * @abstract
+   * @protected
+   */
+  protected abstract execute(): R;
+
+  /**
+   * Returns the action's context.
+   * @protected
+   */
+  protected getActionContext(): ActionContext<S, RootState> {
+    return this.actionContext;
+  }
+
+  /**
+   * Returns the action's payload.
+   *
+   * @return payload or `null` if the action has no payload.
+   * @protected
+   */
+  protected getPayload(): P | null {
+    return this.payload;
+  }
+}

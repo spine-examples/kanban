@@ -24,15 +24,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { createStore } from "vuex";
-import { RootState } from "@/store/root/types";
-import Board from "@/store/board";
+import { v4 as newUuid } from "uuid";
 
 /**
- * The Vuex store for the Kanban web application.
+ * Factory methods for IDs.
  */
-export default createStore<RootState>({
-  modules: {
-    [Board.MODULE_NAME]: Board.MODULE,
-  },
-});
+
+/**
+ * Creates a {@code proto.spine_examples.kanban.ColumnId}.
+ */
+export function newColumnId() {
+  const id = new proto.spine_examples.kanban.ColumnId();
+  id.setUuid(newUuid());
+  return id;
+}
+
+/**
+ * Creates a {@code proto.spine_examples.kanban.BoardId}.
+ */
+export function newBoardId() {
+  const id = new proto.spine_examples.kanban.BoardId();
+  id.setUuid(newUuid());
+  return id;
+}

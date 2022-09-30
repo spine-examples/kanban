@@ -24,15 +24,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { createStore } from "vuex";
+import { ActionTree } from "vuex";
+import { Action, BoardState } from "@/store/board/types";
 import { RootState } from "@/store/root/types";
-import Board from "@/store/board";
+import CreateBoardAction from "@/store/board/actions/create-board-action";
+import AddColumnAction from "@/store/board/actions/add-column-action";
 
 /**
- * The Vuex store for the Kanban web application.
+ * Exposes interactions with the remote board state.
  */
-export default createStore<RootState>({
-  modules: {
-    [Board.MODULE_NAME]: Board.MODULE,
-  },
-});
+const actions: ActionTree<BoardState, RootState> = {
+  [Action.CREATE_BOARD]: CreateBoardAction.newHandler(),
+  [Action.ADD_COLUMN]: AddColumnAction.newHandler(),
+};
+
+export default actions;

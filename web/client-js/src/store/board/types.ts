@@ -25,7 +25,11 @@
  */
 
 /**
- * An alias for the {@code proto.spine_examples.kanban.BoardView} event.
+ * Aliases for frequently used types.
+ */
+
+/**
+ * An alias for the {@code proto.spine_examples.kanban.BoardView} projection.
  */
 export type Board = proto.spine_examples.kanban.BoardView;
 
@@ -40,14 +44,14 @@ export type BoardCreated = proto.spine_examples.kanban.BoardCreated;
 export type ColumnAdded = proto.spine_examples.kanban.ColumnAdded;
 
 /**
- * The local state of the Kanban web application.
+ * The local state of the Kanban board.
  */
-export interface KanbanState {
+export interface BoardState {
   board: Board | null;
 }
 
 /**
- * Exposes mutations of the local {@plain KanbanState state}.
+ * Exposes mutations of the local {@linkplain BoardState board state}.
  */
 export const Mutation = {
   /**
@@ -63,8 +67,7 @@ export const Mutation = {
 };
 
 /**
- * Exposes possible interactions with the Kanban web server, e.g.
- * send a command and subscribe to produced events.
+ * Exposes interactions with the remote board state.
  */
 export const Action = {
   /**

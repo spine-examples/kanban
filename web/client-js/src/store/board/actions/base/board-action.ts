@@ -24,13 +24,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { KanbanState } from "@/store/types";
+import { Board, BoardState } from "@/store/board/types";
+import Action from "@/store/base/action";
 
 /**
- * The local state of the Kanban web application.
+ * Abstract base for Vuex actions in the {@code board} module.
  */
-const state: KanbanState = {
-  board: null,
-};
-
-export default state;
+export abstract class BoardAction<P, R> extends Action<BoardState, P, R> {
+  /**
+   * Extracts the {@link Board} from the state stored in the action's context.
+   * @protected
+   */
+  protected getBoard(): Board | null {
+    return this.getActionContext().state.board;
+  }
+}

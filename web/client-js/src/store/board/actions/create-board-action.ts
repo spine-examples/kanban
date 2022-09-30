@@ -24,26 +24,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { ActionContext, ActionTree } from "vuex";
-import {
-  Action,
-  BoardCreated,
-  ColumnAdded,
-  KanbanState,
-  Mutation,
-} from "@/store/types";
+import { newBoardId } from "@/store/board/id-factory";
+import { BoardAction } from "@/store/board/actions/base/board-action";
 import { client } from "@/dependency/container";
+import { ActionContext, ActionHandler } from "vuex";
+import {
+  BoardCreated,
+  BoardState,
+  ColumnAdded,
+  Mutation,
+} from "@/store/board/types";
+import { RootState } from "@/store/root/types";
+import { Event } from "spine-web/proto/spine/core/event_pb";
 import { AnyPacker } from "spine-web/client/any-packer";
 import { Type } from "spine-web/client/typed-message";
-import { Event } from "spine-web/proto/spine/core/event_pb";
-import { v4 as newUuid } from "uuid";
+
+type CreateBoard = proto.spine_examples.kanban.CreateBoard;
 
 /**
- * Exposes possible interactions with the Kanban web server, e.g.
- * send a command and subscribe to produced events.
+ * Creates a board.
  */
-const actions: ActionTree<KanbanState, any> = {
-  [Action.CREATE_BOARD]: (ctx: ActionContext<KanbanState, any>): void => {
+export default class CreateBoardAction extends BoardAction<null, void> {
+  /**
+   * Sends a command to create a board and subscribes to the {@link BoardCreated} and
+   * {@link ColumnAdded} events.
+   *
+   * @protected
+   */
+  protected execute(): void {
+    this.subscribeToBoardCreated();
+    this.subscribeToColumnAdded();
+    client.command(this.command()).post();
+  }
+
+  /**
+   * Subscribes to {@link BoardCreated} events.
+   *
+   * The subscription is deleted after the first {@link BoardCreated} event arrived,
+   * as a board can be created only once during a session.
+   * @private
+   */
+  private subscribeToBoardCreated(): void {
     client
       .subscribeToEvent(proto.spine_examples.kanban.BoardCreated)
       .post()
@@ -53,50 +74,45 @@ const actions: ActionTree<KanbanState, any> = {
           const innerEvent: BoardCreated = AnyPacker.unpack(e.getMessage()).as(
             Type.forClass(proto.spine_examples.kanban.BoardCreated)
           );
-          ctx.commit(Mutation.BOARD_CREATED, innerEvent);
+          this.getActionContext().commit(Mutation.BOARD_CREATED, innerEvent);
         });
       });
+  }
 
+  /**
+   * Subscribes to {@link ColumnAdded} events.
+   * @private
+   */
+  private subscribeToColumnAdded(): void {
     client
       .subscribeToEvent(proto.spine_examples.kanban.ColumnAdded)
       .post()
       .then(({ eventEmitted }) => {
         eventEmitted.subscribe((e: Event) => {
-          const innerEvent: ColumnAdded = AnyPacker.unpack(e.getMessage()).as(
+          const innerEvent: BoardCreated = AnyPacker.unpack(e.getMessage()).as(
             Type.forClass(proto.spine_examples.kanban.ColumnAdded)
           );
-          ctx.commit(Mutation.COLUMN_ADDED, innerEvent);
+          this.getActionContext().commit(Mutation.COLUMN_ADDED, innerEvent);
         });
       });
+  }
 
-    const command = new proto.spine_examples.kanban.CreateBoard();
-    const board = new proto.spine_examples.kanban.BoardId();
-    board.setUuid(newUuid());
-    command.setBoard(board);
+  /**
+   * Assembles the {@link CreateBoard} command.
+   * @private
+   */
+  private command(): CreateBoard {
+    const c = new proto.spine_examples.kanban.CreateBoard();
+    c.setBoard(newBoardId());
+    return c;
+  }
 
-    client.command(command).post();
-  },
-  [Action.ADD_COLUMN]: (
-    ctx: ActionContext<KanbanState, any>,
-    name: string
-  ): void => {
-    const command = new proto.spine_examples.kanban.AddColumn();
-
-    const column = new proto.spine_examples.kanban.ColumnId();
-    column.setUuid(newUuid());
-    command.setColumn(column);
-
-    command.setName(name);
-    command.setBoard(ctx.state.board!.getId());
-
-    const position = new proto.spine_examples.kanban.ColumnPosition();
-    const numberOfColumns = ctx.state.board!.getColumnList().length;
-    position.setIndex(numberOfColumns);
-    position.setOfTotal(numberOfColumns);
-    command.setDesiredPosition(position);
-
-    client.command(command).post();
-  },
-};
-
-export default actions;
+  /**
+   * Creates the {@link ActionHandler} to be used by the store.
+   */
+  public static newHandler(): ActionHandler<BoardState, RootState> {
+    return (ctx: ActionContext<BoardState, RootState>, p: null): void => {
+      new CreateBoardAction(ctx, p).execute();
+    };
+  }
+}
