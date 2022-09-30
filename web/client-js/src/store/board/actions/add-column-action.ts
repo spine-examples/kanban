@@ -76,7 +76,7 @@ export default class AddColumnAction extends BoardAction<
   }
 
   /**
-   * Assembles a {@linkplain ColumnPosition} representing the position next to
+   * Assembles a {@link ColumnPosition} representing the position next to
    * existing columns.
    * @private
    */
