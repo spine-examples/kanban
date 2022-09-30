@@ -24,7 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { newBoardId } from "@/store/board/actions/id-factory";
+import { newBoardId } from "@/store/board/id-factory";
 import { BoardAction } from "@/store/board/actions/base/board-action";
 import { client } from "@/dependency/container";
 import { ActionContext, ActionHandler } from "vuex";
