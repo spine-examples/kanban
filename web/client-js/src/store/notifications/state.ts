@@ -24,17 +24,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { createStore } from "vuex";
-import { RootState } from "@/store/root/types";
-import Board from "@/store/board";
-import Notifications from "@/store/notifications";
+import { NotificationsCenterState } from "@/store/notifications/types/notification-center-state";
+import { Notifications } from "@/store/notifications/types/notifications";
 
 /**
- * The Vuex store for the Kanban web application.
+ * The state of the notification center.
  */
-export default createStore<RootState>({
-  modules: {
-    [Board.MODULE_NAME]: Board.MODULE,
-    [Notifications.MODULE_NAME]: Notifications.MODULE,
-  },
-});
+const state: NotificationsCenterState = {
+  notifications: new Notifications(),
+};
+
+export default state;

@@ -24,17 +24,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { createStore } from "vuex";
-import { RootState } from "@/store/root/types";
-import Board from "@/store/board";
-import Notifications from "@/store/notifications";
+import { Notification } from "@/store/notifications/types/notification";
+import { NotificationId } from "@/store/notifications/types/notification-id";
 
 /**
- * The Vuex store for the Kanban web application.
+ * The error notification to be displayed in the notifications center.
  */
-export default createStore<RootState>({
-  modules: {
-    [Board.MODULE_NAME]: Board.MODULE,
-    [Notifications.MODULE_NAME]: Notifications.MODULE,
-  },
-});
+export class Error extends Notification {
+  /**
+   * Creates an error notification with the provided message.
+   */
+  public static of(message: string): Notification {
+    return new Error(NotificationId.generate(), message);
+  }
+}

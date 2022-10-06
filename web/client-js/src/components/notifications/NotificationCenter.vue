@@ -24,31 +24,46 @@
   - OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   -->
 
-<template class="all">
-  <TheHeader />
-  <router-view />
-  <NotificationCenter />
+<template>
+  <div v-if="notifications.getItems()" id="notifications">
+    <NotificationMessage
+      v-for="notification of notifications.getItems()"
+      :key="notification.id"
+      :notification="notification"
+    >
+    </NotificationMessage>
+  </div>
 </template>
 
-<script>
-import TheHeader from "@/components/TheHeader";
-import NotificationCenter from "@/components/notifications/NotificationCenter";
-import "proto/index";
+<script lang="ts">
+import { createNamespacedHelpers } from "vuex";
+import { defineComponent } from "vue";
+import Notifications from "@/store/notifications";
+import NotificationMessage from "@/components/notifications/NotificationMessage.vue";
 
-/**
- * The root component of the application.
- */
-export default {
-  components: {
-    TheHeader,
-    NotificationCenter,
+const { mapState } = createNamespacedHelpers(Notifications.MODULE_NAME);
+
+export default defineComponent({
+  components: { NotificationMessage },
+  computed: {
+    ...mapState({
+      notifications: "notifications",
+    }),
   },
-};
+});
 </script>
 
-<style>
-* {
-  margin: 0;
-  padding: 0;
+<style scoped>
+#notifications {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+  right: 0;
+  bottom: 0;
+  width: 250px;
+  margin: 50px;
+  justify-content: center;
+  align-items: flex-start;
 }
 </style>

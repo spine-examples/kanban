@@ -24,17 +24,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { createStore } from "vuex";
-import { RootState } from "@/store/root/types";
-import Board from "@/store/board";
-import Notifications from "@/store/notifications";
+import { Mutation } from "vuex";
+import { NotificationsCenterState } from "@/store/notifications/types/notification-center-state";
+import { Notification } from "@/store/notifications/types/notification";
 
 /**
- * The Vuex store for the Kanban web application.
+ * Adds a notification to the notification center's state.
+ *
+ * <p> The notification is removed after it expires.
  */
-export default createStore<RootState>({
-  modules: {
-    [Board.MODULE_NAME]: Board.MODULE,
-    [Notifications.MODULE_NAME]: Notifications.MODULE,
-  },
-});
+export class AddNotificationMutation {
+  /**
+   * Default time to live for a notification.
+   * @private
+   */
+  private static readonly DEFAULT_NOTIFICATION_TTL = 5000;
+
+  /**
+   * Creates the mutation handler to be used by the store.
+   *
+   * <p> Adds the notification to the state of the notifications center.
+   * The notification is removed from the state after it expires.
+   */
+  public static newHandler(): Mutation<NotificationsCenterState> {
+    return (s: NotificationsCenterState, n: Notification): void => {
+      s.notifications.add(n);
+      setTimeout(() => {
+        s.notifications.remove(n.getId());
+      }, this.DEFAULT_NOTIFICATION_TTL);
+    };
+  }
+}

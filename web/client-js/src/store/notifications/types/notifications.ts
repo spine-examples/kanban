@@ -24,17 +24,40 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { createStore } from "vuex";
-import { RootState } from "@/store/root/types";
-import Board from "@/store/board";
-import Notifications from "@/store/notifications";
+import { Notification } from "@/store/notifications/types/notification";
+import { NotificationId } from "@/store/notifications/types/notification-id";
 
 /**
- * The Vuex store for the Kanban web application.
+ * List of {@linkplain Notification notifications}.
  */
-export default createStore<RootState>({
-  modules: {
-    [Board.MODULE_NAME]: Board.MODULE,
-    [Notifications.MODULE_NAME]: Notifications.MODULE,
-  },
-});
+export class Notifications {
+  /**
+   * Underlying array of notifications.
+   */
+  private items: Notification[];
+
+  public constructor() {
+    this.items = [];
+  }
+
+  /**
+   * Add the notification to the list.
+   */
+  public add(n: Notification) {
+    this.items.push(n);
+  }
+
+  /**
+   * Remove the notification by ID.
+   */
+  public remove(n: NotificationId) {
+    this.items = this.items.filter((i) => !i.getId().equals(n));
+  }
+
+  /**
+   * Returns the underlying array of items.
+   */
+  public getItems() {
+    return this.items;
+  }
+}

@@ -24,17 +24,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { createStore } from "vuex";
-import { RootState } from "@/store/root/types";
-import Board from "@/store/board";
+import { ActionContext } from "vuex";
+import { Notification } from "@/store/notifications/types/notification";
 import Notifications from "@/store/notifications";
+import { Mutation } from "@/store/notifications/types/mutations";
 
-/**
- * The Vuex store for the Kanban web application.
- */
-export default createStore<RootState>({
-  modules: {
-    [Board.MODULE_NAME]: Board.MODULE,
-    [Notifications.MODULE_NAME]: Notifications.MODULE,
-  },
-});
+export function addNotification<S, T>(
+  context: ActionContext<S, T>,
+  notification: Notification
+): void {
+  context.commit(
+    `${Notifications.MODULE_NAME}/${Mutation.ADD_NOTIFICATION}`,
+    notification,
+    { root: true }
+  );
+}

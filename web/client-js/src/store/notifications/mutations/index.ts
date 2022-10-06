@@ -24,17 +24,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { createStore } from "vuex";
-import { RootState } from "@/store/root/types";
-import Board from "@/store/board";
-import Notifications from "@/store/notifications";
+import { MutationTree } from "vuex";
+import { NotificationsCenterState } from "@/store/notifications/types/notification-center-state";
+import { Mutation } from "@/store/notifications/types/mutations";
+import { AddNotificationMutation } from "@/store/notifications/mutations/add-notification-mutation";
+import { RemoveNotificationMutation } from "@/store/notifications/mutations/remove-notification-mutation";
 
 /**
- * The Vuex store for the Kanban web application.
+ * Exposes mutations of the {@linkplain NotificationCenterState notification center state}.
  */
-export default createStore<RootState>({
-  modules: {
-    [Board.MODULE_NAME]: Board.MODULE,
-    [Notifications.MODULE_NAME]: Notifications.MODULE,
-  },
-});
+const mutations: MutationTree<NotificationsCenterState> = {
+  [Mutation.ADD_NOTIFICATION]: AddNotificationMutation.newHandler(),
+  [Mutation.REMOVE_NOTIFICATION]: RemoveNotificationMutation.newHandler(),
+};
+
+export default mutations;

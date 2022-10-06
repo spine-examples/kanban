@@ -24,17 +24,40 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { createStore } from "vuex";
-import { RootState } from "@/store/root/types";
-import Board from "@/store/board";
-import Notifications from "@/store/notifications";
+import { v4 as newUuid } from "uuid";
 
 /**
- * The Vuex store for the Kanban web application.
+ * {@linkplain Notification} ID.
  */
-export default createStore<RootState>({
-  modules: {
-    [Board.MODULE_NAME]: Board.MODULE,
-    [Notifications.MODULE_NAME]: Notifications.MODULE,
-  },
-});
+export class NotificationId {
+  /**
+   * Underlying UUID string.
+   * @private
+   */
+  private readonly uuid: string;
+
+  private constructor(uuid: string) {
+    this.uuid = uuid;
+  }
+
+  /**
+   * Generates unique ID.
+   */
+  public static generate() {
+    return new NotificationId(newUuid());
+  }
+
+  /**
+   * Retrieve underlying UUID string.
+   */
+  public getUuid(): string {
+    return this.uuid;
+  }
+
+  /**
+   * @return true if underlying UUIDs are equal.
+   */
+  public equals(other: NotificationId): boolean {
+    return this.uuid == other.uuid;
+  }
+}
