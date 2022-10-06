@@ -24,8 +24,8 @@
 import { createNamespacedHelpers } from "vuex";
 import Board from "@/store/board";
 import { defineComponent } from "vue";
-import AddColumnForm from "@/components/AddColumnForm.vue";
-import KanbanColumn from "@/components/KanbanColumn.vue";
+import AddColumnForm from "@/components/board/AddColumnForm.vue";
+import KanbanColumn from "@/components/board/KanbanColumn.vue";
 import { Action } from "@/store/board/types";
 
 const { mapState, mapActions } = createNamespacedHelpers(Board.MODULE_NAME);
