@@ -46,7 +46,10 @@ import { defineComponent } from "vue";
 export default defineComponent({
   name: "KanbanColumn",
   props: {
-    column: proto.spine_examples.kanban.Column,
+    column: {
+      type: proto.spine_examples.kanban.Column,
+      required: true,
+    },
   },
 });
 </script>
