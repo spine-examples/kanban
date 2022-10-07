@@ -60,7 +60,7 @@ export default class CreateBoardAction extends BoardAction<null, void> {
   /**
    * Subscribes to {@link BoardCreated} events.
    *
-   * The subscription is deleted after the first {@link BoardCreated} event arrived,
+   * <p> The subscription is deleted after the first {@link BoardCreated} event arrived,
    * as a board can be created only once during a session.
    * @private
    */
