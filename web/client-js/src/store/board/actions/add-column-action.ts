@@ -24,10 +24,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { newColumnId } from "@/store/board/id-factory";
 import { BoardAction } from "@/store/board/actions/base/board-action";
 import { client } from "@/dependency/container";
-import { ActionContext, ActionHandler } from "vuex";
+import { newColumnId } from "@/store/board/id-factory";
+import { Filters } from "spine-web";
+import { AnyPacker } from "spine-web/client/any-packer";
+import { Type } from "spine-web/client/typed-message";
+import { Event } from "spine-web/proto/spine/core/event_pb";
+import { Error } from "@/store/notifications/types/error";
+import { addNotification } from "@/store/notifications/common";
+import { ActionHandler, ActionContext } from "vuex";
 import { BoardState } from "@/store/board/types";
 import { RootState } from "@/store/root/types";
 
@@ -40,8 +46,11 @@ export type AddColumnActionPayload = {
   name: string;
 };
 
+type ColumnId = proto.spine_examples.kanban.ColumnId;
 type ColumnPosition = proto.spine_examples.kanban.ColumnPosition;
 type AddColumn = proto.spine_examples.kanban.AddColumn;
+type ColumnNameAlreadyTaken =
+  proto.spine_examples.kanban.ColumnNameAlreadyTaken;
 
 /**
  * Adds a column.
@@ -58,7 +67,9 @@ export default class AddColumnAction extends BoardAction<
    * @protected
    */
   protected execute(): void {
-    client.command(this.command()).post();
+    const command = this.command();
+    this.subscribeToColumnNameIsAlreadyTaken(command.getColumn()!);
+    client.command(command).post();
   }
 
   /**
@@ -86,6 +97,34 @@ export default class AddColumnAction extends BoardAction<
     nextPosition.setIndex(numberOfColumns + 1);
     nextPosition.setOfTotal(numberOfColumns + 1);
     return nextPosition;
+  }
+
+  /**
+   * Subscribes to {@link ColumnNameAlreadyTaken} rejections.
+   *
+   * <p> When the first rejection arrives the subscription is deleted and
+   * an error notification is added to the notification center.
+   * @private
+   */
+  private subscribeToColumnNameIsAlreadyTaken(column: ColumnId): void {
+    client
+      .subscribeToEvent(proto.spine_examples.kanban.ColumnNameAlreadyTaken)
+      .where(Filters.eq("column", column))
+      .post()
+      .then(({ eventEmitted, unsubscribe }) => {
+        eventEmitted.subscribe((e: Event) => {
+          unsubscribe();
+          const rejection: ColumnNameAlreadyTaken = AnyPacker.unpack(
+            e.getMessage()
+          ).as(
+            Type.forClass(proto.spine_examples.kanban.ColumnNameAlreadyTaken)
+          );
+          const error = Error.of(
+            `The name "${rejection.getName()}" is already taken`
+          );
+          addNotification(this.getActionContext(), error);
+        });
+      });
   }
 
   /**
