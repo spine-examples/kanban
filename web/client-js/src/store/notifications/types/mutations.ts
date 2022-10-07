@@ -29,14 +29,14 @@
  */
 export const Mutation = {
   /**
-   * Adds a notification to the notification center's state.
+   * Adds a notification to the notification center.
    *
    * <p> The notification is removed after it expires.
    */
   ADD_NOTIFICATION: "addNotification",
 
   /**
-   * Removes the notification with the provided ID from the notification center's state.
+   * Removes the notification with the provided ID from the notification center.
    */
   REMOVE_NOTIFICATION: "removeNotification",
 };

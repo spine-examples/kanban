@@ -29,7 +29,7 @@ import { NotificationsCenterState } from "@/store/notifications/types/notificati
 import { NotificationId } from "@/store/notifications/types/notification-id";
 
 /**
- * Removes notification by its ID from the notification center's state.
+ * Removes the notification with the provided ID from the notification center.
  */
 export class RemoveNotificationMutation {
   /**

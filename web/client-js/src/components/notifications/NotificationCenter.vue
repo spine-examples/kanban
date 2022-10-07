@@ -43,6 +43,9 @@ import NotificationMessage from "@/components/notifications/NotificationMessage.
 
 const { mapState } = createNamespacedHelpers(Notifications.MODULE_NAME);
 
+/**
+ * Displays notifications.
+ */
 export default defineComponent({
   components: { NotificationMessage },
   computed: {

@@ -48,7 +48,7 @@ export class Notifications {
   }
 
   /**
-   * Remove the notification by ID.
+   * Remove the notification with the provided ID from the list.
    */
   public remove(n: NotificationId) {
     this.items = this.items.filter((i) => !i.getId().equals(n));

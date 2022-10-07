@@ -45,6 +45,9 @@ import { Error } from "@/store/notifications/types/error";
 
 const { mapMutations } = createNamespacedHelpers(Notifications.MODULE_NAME);
 
+/**
+ * Displays the notification message.
+ */
 export default defineComponent({
   props: {
     notification: {

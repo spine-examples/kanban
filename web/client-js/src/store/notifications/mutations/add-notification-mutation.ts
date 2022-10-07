@@ -35,7 +35,7 @@ import { Notification } from "@/store/notifications/types/notification";
  */
 export class AddNotificationMutation {
   /**
-   * Default time to live for a notification.
+   * Default time to live for a notification in milliseconds.
    * @private
    */
   private static readonly DEFAULT_NOTIFICATION_TTL = 5000;
