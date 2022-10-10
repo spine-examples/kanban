@@ -38,8 +38,10 @@ import { RootState } from "@/store/root/types";
 import { Event } from "spine-web/proto/spine/core/event_pb";
 import { AnyPacker } from "spine-web/client/any-packer";
 import { Type } from "spine-web/client/typed-message";
+import { Filters } from "spine-web";
 
 type CreateBoard = proto.spine_examples.kanban.CreateBoard;
+type BoardId = proto.spine_examples.kanban.BoardId;
 
 /**
  * Creates a board.
@@ -52,9 +54,10 @@ export default class CreateBoardAction extends BoardAction<null, void> {
    * @protected
    */
   protected execute(): void {
-    this.subscribeToBoardCreated();
-    this.subscribeToColumnAdded();
-    client.command(this.command()).post();
+    const command = this.command();
+    this.subscribeToBoardCreated(command.getBoard()!);
+    this.subscribeToColumnAdded(command.getBoard()!);
+    client.command(command).post();
   }
 
   /**
@@ -64,9 +67,10 @@ export default class CreateBoardAction extends BoardAction<null, void> {
    * as a board can be created only once during a session.
    * @private
    */
-  private subscribeToBoardCreated(): void {
+  private subscribeToBoardCreated(board: BoardId): void {
     client
       .subscribeToEvent(proto.spine_examples.kanban.BoardCreated)
+      .where(Filters.eq("board", board))
       .post()
       .then(({ eventEmitted, unsubscribe }) => {
         eventEmitted.subscribe((e: Event) => {
@@ -83,9 +87,10 @@ export default class CreateBoardAction extends BoardAction<null, void> {
    * Subscribes to {@link ColumnAdded} events.
    * @private
    */
-  private subscribeToColumnAdded(): void {
+  private subscribeToColumnAdded(board: BoardId): void {
     client
       .subscribeToEvent(proto.spine_examples.kanban.ColumnAdded)
+      .where(Filters.eq("board", board))
       .post()
       .then(({ eventEmitted }) => {
         eventEmitted.subscribe((e: Event) => {
