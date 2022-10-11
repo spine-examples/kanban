@@ -32,7 +32,7 @@ import { Mutation } from "@/store/notifications/types/mutations";
 /**
  * Commits the root mutation to add a new notification to the notification center.
  *
- * <p> This is a helper method for other Vuex modules.
+ * This is a helper method for other Vuex modules.
  */
 export function addNotification<S, T>(
   context: ActionContext<S, T>,

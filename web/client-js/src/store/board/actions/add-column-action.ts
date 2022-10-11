@@ -40,7 +40,7 @@ import { RootState } from "@/store/root/types";
 /**
  * Payload of the `AddColumnAction` action.
  *
- * <p> Contains the name of a new column.
+ * Contains the name of a new column.
  */
 export type AddColumnActionPayload = {
   name: string;
@@ -62,7 +62,7 @@ export default class AddColumnAction extends BoardAction<
   /**
    * Sends the command to add a column.
    *
-   * <p> It is assumed that the subscription to {@link ColumnAdded} events
+   * It is assumed that the subscription to {@link ColumnAdded} events
    * already exists after {@linkplain CreateBoardAction board creation}.
    * @protected
    */
@@ -102,7 +102,7 @@ export default class AddColumnAction extends BoardAction<
   /**
    * Subscribes to {@link ColumnNameAlreadyTaken} rejections.
    *
-   * <p> When the first rejection arrives the subscription is deleted and
+   * When the first rejection arrives the subscription is deleted and
    * an error notification is added to the notification center.
    * @private
    */

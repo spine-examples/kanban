@@ -31,7 +31,7 @@ import { Notification } from "@/store/notifications/types/notification";
 /**
  * Adds a notification to the notification center's state.
  *
- * <p> The notification is removed after it expires.
+ * The notification is removed after it expires.
  */
 export class AddNotificationMutation {
   /**
@@ -43,7 +43,7 @@ export class AddNotificationMutation {
   /**
    * Creates the mutation handler to be used by the store.
    *
-   * <p> Adds the notification to the state of the notifications center.
+   * Adds the notification to the state of the notifications center.
    * The notification is removed from the state after it expires.
    */
   public static newHandler(): Mutation<NotificationsCenterState> {

@@ -35,7 +35,7 @@ export default class ColumnAddedMutation {
   /**
    * Creates the mutation handler to be used by the store.
    *
-   * <p> Adds the column extracted from the {@link ColumnAdded} event to the board stored
+   * Adds the column extracted from the {@link ColumnAdded} event to the board stored
    * in the {@linkplain BoardState local state}.
    */
   public static newHandler(): Mutation<BoardState> {

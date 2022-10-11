@@ -31,7 +31,7 @@ export const Mutation = {
   /**
    * Adds a notification to the notification center.
    *
-   * <p> The notification is removed after it expires.
+   * The notification is removed after it expires.
    */
   ADD_NOTIFICATION: "addNotification",
 

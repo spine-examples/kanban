@@ -35,7 +35,7 @@ export default class BoardCreatedMutation {
   /**
    * Creates the mutation handler to be used by the store.
    *
-   * <p> Adds the board extracted from the {@link BoardCreated} event to the
+   * Adds the board extracted from the {@link BoardCreated} event to the
    * {@linkplain BoardState local state}.
    */
   public static newHandler(): Mutation<BoardState> {

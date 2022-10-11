@@ -29,7 +29,7 @@ import { NotificationId } from "@/store/notifications/types/notification-id";
 /**
  * The generic notification to be displayed in the notifications center.
  *
- * <p> Specific notification types should be implemented as subclasses.
+ * Specific notification types should be implemented as subclasses.
  */
 export class Notification {
   /**
