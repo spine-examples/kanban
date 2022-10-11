@@ -30,11 +30,11 @@ import { NotificationId } from "@/store/notifications/types/notification-id";
 /**
  * The error notification to be displayed in the notifications center.
  */
-export class Error extends Notification {
+export class ErrorNotification extends Notification {
   /**
    * Creates an error notification with the provided message.
    */
-  public static of(message: string): Notification {
-    return new Error(NotificationId.generate(), message);
+  public static of(message: string): ErrorNotification {
+    return new ErrorNotification(NotificationId.generate(), message);
   }
 }

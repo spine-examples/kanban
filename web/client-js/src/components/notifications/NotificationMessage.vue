@@ -41,7 +41,7 @@ import { Notification } from "@/store/notifications/types/notification";
 import { Mutation } from "@/store/notifications/types/mutations";
 import { createNamespacedHelpers } from "vuex";
 import Notifications from "@/store/notifications";
-import { Error } from "@/store/notifications/types/error";
+import { ErrorNotification } from "@/store/notifications/types/error-notification";
 
 const { mapMutations } = createNamespacedHelpers(Notifications.MODULE_NAME);
 
@@ -60,7 +60,7 @@ export default defineComponent({
       removeNotification: Mutation.REMOVE_NOTIFICATION,
     }),
     isError() {
-      return this.notification instanceof Error;
+      return this.notification instanceof ErrorNotification;
     },
     close() {
       this.removeNotification(this.notification.getId());
