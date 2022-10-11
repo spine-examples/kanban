@@ -31,7 +31,7 @@ import CreateBoardAction from "@/store/board/actions/create-board-action";
 import AddColumnAction from "@/store/board/actions/add-column-action";
 
 /**
- * Exposes interactions with the remote board state.
+ * Exposes actions to interact with the remote board state.
  */
 const actions: ActionTree<BoardState, RootState> = {
   [Action.CREATE_BOARD]: CreateBoardAction.newHandler(),

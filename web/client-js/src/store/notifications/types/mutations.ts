@@ -25,7 +25,8 @@
  */
 
 /**
- * Exposes mutations of the {@linkplain NotificationCenterState notification center state}.
+ * Defines mutation types of the
+ * {@linkplain NotificationCenterState notification center state}.
  */
 export const Mutation = {
   /**

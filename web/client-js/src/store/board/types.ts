@@ -51,7 +51,7 @@ export interface BoardState {
 }
 
 /**
- * Exposes mutations of the local {@linkplain BoardState board state}.
+ * Defines mutation types of the local {@linkplain BoardState board state}.
  */
 export const Mutation = {
   /**
@@ -67,7 +67,7 @@ export const Mutation = {
 };
 
 /**
- * Exposes interactions with the remote board state.
+ * Defines action types to interact with the remote board state.
  */
 export const Action = {
   /**
