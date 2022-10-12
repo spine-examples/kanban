@@ -25,28 +25,33 @@
  */
 
 import { Mutation } from "vuex";
-import { BoardState } from "@/store/board/state/board-state";
-import { ColumnAdded } from "@/store/board/aliases";
+import { NotificationsCenterState } from "@/store/notifications/state/notification-center-state";
+import { Notification } from "@/store/notifications/state/notification";
 
 /**
- * Mutates the local {@linkplain BoardState board state} in response
- * to the {@link ColumnAdded} event.
+ * Adds a notification to the notification center state.
+ *
+ * The notification is removed after it expires.
  */
-export default class ColumnAddedMutation {
+export class AddNotificationMutation {
+  /**
+   * Default time to live for a notification in milliseconds.
+   * @private
+   */
+  private static readonly DEFAULT_NOTIFICATION_TTL = 5000;
+
   /**
    * Creates the mutation handler to be used by the store.
    *
-   * Adds the column extracted from the {@link ColumnAdded} event to the board stored
-   * in the {@linkplain BoardState local state}.
+   * Adds the notification to the state of the notifications center.
+   * The notification is removed from the state after it expires.
    */
-  public static newHandler(): Mutation<BoardState> {
-    return (s: BoardState, e: ColumnAdded) => {
-      const column = new proto.spine_examples.kanban.Column();
-      column.setId(e.getColumn());
-      column.setBoard(e.getBoard());
-      column.setName(e.getName());
-      column.setPosition(e.getPosition());
-      s.board!.addColumn(column);
+  public static newHandler(): Mutation<NotificationsCenterState> {
+    return (s: NotificationsCenterState, n: Notification): void => {
+      s.notifications.add(n);
+      setTimeout(() => {
+        s.notifications.remove(n.getId());
+      }, this.DEFAULT_NOTIFICATION_TTL);
     };
   }
 }

@@ -24,29 +24,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Mutation } from "vuex";
-import { BoardState } from "@/store/board/state/board-state";
-import { ColumnAdded } from "@/store/board/aliases";
+import { MutationTree } from "vuex";
+import { NotificationsCenterState } from "@/store/notifications/state/notification-center-state";
+import { AddNotificationMutation } from "@/store/notifications/mutations/add-notification-mutation";
+import { RemoveNotificationMutation } from "@/store/notifications/mutations/remove-notification-mutation";
 
 /**
- * Mutates the local {@linkplain BoardState board state} in response
- * to the {@link ColumnAdded} event.
+ * Defines mutation types of the
+ * {@linkplain NotificationCenterState notification center state}.
  */
-export default class ColumnAddedMutation {
+export const MutationType = {
   /**
-   * Creates the mutation handler to be used by the store.
+   * Adds a notification to the notification center.
    *
-   * Adds the column extracted from the {@link ColumnAdded} event to the board stored
-   * in the {@linkplain BoardState local state}.
+   * The notification is removed after it expires.
    */
-  public static newHandler(): Mutation<BoardState> {
-    return (s: BoardState, e: ColumnAdded) => {
-      const column = new proto.spine_examples.kanban.Column();
-      column.setId(e.getColumn());
-      column.setBoard(e.getBoard());
-      column.setName(e.getName());
-      column.setPosition(e.getPosition());
-      s.board!.addColumn(column);
-    };
-  }
-}
+  ADD_NOTIFICATION: "addNotification",
+
+  /**
+   * Removes the notification with the provided ID from the notification center.
+   */
+  REMOVE_NOTIFICATION: "removeNotification",
+};
+
+/**
+ * Exposes mutations of the {@linkplain NotificationCenterState notification center state}.
+ */
+export const mutations: MutationTree<NotificationsCenterState> = {
+  [MutationType.ADD_NOTIFICATION]: AddNotificationMutation.newHandler(),
+  [MutationType.REMOVE_NOTIFICATION]: RemoveNotificationMutation.newHandler(),
+};

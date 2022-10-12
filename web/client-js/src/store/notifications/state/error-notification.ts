@@ -24,29 +24,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Mutation } from "vuex";
-import { BoardState } from "@/store/board/state/board-state";
-import { ColumnAdded } from "@/store/board/aliases";
+import { Notification } from "@/store/notifications/state/notification";
+import { NotificationId } from "@/store/notifications/state/notification-id";
 
 /**
- * Mutates the local {@linkplain BoardState board state} in response
- * to the {@link ColumnAdded} event.
+ * An error notification to be displayed in the notifications center.
  */
-export default class ColumnAddedMutation {
+export class ErrorNotification extends Notification {
   /**
-   * Creates the mutation handler to be used by the store.
-   *
-   * Adds the column extracted from the {@link ColumnAdded} event to the board stored
-   * in the {@linkplain BoardState local state}.
+   * Creates an error notification with the provided message.
    */
-  public static newHandler(): Mutation<BoardState> {
-    return (s: BoardState, e: ColumnAdded) => {
-      const column = new proto.spine_examples.kanban.Column();
-      column.setId(e.getColumn());
-      column.setBoard(e.getBoard());
-      column.setName(e.getName());
-      column.setPosition(e.getPosition());
-      s.board!.addColumn(column);
-    };
+  public static of(message: string): ErrorNotification {
+    return new ErrorNotification(NotificationId.generate(), message);
   }
 }

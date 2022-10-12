@@ -24,31 +24,81 @@
   - OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   -->
 
-<template class="all">
-  <TheHeader />
-  <router-view />
-  <NotificationCenter />
+<template>
+  <div class="column">
+    <div class="column-title">
+      <h3>{{ column.getName() }}</h3>
+    </div>
+    <hr class="separator" />
+    <div class="cards"></div>
+    <div class="add-card">
+      <button>Add a card</button>
+    </div>
+  </div>
 </template>
 
-<script>
-import TheHeader from "@/components/TheHeader";
-import NotificationCenter from "@/components/notifications/NotificationCenter";
-import "proto/index";
+<script lang="ts">
+import { defineComponent } from "vue";
 
 /**
- * The root component of the application.
+ * Displays the column's name and cards.
  */
-export default {
-  components: {
-    TheHeader,
-    NotificationCenter,
+export default defineComponent({
+  name: "KanbanColumn",
+  props: {
+    column: {
+      type: proto.spine_examples.kanban.Column,
+      required: true,
+    },
   },
-};
+});
 </script>
 
-<style>
-* {
-  margin: 0;
-  padding: 0;
+<style scoped>
+.column {
+  display: flex;
+  flex-direction: column;
+  width: 250px;
+  background-color: #e2e4e6;
+  border-radius: 0.1rem;
+  margin: 0.5rem;
+  padding: 10px;
+}
+
+.column-title {
+  padding-left: 5px;
+  width: 250px;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.separator {
+  border: 1px solid black;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  min-height: 200px;
+  max-height: 400px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.add-card {
+  display: flex;
+  justify-content: center;
+  height: 30px;
+  margin-top: auto;
+}
+
+.add-card:hover {
+  background-color: #cdd2d4;
+  color: #4d4d4d;
+}
+
+.add-card button {
+  all: unset;
 }
 </style>

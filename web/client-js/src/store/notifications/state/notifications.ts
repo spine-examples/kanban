@@ -24,13 +24,40 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { BoardState } from "@/store/board/types";
+import { Notification } from "@/store/notifications/state/notification";
+import { NotificationId } from "@/store/notifications/state/notification-id";
 
 /**
- * The local state of the Kanban board.
+ * List of {@linkplain Notification notifications}.
  */
-const state: BoardState = {
-  board: null,
-};
+export class Notifications {
+  /**
+   * The underlying array of notifications.
+   */
+  private items: Notification[];
 
-export default state;
+  public constructor() {
+    this.items = [];
+  }
+
+  /**
+   * Adds the notification to the list.
+   */
+  public add(n: Notification) {
+    this.items.push(n);
+  }
+
+  /**
+   * Removes the notification with the provided ID from the list.
+   */
+  public remove(n: NotificationId) {
+    this.items = this.items.filter((i) => !i.getId().equals(n));
+  }
+
+  /**
+   * Returns the underlying array of items.
+   */
+  public getItems() {
+    return this.items;
+  }
+}

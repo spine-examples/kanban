@@ -25,28 +25,19 @@
  */
 
 import { Mutation } from "vuex";
-import { BoardState } from "@/store/board/state/board-state";
-import { ColumnAdded } from "@/store/board/aliases";
+import { NotificationsCenterState } from "@/store/notifications/state/notification-center-state";
+import { NotificationId } from "@/store/notifications/state/notification-id";
 
 /**
- * Mutates the local {@linkplain BoardState board state} in response
- * to the {@link ColumnAdded} event.
+ * Removes the notification with the provided ID from the notification center.
  */
-export default class ColumnAddedMutation {
+export class RemoveNotificationMutation {
   /**
    * Creates the mutation handler to be used by the store.
-   *
-   * Adds the column extracted from the {@link ColumnAdded} event to the board stored
-   * in the {@linkplain BoardState local state}.
    */
-  public static newHandler(): Mutation<BoardState> {
-    return (s: BoardState, e: ColumnAdded) => {
-      const column = new proto.spine_examples.kanban.Column();
-      column.setId(e.getColumn());
-      column.setBoard(e.getBoard());
-      column.setName(e.getName());
-      column.setPosition(e.getPosition());
-      s.board!.addColumn(column);
+  public static newHandler(): Mutation<NotificationsCenterState> {
+    return (s: NotificationsCenterState, n: NotificationId) => {
+      s.notifications.remove(n);
     };
   }
 }

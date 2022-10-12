@@ -25,7 +25,8 @@
  */
 
 import { Mutation } from "vuex";
-import { BoardCreated, BoardState } from "@/store/board/types";
+import { BoardState } from "@/store/board/state/board-state";
+import { BoardCreated } from "@/store/board/aliases";
 
 /**
  * Mutates the local {@linkplain BoardState board state} in response
@@ -35,7 +36,7 @@ export default class BoardCreatedMutation {
   /**
    * Creates the mutation handler to be used by the store.
    *
-   * <p> Adds the board extracted from the {@link BoardCreated} event to the
+   * Adds the board extracted from the {@link BoardCreated} event to the
    * {@linkplain BoardState local state}.
    */
   public static newHandler(): Mutation<BoardState> {

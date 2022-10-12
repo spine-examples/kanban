@@ -25,7 +25,7 @@
  */
 
 /**
- * Helps TypeScript compiler with resolving imports to {@code .vue} files.
+ * Helps TypeScript compiler with resolving imports to `.vue` files.
  */
 declare module "*.vue" {
   import type { DefineComponent } from "vue";

@@ -24,29 +24,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Mutation } from "vuex";
-import { BoardState } from "@/store/board/state/board-state";
-import { ColumnAdded } from "@/store/board/aliases";
+import { ActionContext } from "vuex";
+import { Notification } from "@/store/notifications/state/notification";
+import Notifications from "@/store/notifications";
+import { MutationType } from "@/store/notifications/mutations";
 
 /**
- * Mutates the local {@linkplain BoardState board state} in response
- * to the {@link ColumnAdded} event.
+ * Commits the root mutation to add a new notification to the notification center.
+ *
+ * This is a helper method for other Vuex modules.
  */
-export default class ColumnAddedMutation {
-  /**
-   * Creates the mutation handler to be used by the store.
-   *
-   * Adds the column extracted from the {@link ColumnAdded} event to the board stored
-   * in the {@linkplain BoardState local state}.
-   */
-  public static newHandler(): Mutation<BoardState> {
-    return (s: BoardState, e: ColumnAdded) => {
-      const column = new proto.spine_examples.kanban.Column();
-      column.setId(e.getColumn());
-      column.setBoard(e.getBoard());
-      column.setName(e.getName());
-      column.setPosition(e.getPosition());
-      s.board!.addColumn(column);
-    };
-  }
+export function addNotification<S, T>(
+  context: ActionContext<S, T>,
+  notification: Notification
+): void {
+  context.commit(
+    `${Notifications.MODULE_NAME}/${MutationType.ADD_NOTIFICATION}`,
+    notification,
+    { root: true }
+  );
 }

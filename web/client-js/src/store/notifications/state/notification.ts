@@ -24,29 +24,49 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Mutation } from "vuex";
-import { BoardState } from "@/store/board/state/board-state";
-import { ColumnAdded } from "@/store/board/aliases";
+import { NotificationId } from "@/store/notifications/state/notification-id";
 
 /**
- * Mutates the local {@linkplain BoardState board state} in response
- * to the {@link ColumnAdded} event.
+ * A generic notification to be displayed in the notifications center.
+ *
+ * Specific notification types should be implemented as subclasses.
  */
-export default class ColumnAddedMutation {
+export class Notification {
   /**
-   * Creates the mutation handler to be used by the store.
-   *
-   * Adds the column extracted from the {@link ColumnAdded} event to the board stored
-   * in the {@linkplain BoardState local state}.
+   * The notification's ID.
+   * @private
    */
-  public static newHandler(): Mutation<BoardState> {
-    return (s: BoardState, e: ColumnAdded) => {
-      const column = new proto.spine_examples.kanban.Column();
-      column.setId(e.getColumn());
-      column.setBoard(e.getBoard());
-      column.setName(e.getName());
-      column.setPosition(e.getPosition());
-      s.board!.addColumn(column);
-    };
+  private readonly id: NotificationId;
+
+  /**
+   * The notification's message.
+   * @private
+   */
+  private readonly message: string;
+
+  public constructor(id: NotificationId, message: string) {
+    this.id = id;
+    this.message = message;
+  }
+
+  /**
+   * Returns the notification's ID.
+   */
+  public getId(): NotificationId {
+    return this.id;
+  }
+
+  /**
+   * Returns the notification's message.
+   */
+  public getMessage(): string {
+    return this.message;
+  }
+
+  /**
+   * Creates a generic notification with the provided message.
+   */
+  public static of(message: string): Notification {
+    return new Notification(NotificationId.generate(), message);
   }
 }

@@ -25,8 +25,9 @@
  */
 
 import { createStore } from "vuex";
-import { RootState } from "@/store/root/types";
+import { RootState } from "@/store/root/root-state";
 import Board from "@/store/board";
+import Notifications from "@/store/notifications";
 
 /**
  * The Vuex store for the Kanban web application.
@@ -34,5 +35,6 @@ import Board from "@/store/board";
 export default createStore<RootState>({
   modules: {
     [Board.MODULE_NAME]: Board.MODULE,
+    [Notifications.MODULE_NAME]: Notifications.MODULE,
   },
 });

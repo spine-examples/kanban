@@ -25,7 +25,7 @@
  */
 
 import { ActionContext } from "vuex";
-import { RootState } from "@/store/root/types";
+import { RootState } from "@/store/root/root-state";
 
 /**
  * Abstract base for Vuex actions.

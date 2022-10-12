@@ -24,29 +24,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Mutation } from "vuex";
-import { BoardState } from "@/store/board/state/board-state";
-import { ColumnAdded } from "@/store/board/aliases";
+import { Module } from "vuex";
+import { NotificationsCenterState } from "@/store/notifications/state/notification-center-state";
+import { RootState } from "@/store/root/root-state";
+import state from "@/store/notifications/state";
+import { mutations } from "@/store/notifications/mutations";
 
 /**
- * Mutates the local {@linkplain BoardState board state} in response
- * to the {@link ColumnAdded} event.
+ * The Vuex store module with notification center.
  */
-export default class ColumnAddedMutation {
+export default class {
   /**
-   * Creates the mutation handler to be used by the store.
-   *
-   * Adds the column extracted from the {@link ColumnAdded} event to the board stored
-   * in the {@linkplain BoardState local state}.
+   * The name of the module.
    */
-  public static newHandler(): Mutation<BoardState> {
-    return (s: BoardState, e: ColumnAdded) => {
-      const column = new proto.spine_examples.kanban.Column();
-      column.setId(e.getColumn());
-      column.setBoard(e.getBoard());
-      column.setName(e.getName());
-      column.setPosition(e.getPosition());
-      s.board!.addColumn(column);
-    };
-  }
+  public static MODULE_NAME = "NOTIFICATIONS";
+
+  /**
+   * Vuex module definition.
+   */
+  public static MODULE: Module<NotificationsCenterState, RootState> = {
+    namespaced: true,
+    state,
+    mutations,
+  };
 }

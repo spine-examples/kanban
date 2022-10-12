@@ -25,77 +25,85 @@
   -->
 
 <template>
-  <div class="column">
-    <div class="column-title">
-      <h3>{{ column.getName() }}</h3>
-    </div>
-    <hr class="separator" />
-    <div class="cards"></div>
-    <div class="add-card">
-      <button>Add a card</button>
+  <div class="notification" :class="{ error: isError() }">
+    <p>{{ notification.getMessage() }}</p>
+    <div class="close-button">
+      <button v-on:click="this.close()">
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { Notification } from "@/store/notifications/state/notification";
+import { MutationType } from "@/store/notifications/mutations";
+import { createNamespacedHelpers } from "vuex";
+import Notifications from "@/store/notifications";
+import { ErrorNotification } from "@/store/notifications/state/error-notification";
+
+const { mapMutations } = createNamespacedHelpers(Notifications.MODULE_NAME);
 
 /**
- * Displays the column's name and cards.
+ * Displays the notification message.
  */
 export default defineComponent({
-  name: "KanbanColumn",
   props: {
-    column: proto.spine_examples.kanban.Column,
+    notification: {
+      type: Notification,
+      required: true,
+    },
+  },
+  methods: {
+    ...mapMutations({
+      removeNotification: MutationType.REMOVE_NOTIFICATION,
+    }),
+    isError() {
+      return this.notification instanceof ErrorNotification;
+    },
+    close() {
+      this.removeNotification(this.notification.getId());
+    },
   },
 });
 </script>
 
 <style scoped>
-.column {
-  display: flex;
-  flex-direction: column;
+.notification {
   width: 250px;
-  background-color: #e2e4e6;
-  border-radius: 0.1rem;
-  margin: 0.5rem;
+  margin-bottom: 10px;
   padding: 10px;
+  border-radius: 3px;
+  background-color: #1378da;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  box-shadow: 1px 0 3px 0 black;
 }
 
-.column-title {
-  padding-left: 5px;
-  width: 250px;
-  text-align: center;
-  margin-bottom: 5px;
+.error {
+  background-color: #e57373;
+  color: white;
 }
 
-.separator {
-  border: 1px solid black;
-}
-
-.cards {
+.close-button {
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
-  min-height: 200px;
-  max-height: 400px;
-  border-radius: 4px;
-  margin-bottom: 20px;
+  justify-content: flex-start;
+  right: 0;
+  top: 0;
 }
 
-.add-card {
+.close-button button {
+  all: unset;
   display: flex;
   justify-content: center;
-  height: 30px;
-  margin-top: auto;
+  align-items: center;
 }
 
-.add-card:hover {
-  background-color: #cdd2d4;
+.close-button button:hover {
   color: #4d4d4d;
-}
-
-.add-card button {
-  all: unset;
 }
 </style>

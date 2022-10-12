@@ -29,55 +29,26 @@
  */
 
 /**
- * An alias for the {@code proto.spine_examples.kanban.BoardView} projection.
+ * An alias for the `proto.spine_examples.kanban.BoardView` projection.
  */
 export type Board = proto.spine_examples.kanban.BoardView;
 
 /**
- * An alias for the {@code proto.spine_examples.kanban.BoardCreated} event.
+ * An alias for the `proto.spine_examples.kanban.BoardCreated` event.
  */
 export type BoardCreated = proto.spine_examples.kanban.BoardCreated;
 
 /**
- * An alias for the {@code proto.spine_examples.kanban.ColumnAdded} event.
+ * An alias for the `proto.spine_examples.kanban.ColumnAdded` event.
  */
 export type ColumnAdded = proto.spine_examples.kanban.ColumnAdded;
 
 /**
- * The local state of the Kanban board.
+ * An alias for the `proto.spine_examples.kanban.BoardId`.
  */
-export interface BoardState {
-  board: Board | null;
-}
+export type BoardId = proto.spine_examples.kanban.BoardId;
 
 /**
- * Exposes mutations of the local {@linkplain BoardState board state}.
+ * An alias for the `proto.spine_examples.kanban.ColumnId`.
  */
-export const Mutation = {
-  /**
-   * Adds the board extracted from the {@link BoardCreated} event to the state.
-   */
-  BOARD_CREATED: "boardCreated",
-
-  /**
-   * Adds the column extracted from the {@link ColumnAdded} event to the board stored
-   * in the state.
-   */
-  COLUMN_ADDED: "columnAdded",
-};
-
-/**
- * Exposes interactions with the remote board state.
- */
-export const Action = {
-  /**
-   * Subscribes to the {@link BoardCreated} and {@link ColumnAdded} events and sends
-   * the {@code proto.spine_examples.kanban.CreateBoard} command to create a board.
-   */
-  CREATE_BOARD: "createBoard",
-
-  /**
-   * Sends the {@code proto.spine_examples.kanban.AddColumn} command to add the column.
-   */
-  ADD_COLUMN: "addColumn",
-};
+export type ColumnId = proto.spine_examples.kanban.ColumnId;
