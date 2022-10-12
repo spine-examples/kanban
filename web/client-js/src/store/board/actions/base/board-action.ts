@@ -29,7 +29,7 @@ import Action from "@/store/base/action";
 import { Board } from "@/store/board/aliases";
 
 /**
- * Abstract base for Vuex actions in the {@code board} module.
+ * Abstract base for Vuex actions in the `board` module.
  */
 export abstract class BoardAction<P, R> extends Action<BoardState, P, R> {
   /**

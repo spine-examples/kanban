@@ -36,12 +36,12 @@ import AddColumnAction from "@/store/board/actions/add-column-action";
 export const ActionType = {
   /**
    * Subscribes to the {@link BoardCreated} and {@link ColumnAdded} events and sends
-   * the {@code proto.spine_examples.kanban.CreateBoard} command to create a board.
+   * the `proto.spine_examples.kanban.CreateBoard` command to create a board.
    */
   CREATE_BOARD: "createBoard",
 
   /**
-   * Sends the {@code proto.spine_examples.kanban.AddColumn} command to add the column.
+   * Sends the `proto.spine_examples.kanban.AddColumn` command to add the column.
    */
   ADD_COLUMN: "addColumn",
 };
