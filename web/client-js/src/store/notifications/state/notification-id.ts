@@ -48,7 +48,7 @@ export class NotificationId {
   }
 
   /**
-   * Retrieves underlying UUID string.
+   * Retrieves the underlying UUID string.
    */
   public getUuid(): string {
     return this.uuid;
