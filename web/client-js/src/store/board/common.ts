@@ -42,3 +42,13 @@ export type BoardCreated = proto.spine_examples.kanban.BoardCreated;
  * An alias for the {@code proto.spine_examples.kanban.ColumnAdded} event.
  */
 export type ColumnAdded = proto.spine_examples.kanban.ColumnAdded;
+
+/**
+ * An alias for the `proto.spine_examples.kanban.BoardId`.
+ */
+export type BoardId = proto.spine_examples.kanban.BoardId;
+
+/**
+ * An alias for the `proto.spine_examples.kanban.ColumnId`.
+ */
+export type ColumnId = proto.spine_examples.kanban.ColumnId;

@@ -25,24 +25,25 @@
  */
 
 import { v4 as newUuid } from "uuid";
+import { ColumnId, BoardId } from "@/store/board/common";
 
 /**
  * Factory methods for IDs.
  */
 
 /**
- * Creates a {@code proto.spine_examples.kanban.ColumnId}.
+ * Creates a {@link ColumnId}.
  */
-export function newColumnId() {
+export function newColumnId(): ColumnId {
   const id = new proto.spine_examples.kanban.ColumnId();
   id.setUuid(newUuid());
   return id;
 }
 
 /**
- * Creates a {@code proto.spine_examples.kanban.BoardId}.
+ * Creates a {@link BoardId}.
  */
-export function newBoardId() {
+export function newBoardId(): BoardId {
   const id = new proto.spine_examples.kanban.BoardId();
   id.setUuid(newUuid());
   return id;

@@ -27,6 +27,7 @@
 import { BoardAction } from "@/store/board/actions/base/board-action";
 import { client } from "@/dependency/container";
 import { newColumnId } from "@/store/board/id-factory";
+import { ColumnId } from "@/store/board/common";
 import { Filters } from "spine-web";
 import { AnyPacker } from "spine-web/client/any-packer";
 import { Type } from "spine-web/client/typed-message";
@@ -46,7 +47,6 @@ export type AddColumnActionPayload = {
   name: string;
 };
 
-type ColumnId = proto.spine_examples.kanban.ColumnId;
 type ColumnPosition = proto.spine_examples.kanban.ColumnPosition;
 type AddColumn = proto.spine_examples.kanban.AddColumn;
 type ColumnNameAlreadyTaken =
