@@ -25,7 +25,7 @@
  */
 
 import { v4 as newUuid } from "uuid";
-import { ColumnId, BoardId } from "@/store/board/common";
+import { ColumnId, BoardId } from "@/store/board/aliases";
 
 /**
  * Factory methods for IDs.

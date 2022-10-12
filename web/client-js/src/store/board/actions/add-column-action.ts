@@ -27,7 +27,7 @@
 import { BoardAction } from "@/store/board/actions/base/board-action";
 import { client } from "@/dependency/container";
 import { newColumnId } from "@/store/board/id-factory";
-import { ColumnId } from "@/store/board/common";
+import { ColumnId } from "@/store/board/aliases";
 import { Filters } from "spine-web";
 import { AnyPacker } from "spine-web/client/any-packer";
 import { Type } from "spine-web/client/typed-message";

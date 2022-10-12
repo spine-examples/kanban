@@ -26,7 +26,7 @@
 
 import { BoardState } from "@/store/board/state/board-state";
 import Action from "@/store/base/action";
-import { Board } from "@/store/board/common";
+import { Board } from "@/store/board/aliases";
 
 /**
  * Abstract base for Vuex actions in the {@code board} module.

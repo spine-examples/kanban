@@ -24,7 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Board } from "@/store/board/common";
+import { Board } from "@/store/board/aliases";
 
 /**
  * Local state of the Kanban board.

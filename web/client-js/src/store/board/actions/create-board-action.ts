@@ -29,7 +29,7 @@ import { newBoardId } from "@/store/board/id-factory";
 import { client } from "@/dependency/container";
 import { MutationType } from "@/store/board/mutations";
 import { Event } from "spine-web/proto/spine/core/event_pb";
-import { BoardCreated, BoardId, ColumnAdded } from "@/store/board/common";
+import { BoardCreated, BoardId, ColumnAdded } from "@/store/board/aliases";
 import { AnyPacker } from "spine-web/client/any-packer";
 import { Type } from "spine-web/client/typed-message";
 import { Filters } from "spine-web";

@@ -29,17 +29,17 @@
  */
 
 /**
- * An alias for the {@code proto.spine_examples.kanban.BoardView} projection.
+ * An alias for the `proto.spine_examples.kanban.BoardView` projection.
  */
 export type Board = proto.spine_examples.kanban.BoardView;
 
 /**
- * An alias for the {@code proto.spine_examples.kanban.BoardCreated} event.
+ * An alias for the `proto.spine_examples.kanban.BoardCreated` event.
  */
 export type BoardCreated = proto.spine_examples.kanban.BoardCreated;
 
 /**
- * An alias for the {@code proto.spine_examples.kanban.ColumnAdded} event.
+ * An alias for the `proto.spine_examples.kanban.ColumnAdded` event.
  */
 export type ColumnAdded = proto.spine_examples.kanban.ColumnAdded;
 
