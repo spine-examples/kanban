@@ -24,8 +24,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Board, BoardState } from "@/store/board/types";
+import { BoardState } from "@/store/board/state/board-state";
 import Action from "@/store/base/action";
+import { Board } from "@/store/board/common";
 
 /**
  * Abstract base for Vuex actions in the {@code board} module.

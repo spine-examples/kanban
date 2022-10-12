@@ -25,10 +25,10 @@
  */
 
 import { Module } from "vuex";
-import { NotificationsCenterState } from "@/store/notifications/types/notification-center-state";
-import { RootState } from "@/store/root/types";
+import { NotificationsCenterState } from "@/store/notifications/state/notification-center-state";
+import { RootState } from "@/store/root/root-state";
 import state from "@/store/notifications/state";
-import mutations from "@/store/notifications/mutations";
+import { mutations } from "@/store/notifications/mutations";
 
 /**
  * The Vuex store module with notification center.

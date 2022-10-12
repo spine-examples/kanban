@@ -24,20 +24,49 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { NotificationId } from "@/store/notifications/state/notification-id";
+
 /**
- * Defines mutation types of the
- * {@linkplain NotificationCenterState notification center state}.
+ * The generic notification to be displayed in the notifications center.
+ *
+ * Specific notification types should be implemented as subclasses.
  */
-export const Mutation = {
+export class Notification {
   /**
-   * Adds a notification to the notification center.
-   *
-   * The notification is removed after it expires.
+   * The notification's ID.
+   * @private
    */
-  ADD_NOTIFICATION: "addNotification",
+  private readonly id: NotificationId;
 
   /**
-   * Removes the notification with the provided ID from the notification center.
+   * The notification's message.
+   * @private
    */
-  REMOVE_NOTIFICATION: "removeNotification",
-};
+  private readonly message: string;
+
+  public constructor(id: NotificationId, message: string) {
+    this.id = id;
+    this.message = message;
+  }
+
+  /**
+   * Returns the notification's ID.
+   */
+  public getId(): NotificationId {
+    return this.id;
+  }
+
+  /**
+   * Returns the notification's message.
+   */
+  public getMessage(): string {
+    return this.message;
+  }
+
+  /**
+   * Creates a generic notification with the provided message.
+   */
+  public static of(message: string): Notification {
+    return new Notification(NotificationId.generate(), message);
+  }
+}

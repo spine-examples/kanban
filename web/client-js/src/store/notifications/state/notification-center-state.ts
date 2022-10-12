@@ -24,49 +24,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { NotificationId } from "@/store/notifications/types/notification-id";
+import { Notifications } from "@/store/notifications/state/notifications";
 
 /**
- * The generic notification to be displayed in the notifications center.
- *
- * Specific notification types should be implemented as subclasses.
+ * The state of the notification center.
  */
-export class Notification {
-  /**
-   * The notification's ID.
-   * @private
-   */
-  private readonly id: NotificationId;
-
-  /**
-   * The notification's message.
-   * @private
-   */
-  private readonly message: string;
-
-  public constructor(id: NotificationId, message: string) {
-    this.id = id;
-    this.message = message;
-  }
-
-  /**
-   * Returns the notification's ID.
-   */
-  public getId(): NotificationId {
-    return this.id;
-  }
-
-  /**
-   * Returns the notification's message.
-   */
-  public getMessage(): string {
-    return this.message;
-  }
-
-  /**
-   * Creates a generic notification with the provided message.
-   */
-  public static of(message: string): Notification {
-    return new Notification(NotificationId.generate(), message);
-  }
+export interface NotificationsCenterState {
+  notifications: Notifications;
 }

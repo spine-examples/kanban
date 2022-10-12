@@ -25,11 +25,11 @@
  */
 
 import { Mutation } from "vuex";
-import { NotificationsCenterState } from "@/store/notifications/types/notification-center-state";
-import { Notification } from "@/store/notifications/types/notification";
+import { NotificationsCenterState } from "@/store/notifications/state/notification-center-state";
+import { Notification } from "@/store/notifications/state/notification";
 
 /**
- * Adds a notification to the notification center's state.
+ * Adds a notification to the notification center state.
  *
  * The notification is removed after it expires.
  */

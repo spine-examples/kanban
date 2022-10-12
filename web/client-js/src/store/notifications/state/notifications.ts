@@ -24,33 +24,40 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { MutationTree } from "vuex";
-import { NotificationsCenterState } from "@/store/notifications/state/notification-center-state";
-import { AddNotificationMutation } from "@/store/notifications/mutations/add-notification-mutation";
-import { RemoveNotificationMutation } from "@/store/notifications/mutations/remove-notification-mutation";
+import { Notification } from "@/store/notifications/state/notification";
+import { NotificationId } from "@/store/notifications/state/notification-id";
 
 /**
- * Defines mutation types of the
- * {@linkplain NotificationCenterState notification center state}.
+ * List of {@linkplain Notification notifications}.
  */
-export const MutationType = {
+export class Notifications {
   /**
-   * Adds a notification to the notification center.
-   *
-   * The notification is removed after it expires.
+   * Underlying array of notifications.
    */
-  ADD_NOTIFICATION: "addNotification",
+  private items: Notification[];
+
+  public constructor() {
+    this.items = [];
+  }
 
   /**
-   * Removes the notification with the provided ID from the notification center.
+   * Add the notification to the list.
    */
-  REMOVE_NOTIFICATION: "removeNotification",
-};
+  public add(n: Notification) {
+    this.items.push(n);
+  }
 
-/**
- * Exposes mutations of the {@linkplain NotificationCenterState notification center state}.
- */
-export const mutations: MutationTree<NotificationsCenterState> = {
-  [MutationType.ADD_NOTIFICATION]: AddNotificationMutation.newHandler(),
-  [MutationType.REMOVE_NOTIFICATION]: RemoveNotificationMutation.newHandler(),
-};
+  /**
+   * Remove the notification with the provided ID from the list.
+   */
+  public remove(n: NotificationId) {
+    this.items = this.items.filter((i) => !i.getId().equals(n));
+  }
+
+  /**
+   * Returns the underlying array of items.
+   */
+  public getItems() {
+    return this.items;
+  }
+}

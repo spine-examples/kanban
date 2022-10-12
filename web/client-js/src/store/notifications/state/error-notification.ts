@@ -24,40 +24,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Notification } from "@/store/notifications/types/notification";
-import { NotificationId } from "@/store/notifications/types/notification-id";
+import { Notification } from "@/store/notifications/state/notification";
+import { NotificationId } from "@/store/notifications/state/notification-id";
 
 /**
- * List of {@linkplain Notification notifications}.
+ * The error notification to be displayed in the notifications center.
  */
-export class Notifications {
+export class ErrorNotification extends Notification {
   /**
-   * Underlying array of notifications.
+   * Creates an error notification with the provided message.
    */
-  private items: Notification[];
-
-  public constructor() {
-    this.items = [];
-  }
-
-  /**
-   * Add the notification to the list.
-   */
-  public add(n: Notification) {
-    this.items.push(n);
-  }
-
-  /**
-   * Remove the notification with the provided ID from the list.
-   */
-  public remove(n: NotificationId) {
-    this.items = this.items.filter((i) => !i.getId().equals(n));
-  }
-
-  /**
-   * Returns the underlying array of items.
-   */
-  public getItems() {
-    return this.items;
+  public static of(message: string): ErrorNotification {
+    return new ErrorNotification(NotificationId.generate(), message);
   }
 }

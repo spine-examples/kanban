@@ -31,11 +31,11 @@ import { Filters } from "spine-web";
 import { AnyPacker } from "spine-web/client/any-packer";
 import { Type } from "spine-web/client/typed-message";
 import { Event } from "spine-web/proto/spine/core/event_pb";
-import { ErrorNotification } from "@/store/notifications/types/error-notification";
+import { ErrorNotification } from "@/store/notifications/state/error-notification";
 import { addNotification } from "@/store/notifications/common";
 import { ActionHandler, ActionContext } from "vuex";
-import { BoardState } from "@/store/board/types";
-import { RootState } from "@/store/root/types";
+import { BoardState } from "@/store/board/state/board-state";
+import { RootState } from "@/store/root/root-state";
 
 /**
  * Payload of the `AddColumnAction` action.

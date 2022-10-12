@@ -37,11 +37,11 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { Notification } from "@/store/notifications/types/notification";
-import { Mutation } from "@/store/notifications/types/mutations";
+import { Notification } from "@/store/notifications/state/notification";
+import { MutationType } from "@/store/notifications/mutations";
 import { createNamespacedHelpers } from "vuex";
 import Notifications from "@/store/notifications";
-import { ErrorNotification } from "@/store/notifications/types/error-notification";
+import { ErrorNotification } from "@/store/notifications/state/error-notification";
 
 const { mapMutations } = createNamespacedHelpers(Notifications.MODULE_NAME);
 
@@ -57,7 +57,7 @@ export default defineComponent({
   },
   methods: {
     ...mapMutations({
-      removeNotification: Mutation.REMOVE_NOTIFICATION,
+      removeNotification: MutationType.REMOVE_NOTIFICATION,
     }),
     isError() {
       return this.notification instanceof ErrorNotification;

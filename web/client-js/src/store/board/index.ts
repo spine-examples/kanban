@@ -25,11 +25,11 @@
  */
 
 import { Module } from "vuex";
-import { BoardState } from "./types";
-import { RootState } from "@/store/root/types";
+import { BoardState } from "@/store/board/state/board-state";
 import state from "@/store/board/state";
-import mutations from "@/store/board/mutations";
-import actions from "@/store/board/actions";
+import { RootState } from "@/store/root/root-state";
+import { mutations } from "@/store/board/mutations";
+import { actions } from "@/store/board/actions";
 
 /**
  * The Vuex store module with Kanban board.

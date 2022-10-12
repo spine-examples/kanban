@@ -26,7 +26,7 @@ import Board from "@/store/board";
 import { defineComponent } from "vue";
 import AddColumnForm from "@/components/board/AddColumnForm.vue";
 import KanbanColumn from "@/components/board/KanbanColumn.vue";
-import { Action } from "@/store/board/types";
+import { ActionType } from "@/store/board/actions";
 
 const { mapState, mapActions } = createNamespacedHelpers(Board.MODULE_NAME);
 
@@ -45,7 +45,7 @@ export default defineComponent({
     ...mapState(["board"]),
   },
   methods: {
-    ...mapActions([Action.CREATE_BOARD]),
+    ...mapActions([ActionType.CREATE_BOARD]),
     openAddColumnForm() {
       this.addColumnFormOpened = true;
     },

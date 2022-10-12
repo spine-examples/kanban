@@ -25,8 +25,8 @@
  */
 
 import { Mutation } from "vuex";
-import { NotificationsCenterState } from "@/store/notifications/types/notification-center-state";
-import { NotificationId } from "@/store/notifications/types/notification-id";
+import { NotificationsCenterState } from "@/store/notifications/state/notification-center-state";
+import { NotificationId } from "@/store/notifications/state/notification-id";
 
 /**
  * Removes the notification with the provided ID from the notification center.

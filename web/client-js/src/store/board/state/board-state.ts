@@ -24,17 +24,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Notification } from "@/store/notifications/types/notification";
-import { NotificationId } from "@/store/notifications/types/notification-id";
+import { Board } from "@/store/board/common";
 
 /**
- * The error notification to be displayed in the notifications center.
+ * The local state of the Kanban board.
  */
-export class ErrorNotification extends Notification {
-  /**
-   * Creates an error notification with the provided message.
-   */
-  public static of(message: string): ErrorNotification {
-    return new ErrorNotification(NotificationId.generate(), message);
-  }
+export interface BoardState {
+  board: Board | null;
 }

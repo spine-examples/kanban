@@ -25,7 +25,7 @@
  */
 
 import { createStore } from "vuex";
-import { RootState } from "@/store/root/types";
+import { RootState } from "@/store/root/root-state";
 import Board from "@/store/board";
 import Notifications from "@/store/notifications";
 

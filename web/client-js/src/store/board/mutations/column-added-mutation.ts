@@ -25,7 +25,8 @@
  */
 
 import { Mutation } from "vuex";
-import { BoardState, ColumnAdded } from "@/store/board/types";
+import { BoardState } from "@/store/board/state/board-state";
+import { ColumnAdded } from "@/store/board/common";
 
 /**
  * Mutates the local {@linkplain BoardState board state} in response

@@ -36,7 +36,7 @@
 import { createNamespacedHelpers } from "vuex";
 import Board from "@/store/board";
 import { defineComponent } from "vue";
-import { Action } from "@/store/board/types";
+import { ActionType } from "@/store/board/actions";
 import { AddColumnActionPayload } from "@/store/board/actions/add-column-action";
 
 const { mapActions } = createNamespacedHelpers(Board.MODULE_NAME);
@@ -53,7 +53,7 @@ export default defineComponent({
   },
   methods: {
     ...mapActions({
-      addColumn: Action.ADD_COLUMN,
+      addColumn: ActionType.ADD_COLUMN,
     }),
     submit() {
       if (this.name.length > 0) {

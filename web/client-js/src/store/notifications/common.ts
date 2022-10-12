@@ -25,9 +25,9 @@
  */
 
 import { ActionContext } from "vuex";
-import { Notification } from "@/store/notifications/types/notification";
+import { Notification } from "@/store/notifications/state/notification";
 import Notifications from "@/store/notifications";
-import { Mutation } from "@/store/notifications/types/mutations";
+import { MutationType } from "@/store/notifications/mutations";
 
 /**
  * Commits the root mutation to add a new notification to the notification center.
@@ -39,7 +39,7 @@ export function addNotification<S, T>(
   notification: Notification
 ): void {
   context.commit(
-    `${Notifications.MODULE_NAME}/${Mutation.ADD_NOTIFICATION}`,
+    `${Notifications.MODULE_NAME}/${MutationType.ADD_NOTIFICATION}`,
     notification,
     { root: true }
   );

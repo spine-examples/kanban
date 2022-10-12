@@ -24,10 +24,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { BoardState } from "@/store/board/types";
+import { BoardState } from "@/store/board/state/board-state";
 
 /**
- * The local state of the Kanban board.
+ * The instance of local state of the Kanban board.
  */
 const state: BoardState = {
   board: null,

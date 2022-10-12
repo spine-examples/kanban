@@ -24,11 +24,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Notifications } from "@/store/notifications/types/notifications";
+import { NotificationsCenterState } from "@/store/notifications/state/notification-center-state";
+import { Notifications } from "@/store/notifications/state/notifications";
 
 /**
- * The state of the notification center.
+ * The instance of the notification center state.
  */
-export interface NotificationsCenterState {
-  notifications: Notifications;
-}
+const state: NotificationsCenterState = {
+  notifications: new Notifications(),
+};
+
+export default state;

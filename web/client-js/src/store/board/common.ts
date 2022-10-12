@@ -24,14 +24,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { NotificationsCenterState } from "@/store/notifications/types/notification-center-state";
-import { Notifications } from "@/store/notifications/types/notifications";
+/**
+ * Aliases for frequently used types.
+ */
 
 /**
- * The state of the notification center.
+ * An alias for the {@code proto.spine_examples.kanban.BoardView} projection.
  */
-const state: NotificationsCenterState = {
-  notifications: new Notifications(),
-};
+export type Board = proto.spine_examples.kanban.BoardView;
 
-export default state;
+/**
+ * An alias for the {@code proto.spine_examples.kanban.BoardCreated} event.
+ */
+export type BoardCreated = proto.spine_examples.kanban.BoardCreated;
+
+/**
+ * An alias for the {@code proto.spine_examples.kanban.ColumnAdded} event.
+ */
+export type ColumnAdded = proto.spine_examples.kanban.ColumnAdded;
