@@ -27,7 +27,7 @@
 import { Board } from "@/store/board/common";
 
 /**
- * The local state of the Kanban board.
+ * Local state of the Kanban board.
  */
 export interface BoardState {
   board: Board | null;

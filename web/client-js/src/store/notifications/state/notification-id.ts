@@ -31,7 +31,7 @@ import { v4 as newUuid } from "uuid";
  */
 export class NotificationId {
   /**
-   * Underlying UUID string.
+   * The underlying UUID string.
    * @private
    */
   private readonly uuid: string;
@@ -41,14 +41,14 @@ export class NotificationId {
   }
 
   /**
-   * Generates unique ID.
+   * Generates a unique ID.
    */
   public static generate() {
     return new NotificationId(newUuid());
   }
 
   /**
-   * Retrieve underlying UUID string.
+   * Retrieves underlying UUID string.
    */
   public getUuid(): string {
     return this.uuid;

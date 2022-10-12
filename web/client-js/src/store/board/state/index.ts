@@ -27,7 +27,7 @@
 import { BoardState } from "@/store/board/state/board-state";
 
 /**
- * The instance of local state of the Kanban board.
+ * The instance of the local Kanban board state.
  */
 const state: BoardState = {
   board: null,

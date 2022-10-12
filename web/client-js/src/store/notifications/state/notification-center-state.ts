@@ -27,7 +27,7 @@
 import { Notifications } from "@/store/notifications/state/notifications";
 
 /**
- * The state of the notification center.
+ * State of the notification center.
  */
 export interface NotificationsCenterState {
   notifications: Notifications;

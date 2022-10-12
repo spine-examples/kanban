@@ -32,7 +32,7 @@ import { NotificationId } from "@/store/notifications/state/notification-id";
  */
 export class Notifications {
   /**
-   * Underlying array of notifications.
+   * The underlying array of notifications.
    */
   private items: Notification[];
 
@@ -41,14 +41,14 @@ export class Notifications {
   }
 
   /**
-   * Add the notification to the list.
+   * Adds the notification to the list.
    */
   public add(n: Notification) {
     this.items.push(n);
   }
 
   /**
-   * Remove the notification with the provided ID from the list.
+   * Removes the notification with the provided ID from the list.
    */
   public remove(n: NotificationId) {
     this.items = this.items.filter((i) => !i.getId().equals(n));

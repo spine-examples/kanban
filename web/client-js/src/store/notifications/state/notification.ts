@@ -27,7 +27,7 @@
 import { NotificationId } from "@/store/notifications/state/notification-id";
 
 /**
- * The generic notification to be displayed in the notifications center.
+ * A generic notification to be displayed in the notifications center.
  *
  * Specific notification types should be implemented as subclasses.
  */

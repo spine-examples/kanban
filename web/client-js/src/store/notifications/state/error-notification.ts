@@ -28,7 +28,7 @@ import { Notification } from "@/store/notifications/state/notification";
 import { NotificationId } from "@/store/notifications/state/notification-id";
 
 /**
- * The error notification to be displayed in the notifications center.
+ * An error notification to be displayed in the notifications center.
  */
 export class ErrorNotification extends Notification {
   /**
