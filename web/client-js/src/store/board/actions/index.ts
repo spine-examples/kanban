@@ -27,29 +27,47 @@
 import { ActionTree } from "vuex";
 import { BoardState } from "@/store/board/state/board-state";
 import { RootState } from "@/store/root/root-state";
-import CreateBoardAction from "@/store/board/actions/create-board-action";
-import AddColumnAction from "@/store/board/actions/add-column-action";
+import CreateBoardAction from "@/store/board/actions/command/create-board-action";
+import AddColumnAction from "@/store/board/actions/command/add-column-action";
+import FetchBoardAction from "@/store/board/actions/query/fetch-board-action";
+import SubscribeToColumnAddedAction from "@/store/board/actions/subscription/subscribe-to-column-added-action";
 
 /**
  * Defines action types to interact with the remote board state.
  */
 export const ActionType = {
-  /**
-   * Subscribes to the {@link BoardCreated} and {@link ColumnAdded} events and sends
-   * the `proto.spine_examples.kanban.CreateBoard` command to create a board.
-   */
-  CREATE_BOARD: "createBoard",
+  Query: {
+    /**
+     * Fetches the {@link Board} with the provided ID from the server.
+     */
+    FETCH_BOARD: "fetchBoard",
+  },
+  Command: {
+    /**
+     * Creates a board.
+     */
+    CREATE_BOARD: "createBoard",
 
-  /**
-   * Sends the `proto.spine_examples.kanban.AddColumn` command to add the column.
-   */
-  ADD_COLUMN: "addColumn",
+    /**
+     * Adds a column.
+     */
+    ADD_COLUMN: "addColumn",
+  },
+  Subscription: {
+    /**
+     * Subscribes to {@link ColumnAdded} events produced by the provided board.
+     */
+    SUBSCRIBE_TO_COLUMN_ADDED: "subscribeToColumnAdded",
+  },
 };
 
 /**
  * Exposes actions to interact with the remote board state.
  */
 export const actions: ActionTree<BoardState, RootState> = {
-  [ActionType.CREATE_BOARD]: CreateBoardAction.newHandler(),
-  [ActionType.ADD_COLUMN]: AddColumnAction.newHandler(),
+  [ActionType.Query.FETCH_BOARD]: FetchBoardAction.newHandler(),
+  [ActionType.Command.CREATE_BOARD]: CreateBoardAction.newHandler(),
+  [ActionType.Command.ADD_COLUMN]: AddColumnAction.newHandler(),
+  [ActionType.Subscription.SUBSCRIBE_TO_COLUMN_ADDED]:
+    SubscribeToColumnAddedAction.newHandler(),
 };
