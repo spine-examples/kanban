@@ -114,17 +114,24 @@ export default class AddColumnAction extends BoardAction<
       .then(({ eventEmitted, unsubscribe }) => {
         eventEmitted.subscribe((e: Event) => {
           unsubscribe();
-          const rejection: ColumnNameAlreadyTaken = AnyPacker.unpack(
-            e.getMessage()
-          ).as(
-            Type.forClass(proto.spine_examples.kanban.ColumnNameAlreadyTaken)
-          );
+          const rejection: ColumnNameAlreadyTaken =
+            this.unpackColumnNameAlreadyTaken(e);
           const error = ErrorNotification.of(
             `The name "${rejection.getName()}" is already taken`
           );
           addNotification(this.getActionContext(), error);
         });
       });
+  }
+
+  /**
+   * Unpacks the {@link ColumnNameAlreadyTaken} event from the {@link Event}.
+   * @private
+   */
+  private unpackColumnNameAlreadyTaken(e: Event) {
+    return AnyPacker.unpack(e.getMessage()).as(
+      Type.forClass(proto.spine_examples.kanban.ColumnNameAlreadyTaken)
+    );
   }
 
   /**
