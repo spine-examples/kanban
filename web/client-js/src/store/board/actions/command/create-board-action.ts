@@ -41,7 +41,7 @@ import { Filters } from "spine-web";
 import { ActionContext, ActionHandler } from "vuex";
 import { RootState } from "@/store/root/root-state";
 import { BoardState } from "@/store/board/state/board-state";
-import { ActionType } from "@/store/board/actions";
+import router from "@/router";
 
 type CreateBoard = proto.spine_examples.kanban.CreateBoard;
 
@@ -88,8 +88,8 @@ export default class CreateBoardAction extends BoardAction<null, void> {
           unsubscribe();
           const innerEvent: BoardCreated = this.unpackBoardCreated(e);
           const board = this.extractBoard(innerEvent);
-          this.subscribeToColumnAdded(board);
           this.addBoardToState(board);
+          CreateBoardAction.redirectToBoard(board);
         });
       });
   }
@@ -114,20 +114,15 @@ export default class CreateBoardAction extends BoardAction<null, void> {
     return board;
   }
 
-  /**
-   * Dispatches action to subscribe for {@link ColumnAdded} produced by
-   * the board with the provided ID.
-   * @private
-   */
-  private subscribeToColumnAdded(b: Board): void {
-    this.getActionContext().dispatch(
-      ActionType.Subscription.SUBSCRIBE_TO_COLUMN_ADDED,
-      b.getId()
-    );
-  }
-
   private addBoardToState(b: Board): void {
     this.getActionContext().commit(MutationType.SET_BOARD, b);
+  }
+
+  private static redirectToBoard(b: Board): void {
+    router.push({
+      name: "board",
+      params: { id: b.getId()!.getUuid() },
+    });
   }
 
   /**

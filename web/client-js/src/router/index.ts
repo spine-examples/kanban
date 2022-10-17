@@ -26,12 +26,24 @@
 
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import BoardView from "@/views/BoardView.vue";
+import CreateBoardView from "@/views/CreateBoardView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: "/",
+    path: "/boards/:id",
     name: "board",
     component: BoardView,
+  },
+  {
+    path: "/boards/create",
+    name: "create-board",
+    component: CreateBoardView,
+  },
+  {
+    path: "/",
+    redirect: {
+      name: "create-board",
+    },
   },
 ];
 

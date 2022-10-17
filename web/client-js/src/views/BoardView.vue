@@ -1,5 +1,5 @@
 <template>
-  <div v-if="board" id="columns">
+  <div v-if="board" id="board">
     <KanbanColumn
       v-for="(column, $columnIndex) of board.getColumnList()"
       :key="$columnIndex"
@@ -15,9 +15,6 @@
       />
     </div>
   </div>
-  <div v-else id="add-board">
-    <button v-on:click="createBoard()">Add a board</button>
-  </div>
 </template>
 
 <script lang="ts">
@@ -28,7 +25,7 @@ import AddColumnForm from "@/components/board/AddColumnForm.vue";
 import KanbanColumn from "@/components/board/KanbanColumn.vue";
 import { ActionType } from "@/store/board/actions";
 
-const { mapState, mapActions } = createNamespacedHelpers(Board.MODULE_NAME);
+const { mapActions, mapState } = createNamespacedHelpers(Board.MODULE_NAME);
 
 /**
  * Displays the Kanban board.
@@ -41,11 +38,21 @@ export default defineComponent({
       addColumnFormOpened: false,
     };
   },
+  created() {
+    const boardUuid = this.$route.params.id as string;
+    const boardId = new proto.spine_examples.kanban.BoardId();
+    boardId.setUuid(boardUuid);
+    this.fetchBoard(boardId);
+    this.subscribeToColumnAdded(boardId);
+  },
   computed: {
     ...mapState(["board"]),
   },
   methods: {
-    ...mapActions([ActionType.CREATE_BOARD]),
+    ...mapActions({
+      subscribeToColumnAdded: ActionType.Subscription.SUBSCRIBE_TO_COLUMN_ADDED,
+      fetchBoard: ActionType.Query.FETCH_BOARD,
+    }),
     openAddColumnForm() {
       this.addColumnFormOpened = true;
     },
@@ -57,7 +64,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-#columns {
+#board {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
@@ -66,11 +73,6 @@ export default defineComponent({
   overflow-x: auto;
 }
 
-#add-board {
-  padding-left: 30px;
-}
-
-#add-board button,
 #add-column button {
   all: unset;
   display: flex;
@@ -83,7 +85,6 @@ export default defineComponent({
   margin: 0.5rem;
 }
 
-#add-board button:hover,
 #add-column button:hover {
   background-color: #cdd2d4;
   color: #4d4d4d;
