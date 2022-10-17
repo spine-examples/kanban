@@ -62,8 +62,8 @@ export default class AddColumnAction extends BoardAction<
   /**
    * Sends the command to add a column.
    *
-   * It is assumed that the subscription to {@link ColumnAdded} events
-   * already exists after {@linkplain CreateBoardAction board creation}.
+   * It is assumed that the {@linkplain SubscribeToColumnAddedAction subscription} to
+   * {@link ColumnAdded} events already exists.
    * @protected
    */
   protected execute(): void {

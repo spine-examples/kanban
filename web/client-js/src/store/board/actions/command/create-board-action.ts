@@ -29,13 +29,19 @@ import { newBoardId } from "@/store/board/id-factory";
 import { client } from "@/dependency/container";
 import { MutationType } from "@/store/board/mutations";
 import { Event } from "spine-web/proto/spine/core/event_pb";
-import { BoardCreated, BoardId, ColumnAdded } from "@/store/board/aliases";
+import {
+  Board,
+  BoardCreated,
+  BoardId,
+  ColumnAdded,
+} from "@/store/board/aliases";
 import { AnyPacker } from "spine-web/client/any-packer";
 import { Type } from "spine-web/client/typed-message";
 import { Filters } from "spine-web";
 import { ActionContext, ActionHandler } from "vuex";
 import { RootState } from "@/store/root/root-state";
 import { BoardState } from "@/store/board/state/board-state";
+import { ActionType } from "@/store/board/actions";
 
 type CreateBoard = proto.spine_examples.kanban.CreateBoard;
 
@@ -52,8 +58,17 @@ export default class CreateBoardAction extends BoardAction<null, void> {
   protected execute(): void {
     const command = this.command();
     this.subscribeToBoardCreated(command.getBoard()!);
-    this.subscribeToColumnAdded(command.getBoard()!);
     client.command(command).post();
+  }
+
+  /**
+   * Assembles the {@link CreateBoard} command.
+   * @private
+   */
+  private command(): CreateBoard {
+    const c = new proto.spine_examples.kanban.CreateBoard();
+    c.setBoard(newBoardId());
+    return c;
   }
 
   /**
@@ -71,44 +86,48 @@ export default class CreateBoardAction extends BoardAction<null, void> {
       .then(({ eventEmitted, unsubscribe }) => {
         eventEmitted.subscribe((e: Event) => {
           unsubscribe();
-          const innerEvent: BoardCreated = AnyPacker.unpack(e.getMessage()).as(
-            Type.forClass(proto.spine_examples.kanban.BoardCreated)
-          );
-          this.getActionContext().commit(
-            MutationType.BOARD_CREATED,
-            innerEvent
-          );
+          const innerEvent: BoardCreated = this.unpackBoardCreated(e);
+          const board = this.extractBoard(innerEvent);
+          this.subscribeToColumnAdded(board);
+          this.addBoardToState(board);
         });
       });
   }
 
   /**
-   * Subscribes to {@link ColumnAdded} events.
+   * Unpacks the {@link BoardCreated} event from the {@link Event}.
    * @private
    */
-  private subscribeToColumnAdded(board: BoardId): void {
-    client
-      .subscribeToEvent(proto.spine_examples.kanban.ColumnAdded)
-      .where(Filters.eq("board", board))
-      .post()
-      .then(({ eventEmitted }) => {
-        eventEmitted.subscribe((e: Event) => {
-          const innerEvent: BoardCreated = AnyPacker.unpack(e.getMessage()).as(
-            Type.forClass(proto.spine_examples.kanban.ColumnAdded)
-          );
-          this.getActionContext().commit(MutationType.COLUMN_ADDED, innerEvent);
-        });
-      });
+  private unpackBoardCreated(e: Event) {
+    return AnyPacker.unpack(e.getMessage()).as(
+      Type.forClass(proto.spine_examples.kanban.BoardCreated)
+    );
   }
 
   /**
-   * Assembles the {@link CreateBoard} command.
+   * Extracts the {@link Board} from the {@link BoardCreated} event.
    * @private
    */
-  private command(): CreateBoard {
-    const c = new proto.spine_examples.kanban.CreateBoard();
-    c.setBoard(newBoardId());
-    return c;
+  private extractBoard(e: BoardCreated): Board {
+    const board = new proto.spine_examples.kanban.BoardView();
+    board.setId(e.getBoard());
+    return board;
+  }
+
+  /**
+   * Dispatches action to subscribe for {@link ColumnAdded} produced by
+   * the board with the provided ID.
+   * @private
+   */
+  private subscribeToColumnAdded(b: Board): void {
+    this.getActionContext().dispatch(
+      ActionType.Subscription.SUBSCRIBE_TO_COLUMN_ADDED,
+      b.getId()
+    );
+  }
+
+  private addBoardToState(b: Board): void {
+    this.getActionContext().commit(MutationType.SET_BOARD, b);
   }
 
   /**
