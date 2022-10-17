@@ -26,27 +26,18 @@
 
 import { Mutation } from "vuex";
 import { BoardState } from "@/store/board/state/board-state";
-import { ColumnAdded } from "@/store/board/aliases";
+import { Board } from "@/store/board/aliases";
 
 /**
- * Mutates the local {@linkplain BoardState board state} in response
- * to the {@link ColumnAdded} event.
+ * Sets the board in the {@linkplain BoardState local state} to the provided value.
  */
-export default class ColumnAddedMutation {
+export default class SetBoardMutation {
   /**
    * Creates the mutation handler to be used by the store.
-   *
-   * Adds the column extracted from the {@link ColumnAdded} event to the board stored
-   * in the {@linkplain BoardState local state}.
    */
   public static newHandler(): Mutation<BoardState> {
-    return (s: BoardState, e: ColumnAdded) => {
-      const column = new proto.spine_examples.kanban.Column();
-      column.setId(e.getColumn());
-      column.setBoard(e.getBoard());
-      column.setName(e.getName());
-      column.setPosition(e.getPosition());
-      s.board!.addColumn(column);
+    return (s: BoardState, b: Board) => {
+      s.board = b;
     };
   }
 }
