@@ -114,10 +114,18 @@ export default class CreateBoardAction extends BoardAction<null, void> {
     return board;
   }
 
+  /**
+   * Commits the mutation to add the provided {@link Board} to the state.
+   * @private
+   */
   private addBoardToState(b: Board): void {
     this.getActionContext().commit(MutationType.SET_BOARD, b);
   }
 
+  /**
+   * Redirects to the view of the board with the provided ID.
+   * @private
+   */
   private static redirectToBoard(b: Board): void {
     router.push({
       name: "board",
