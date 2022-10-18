@@ -34,11 +34,12 @@ import AddColumnMutation from "@/store/board/mutations/add-column-mutation";
  */
 export const MutationType = {
   /**
-   * Adds the provided column to the board in the {@linkplain BoardState local state}.
+   * Sets the board in the {@linkplain BoardState local state} to the provided value.
    */
   SET_BOARD: "setBoard",
+
   /**
-   * Sets the board in the {@linkplain BoardState local state} to the provided value.
+   * Adds the provided column to the board in the {@linkplain BoardState local state}.
    */
   ADD_COLUMN: "addColumn",
 };
