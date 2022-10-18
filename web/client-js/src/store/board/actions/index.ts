@@ -38,7 +38,7 @@ import SubscribeToColumnAddedAction from "@/store/board/actions/subscription/sub
 export const ActionType = {
   Query: {
     /**
-     * Fetches the {@link Board} with the provided ID from the server.
+     * Fetches the {@link Board} with the provided ID.
      */
     FETCH_BOARD: "fetchBoard",
   },
