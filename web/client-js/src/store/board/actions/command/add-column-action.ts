@@ -125,10 +125,10 @@ export default class AddColumnAction extends BoardAction<
   }
 
   /**
-   * Unpacks the {@link ColumnNameAlreadyTaken} event from the {@link Event}.
+   * Unpacks the {@link ColumnNameAlreadyTaken} rejection from the {@link Event}.
    * @private
    */
-  private unpackColumnNameAlreadyTaken(e: Event) {
+  private unpackColumnNameAlreadyTaken(e: Event): ColumnNameAlreadyTaken {
     return AnyPacker.unpack(e.getMessage()).as(
       Type.forClass(proto.spine_examples.kanban.ColumnNameAlreadyTaken)
     );

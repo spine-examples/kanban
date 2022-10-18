@@ -78,7 +78,7 @@ export default class SubscribeToColumnAddedAction extends BoardAction<
    * Unpacks the {@link ColumnAdded} event from the {@link Event}.
    * @private
    */
-  private unpackColumnAdded(e: Event) {
+  private unpackColumnAdded(e: Event): ColumnAdded {
     return AnyPacker.unpack(e.getMessage()).as(
       Type.forClass(proto.spine_examples.kanban.ColumnAdded)
     );

@@ -98,7 +98,7 @@ export default class CreateBoardAction extends BoardAction<null, void> {
    * Unpacks the {@link BoardCreated} event from the {@link Event}.
    * @private
    */
-  private unpackBoardCreated(e: Event) {
+  private unpackBoardCreated(e: Event): BoardCreated {
     return AnyPacker.unpack(e.getMessage()).as(
       Type.forClass(proto.spine_examples.kanban.BoardCreated)
     );
