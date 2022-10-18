@@ -31,6 +31,8 @@ type Column = proto.spine_examples.kanban.Column;
 
 /**
  * Adds the provided column to the board in the {@linkplain BoardState local state}.
+ *
+ * If the column is already present in the state, it is not added.
  */
 export default class AddColumnMutation {
   /**
@@ -38,7 +40,9 @@ export default class AddColumnMutation {
    */
   public static newHandler(): Mutation<BoardState> {
     return (s: BoardState, c: Column) => {
-      s.board?.addColumn(c);
+      if (!s.board?.getColumnList().includes(c)) {
+        s.board!.addColumn(c);
+      }
     };
   }
 }
