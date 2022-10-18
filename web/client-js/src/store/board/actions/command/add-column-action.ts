@@ -62,8 +62,8 @@ export default class AddColumnAction extends BoardAction<
   /**
    * Sends the command to add a column.
    *
-   * It is assumed that the subscription to {@link ColumnAdded} events
-   * already exists after {@linkplain CreateBoardAction board creation}.
+   * It is assumed that the {@linkplain SubscribeToColumnAddedAction subscription} to
+   * {@link ColumnAdded} events already exists.
    * @protected
    */
   protected execute(): void {
@@ -114,17 +114,24 @@ export default class AddColumnAction extends BoardAction<
       .then(({ eventEmitted, unsubscribe }) => {
         eventEmitted.subscribe((e: Event) => {
           unsubscribe();
-          const rejection: ColumnNameAlreadyTaken = AnyPacker.unpack(
-            e.getMessage()
-          ).as(
-            Type.forClass(proto.spine_examples.kanban.ColumnNameAlreadyTaken)
-          );
+          const rejection: ColumnNameAlreadyTaken =
+            this.unpackColumnNameAlreadyTaken(e);
           const error = ErrorNotification.of(
             `The name "${rejection.getName()}" is already taken`
           );
           addNotification(this.getActionContext(), error);
         });
       });
+  }
+
+  /**
+   * Unpacks the {@link ColumnNameAlreadyTaken} rejection from the {@link Event}.
+   * @private
+   */
+  private unpackColumnNameAlreadyTaken(e: Event): ColumnNameAlreadyTaken {
+    return AnyPacker.unpack(e.getMessage()).as(
+      Type.forClass(proto.spine_examples.kanban.ColumnNameAlreadyTaken)
+    );
   }
 
   /**

@@ -26,29 +26,28 @@
 
 import { MutationTree } from "vuex";
 import { BoardState } from "@/store/board/state/board-state";
-import BoardCreatedMutation from "@/store/board/mutations/board-created-mutation";
-import ColumnAddedMutation from "@/store/board/mutations/column-added-mutation";
+import SetBoardMutation from "@/store/board/mutations/set-board-mutation";
+import AddColumnMutation from "@/store/board/mutations/add-column-mutation";
 
 /**
  * Defines mutation types of the local {@linkplain BoardState board state}.
  */
 export const MutationType = {
   /**
-   * Adds the board extracted from the {@link BoardCreated} event to the state.
+   * Sets the board in the {@linkplain BoardState local state} to the provided value.
    */
-  BOARD_CREATED: "boardCreated",
+  SET_BOARD: "setBoard",
 
   /**
-   * Adds the column extracted from the {@link ColumnAdded} event to the board stored
-   * in the state.
+   * Adds the provided column to the board in the {@linkplain BoardState local state}.
    */
-  COLUMN_ADDED: "columnAdded",
+  ADD_COLUMN: "addColumn",
 };
 
 /**
  * Exposes mutations of the local {@linkplain BoardState board state}.
  */
 export const mutations: MutationTree<BoardState> = {
-  [MutationType.BOARD_CREATED]: BoardCreatedMutation.newHandler(),
-  [MutationType.COLUMN_ADDED]: ColumnAddedMutation.newHandler(),
+  [MutationType.SET_BOARD]: SetBoardMutation.newHandler(),
+  [MutationType.ADD_COLUMN]: AddColumnMutation.newHandler(),
 };
