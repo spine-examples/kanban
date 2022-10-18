@@ -101,8 +101,8 @@ export default class SubscribeToColumnAddedAction extends BoardAction<
    * Commits the mutation to add the provided {@link Column} to the state.
    * @private
    */
-  private addColumnToState(column: Column): void {
-    this.getActionContext().commit(MutationType.ADD_COLUMN, column);
+  private addColumnToState(c: Column): void {
+    this.getActionContext().commit(MutationType.ADD_COLUMN, c);
   }
 
   /**
