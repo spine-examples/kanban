@@ -89,7 +89,7 @@ export default class CreateBoardAction extends BoardAction<null, void> {
           const innerEvent: BoardCreated = this.unpackBoardCreated(e);
           const board = this.extractBoard(innerEvent);
           this.addBoardToState(board);
-          CreateBoardAction.redirectToBoard(board);
+          CreateBoardAction.redirectToBoard(board.getId()!);
         });
       });
   }
@@ -126,10 +126,10 @@ export default class CreateBoardAction extends BoardAction<null, void> {
    * Redirects to the view of the board with the provided ID.
    * @private
    */
-  private static redirectToBoard(b: Board): void {
+  private static redirectToBoard(b: BoardId): void {
     router.push({
       name: "board",
-      params: { id: b.getId()!.getUuid() },
+      params: { id: b.getUuid() },
     });
   }
 
