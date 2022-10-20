@@ -141,15 +141,15 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
                 new ImmutableList.Builder<>();
 
         for (int i = 1; i <= currentTotal; i++) {
-            columnsMoved.add(updateTotal(i, currentTotal, newTotal));
+            ColumnPosition from = ColumnPositions.of(i, currentTotal);
+            ColumnPosition to = ColumnPositions.of(i, newTotal);
+            columnsMoved.add(moveColumn(from, to));
         }
 
         return columnsMoved.build();
     }
 
-    private ColumnMovedOnBoard updateTotal(int index, int currentTotal, int newTotal) {
-        ColumnPosition from = ColumnPositions.of(index, currentTotal);
-        ColumnPosition to = ColumnPositions.of(index, newTotal);
+    private ColumnMovedOnBoard moveColumn(ColumnPosition from, ColumnPosition to) {
         ColumnId column = state().getColumn(from.zeroBasedIndex());
         return ColumnMovedOnBoard
                 .newBuilder()
