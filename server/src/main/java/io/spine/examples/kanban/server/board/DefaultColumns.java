@@ -70,12 +70,7 @@ final class DefaultColumns {
 
         for (int oneBasedIndex = 1; oneBasedIndex <= total; oneBasedIndex++) {
             DefaultColumn column = columns[oneBasedIndex - 1];
-            ColumnPosition position =
-                    ColumnPosition.newBuilder()
-                                  .setIndex(oneBasedIndex)
-                                  .setOfTotal(total)
-                                  .vBuild();
-
+            ColumnPosition position = ColumnPositions.of(oneBasedIndex, total);
             commands.add(additionCommand(board, column, position));
         }
 

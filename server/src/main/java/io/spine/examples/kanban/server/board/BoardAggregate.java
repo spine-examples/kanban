@@ -148,18 +148,9 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     }
 
     private ColumnMovedOnBoard updateTotal(int index, int currentTotal, int newTotal) {
-        ColumnPosition from =
-                ColumnPosition.newBuilder()
-                              .setIndex(index)
-                              .setOfTotal(currentTotal)
-                              .vBuild();
-        ColumnPosition to =
-                ColumnPosition.newBuilder()
-                              .setIndex(index)
-                              .setOfTotal(newTotal)
-                              .vBuild();
+        ColumnPosition from = ColumnPositions.of(index, currentTotal);
+        ColumnPosition to = ColumnPositions.of(index, newTotal);
         ColumnId column = state().getColumn(from.zeroBasedIndex());
-
         return ColumnMovedOnBoard
                 .newBuilder()
                 .setColumn(column)

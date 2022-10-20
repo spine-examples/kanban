@@ -35,7 +35,7 @@ import io.spine.examples.kanban.command.AddColumn;
 import io.spine.examples.kanban.command.CreateBoard;
 import io.spine.examples.kanban.command.CreateCard;
 import io.spine.examples.kanban.command.SetWipLimit;
-import io.spine.examples.kanban.server.given.ColumnPositions;
+import io.spine.examples.kanban.server.board.ColumnPositions;
 import io.spine.examples.kanban.server.given.TestCommands;
 import org.junit.jupiter.api.BeforeEach;
 

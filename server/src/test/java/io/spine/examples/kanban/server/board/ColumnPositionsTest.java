@@ -24,29 +24,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.examples.kanban.server.given;
+package io.spine.examples.kanban.server.board;
 
-import io.spine.examples.kanban.ColumnPosition;
+import io.spine.testing.UtilityClassTest;
+import org.junit.jupiter.api.DisplayName;
 
-/**
- * Provides utility methods for {@link ColumnPosition} for testing purposes.
- */
-public final class ColumnPositions {
+@DisplayName("`ColumnPositions` should")
 
-    /**
-     * Prevents utility class instantiation.
-     */
-    private ColumnPositions() {
-    }
+class ColumnPositionsTest extends UtilityClassTest<ColumnPositions> {
 
-    /**
-     * Creates a column position with the passed index and total number of columns.
-     */
-    public static ColumnPosition of(int index, int ofTotal) {
-        return ColumnPosition
-                .newBuilder()
-                .setIndex(index)
-                .setOfTotal(ofTotal)
-                .vBuild();
+    ColumnPositionsTest() {
+        super(ColumnPositions.class);
     }
 }
