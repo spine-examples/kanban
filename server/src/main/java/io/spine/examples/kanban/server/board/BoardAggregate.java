@@ -34,6 +34,7 @@ import io.spine.examples.kanban.ColumnId;
 import io.spine.examples.kanban.ColumnPosition;
 import io.spine.examples.kanban.command.AddColumn;
 import io.spine.examples.kanban.command.CreateBoard;
+import io.spine.examples.kanban.command.MoveColumn;
 import io.spine.examples.kanban.command.PlaceColumn;
 import io.spine.examples.kanban.event.BoardCreated;
 import io.spine.examples.kanban.event.CardCreated;
@@ -116,10 +117,10 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
 
     private ColumnPlaced placeColumn(PlaceColumn c) {
         ColumnPosition actualPosition =
-                ColumnPosition.newBuilder()
-                              .setIndex(c.getDesiredPosition().getIndex())
-                              .setOfTotal(incrementColumnCount())
-                              .vBuild();
+                ColumnPositions.of(
+                    c.getDesiredPosition().getIndex(),
+                    incrementColumnCount()
+                );
 
         return ColumnPlaced
                 .newBuilder()
@@ -151,10 +152,11 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
 
     private ColumnMovedOnBoard moveColumn(ColumnPosition from, ColumnPosition to) {
         ColumnId column = state().getColumn(from.zeroBasedIndex());
+        BoardId board = state().getId();
         return ColumnMovedOnBoard
                 .newBuilder()
                 .setColumn(column)
-                .setBoard(state().getId())
+                .setBoard(board)
                 .setFrom(from)
                 .setTo(to)
                 .vBuild();
@@ -167,8 +169,60 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
 
     @Apply
     private void apply(ColumnMovedOnBoard e) {
-        builder().removeColumn(e.getFrom().zeroBasedIndex())
-                 .addColumn(e.getTo().zeroBasedIndex(), e.getColumn());
+        int index = indexOf(e.getColumn());
+        int newIndex = e.getTo().zeroBasedIndex();
+
+        if (index != newIndex) {
+            builder().removeColumn(index)
+                     .addColumn(newIndex, e.getColumn());
+        }
+    }
+
+    private int indexOf(ColumnId column) {
+        return state().getColumnList().indexOf(column);
+    }
+
+    @Assign
+    Iterable<ColumnMovedOnBoard> handle(MoveColumn c) {
+        return new ImmutableList.Builder<ColumnMovedOnBoard>()
+                .add(moveColumn(c.getFrom(), c.getTo()))
+                .addAll(shiftColumns(c))
+                .build();
+    }
+
+    private ImmutableList<ColumnMovedOnBoard> shiftColumns(MoveColumn c) {
+        ImmutableList.Builder<ColumnMovedOnBoard> shiftedColumns =
+                new ImmutableList.Builder<>();
+
+        if (movingRight(c)) {
+            for(int i = c.getFrom().getIndex() + 1; i <= c.getTo().getIndex(); i++) {
+                shiftedColumns.add(shiftColumnLeft(i));
+            }
+        } else {
+            for(int i = c.getFrom().getIndex() - 1; i >= c.getTo().getIndex(); i--) {
+                shiftedColumns.add(shiftColumnRight(i));
+            }
+        }
+
+        return shiftedColumns.build();
+    }
+
+    private static boolean movingRight(MoveColumn c) {
+        return c.getFrom().getIndex() < c.getTo().getIndex();
+    }
+
+    private ColumnMovedOnBoard shiftColumnLeft(int index) {
+        int total = state().getColumnCount();
+        ColumnPosition from = ColumnPositions.of(index, total);
+        ColumnPosition to = ColumnPositions.of(index - 1, total);
+        return moveColumn(from, to);
+    }
+
+    private ColumnMovedOnBoard shiftColumnRight(int index) {
+        int total = state().getColumnCount();
+        ColumnPosition from = ColumnPositions.of(index, total);
+        ColumnPosition to = ColumnPositions.of(index + 1, total);
+        return moveColumn(from, to);
     }
 
     /**

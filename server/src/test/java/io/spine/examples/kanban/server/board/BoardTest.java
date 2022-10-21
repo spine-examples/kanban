@@ -30,6 +30,7 @@ import io.spine.examples.kanban.Board;
 import io.spine.examples.kanban.ColumnId;
 import io.spine.examples.kanban.ColumnPosition;
 import io.spine.examples.kanban.command.AddColumn;
+import io.spine.examples.kanban.command.MoveColumn;
 import io.spine.examples.kanban.event.BoardCreated;
 import io.spine.examples.kanban.server.KanbanContextTest;
 import io.spine.testing.server.EventSubject;
@@ -39,6 +40,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import static com.google.common.truth.Truth.assertThat;
 import static io.spine.examples.kanban.rejection.Rejections.ColumnNameAlreadyTaken;
 import static io.spine.testing.TestValues.randomString;
 
@@ -125,6 +127,58 @@ class BoardTest extends KanbanContextTest {
                                           .vBuild();
             assertRejections.message(0)
                             .isEqualTo(expected);
+        }
+    }
+
+    @Nested
+    @DisplayName("move columns")
+    class MoveColumns {
+
+        @Test
+        @DisplayName("in the left direction")
+        void moveLeft() {
+            Board board = currentBoardState();
+            ColumnPosition from = ColumnPositions.of(1, 4);
+            ColumnId column = board.getColumn(from.zeroBasedIndex());
+            ColumnPosition to = ColumnPositions.of(4, 4);
+
+            context().receivesCommand(moveColumn(column, from, to));
+
+            board = currentBoardState();
+            ColumnId actual = board.getColumn(to.zeroBasedIndex());
+            assertThat(column).isEqualTo(actual);
+        }
+
+        private Board currentBoardState() {
+            return (Board) context()
+                    .assertEntityWithState(board(), Board.class)
+                    .actual()
+                    .state();
+        }
+
+        private MoveColumn moveColumn(ColumnId column, ColumnPosition from, ColumnPosition to) {
+            return MoveColumn
+                    .newBuilder()
+                    .setColumn(column)
+                    .setBoard(board())
+                    .setFrom(from)
+                    .setTo(to)
+                    .vBuild();
+        }
+
+        @Test
+        @DisplayName("in the right direction")
+        void moveRight() {
+            Board board = currentBoardState();
+            ColumnPosition from = ColumnPositions.of(4, 4);
+            ColumnId column = board.getColumn(from.zeroBasedIndex());
+            ColumnPosition to = ColumnPositions.of(1, 4);
+
+            context().receivesCommand(moveColumn(column, from, to));
+
+            board = currentBoardState();
+            ColumnId actual = board.getColumn(to.zeroBasedIndex());
+            assertThat(column).isEqualTo(actual);
         }
     }
 

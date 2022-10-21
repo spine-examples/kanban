@@ -30,12 +30,17 @@ import io.spine.core.Subscribe;
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.Card;
 import io.spine.examples.kanban.Column;
+import io.spine.examples.kanban.ColumnId;
 import io.spine.examples.kanban.event.BoardCreated;
 import io.spine.examples.kanban.event.ColumnAdditionRequested;
 import io.spine.examples.kanban.event.ColumnMovedOnBoard;
 import io.spine.examples.kanban.event.ColumnPlaced;
 import io.spine.examples.kanban.view.BoardView;
 import io.spine.server.projection.Projection;
+
+import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.stream.IntStream;
 
 /**
  * Builds display information for a board.
@@ -56,8 +61,7 @@ public final class BoardProjection
                               .setName(e.getName())
                               .setPosition(e.getDesiredPosition())
                               .vBuild();
-
-        builder().addColumn(e.getDesiredPosition().zeroBasedIndex(), column);
+        addColumn(column);
     }
 
     @Subscribe
@@ -68,20 +72,34 @@ public final class BoardProjection
                 .setPosition(e.getActualPosition())
                 .vBuild();
 
-        builder().removeColumn(e.getDesiredPosition().zeroBasedIndex())
-                 .addColumn(column.getPosition().zeroBasedIndex(), column);
+        builder().removeColumn(e.getDesiredPosition().zeroBasedIndex());
+        addColumn(column);
+    }
+
+    private void addColumn(Column column) {
+        builder().addColumn(column.getPosition().zeroBasedIndex(), column);
     }
 
     @Subscribe
     void on(ColumnMovedOnBoard e) {
-        Column column = state()
-                .getColumn(e.getFrom().zeroBasedIndex())
-                .toBuilder()
-                .setPosition(e.getTo())
-                .vBuild();
+        OptionalInt optionalIndex = indexOf(e.getColumn());
 
-        builder().removeColumn(e.getFrom().zeroBasedIndex())
-                 .addColumn(column.getPosition().zeroBasedIndex(), column);
+        if (optionalIndex.isPresent()) {
+            int index = optionalIndex.getAsInt();
+            Column column = state().getColumn(index);
+            column = column.toBuilder()
+                           .setPosition(e.getTo())
+                           .vBuild();
+
+            builder().removeColumn(index);
+            addColumn(column);
+        }
+    }
+
+    private OptionalInt indexOf(ColumnId column) {
+        return IntStream.range(0, state().getColumnCount())
+                        .filter(i -> state().getColumn(i).getId().equals(column))
+                        .findFirst();
     }
 
     @Subscribe
