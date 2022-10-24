@@ -32,12 +32,14 @@ import io.spine.examples.kanban.CardId;
 import io.spine.examples.kanban.ColumnId;
 import io.spine.examples.kanban.WipLimit;
 import io.spine.examples.kanban.command.AddCardToColumn;
+import io.spine.examples.kanban.command.SetWipLimit;
 import io.spine.examples.kanban.event.WipLimitChanged;
 import io.spine.examples.kanban.event.WipLimitRemoved;
 import io.spine.examples.kanban.event.WipLimitSet;
 import io.spine.examples.kanban.rejection.Rejections.WipLimitAlreadySet;
 import io.spine.examples.kanban.rejection.Rejections.WipLimitExceeded;
 import io.spine.examples.kanban.server.KanbanContextTest;
+import io.spine.examples.kanban.server.given.TestCommands;
 import io.spine.examples.kanban.server.given.WipLimits;
 import io.spine.testing.server.EventSubject;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,6 +47,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import static io.spine.examples.kanban.server.given.TestCommands.setWipLimit;
 import static io.spine.testing.Tests.repeat;
 
 @DisplayName("`Column` should")
@@ -61,7 +64,11 @@ class ColumnTest extends KanbanContextTest {
 
         @BeforeEach
         void setupLimit() {
-            context().receivesCommand(setWipLimit(column(), limit));
+            context().receivesCommand(setWipLimit(limit));
+        }
+
+        private SetWipLimit setWipLimit(WipLimit limit) {
+            return TestCommands.setWipLimit(column(), limit);
         }
 
         @Test
@@ -83,7 +90,7 @@ class ColumnTest extends KanbanContextTest {
         @DisplayName("change the WIP limit")
         void changeLimit() {
             WipLimit newLimit = WipLimits.of(6);
-            context().receivesCommand(setWipLimit(column(), newLimit));
+            context().receivesCommand(setWipLimit(newLimit));
 
             EventSubject assertEvents = assertEvents(WipLimitChanged.class);
             assertEvents.hasSize(1);
@@ -101,7 +108,7 @@ class ColumnTest extends KanbanContextTest {
         @Test
         @DisplayName("remove the WIP limit")
         void clearLimit() {
-            context().receivesCommand(setWipLimit(column(), WipLimits.of(0)));
+            context().receivesCommand(setWipLimit(WipLimits.of(0)));
 
             EventSubject assertEvents = assertEvents(WipLimitRemoved.class);
             assertEvents.hasSize(1);
@@ -118,7 +125,7 @@ class ColumnTest extends KanbanContextTest {
         @Test
         @DisplayName("reject setting the WIP limit to the same value")
         void rejectSameValue() {
-            context().receivesCommand(setWipLimit(column(), limit));
+            context().receivesCommand(setWipLimit(limit));
 
             EventSubject assertEvents = assertEvents(WipLimitAlreadySet.class);
             assertEvents.hasSize(1);
