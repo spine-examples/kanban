@@ -30,17 +30,12 @@ import io.spine.core.Subscribe;
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.Card;
 import io.spine.examples.kanban.Column;
-import io.spine.examples.kanban.ColumnId;
 import io.spine.examples.kanban.event.BoardCreated;
 import io.spine.examples.kanban.event.ColumnAdditionRequested;
 import io.spine.examples.kanban.event.ColumnMovedOnBoard;
 import io.spine.examples.kanban.event.ColumnPlaced;
 import io.spine.examples.kanban.view.BoardView;
 import io.spine.server.projection.Projection;
-
-import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.stream.IntStream;
 
 /**
  * Builds display information for a board.
