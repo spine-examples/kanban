@@ -30,7 +30,6 @@ import io.spine.testing.UtilityClassTest;
 import org.junit.jupiter.api.DisplayName;
 
 @DisplayName("`ColumnPositions` should")
-
 class ColumnPositionsTest extends UtilityClassTest<ColumnPositions> {
 
     ColumnPositionsTest() {
