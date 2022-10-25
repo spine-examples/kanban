@@ -186,7 +186,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     Iterable<ColumnMovedOnBoard> handle(MoveColumn c) {
         return new ImmutableList.Builder<ColumnMovedOnBoard>()
                 .add(moveColumn(c.getFrom(), c.getTo()))
-                .addAll(shiftColumns(c.getFrom(), c.getTo()))
+                .addAll(shiftColumns(c))
                 .build();
     }
 
@@ -196,19 +196,16 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
      * <p> The shift direction is based on the movement direction. If a column is
      * moving right, then columns on the way are shifted left and vice versa.
      */
-    private ImmutableList<ColumnMovedOnBoard> shiftColumns(
-            ColumnPosition from,
-            ColumnPosition to
-    ) {
-        if (movingRight(from, to)) {
-           return shiftColumnsLeft(from, to);
+    private ImmutableList<ColumnMovedOnBoard> shiftColumns(MoveColumn c) {
+        if (movingRight(c)) {
+           return shiftColumnsLeft(c.getFrom(), c.getTo());
         } else {
-            return shiftColumnsRight(from, to);
+            return shiftColumnsRight(c.getFrom(), c.getTo());
         }
     }
 
-    private static boolean movingRight(ColumnPosition from, ColumnPosition to) {
-        return from.getIndex() < to.getIndex();
+    private static boolean movingRight(MoveColumn c) {
+        return c.getFrom().getIndex() < c.getTo().getIndex();
     }
 
     private ImmutableList<ColumnMovedOnBoard> shiftColumnsLeft(
