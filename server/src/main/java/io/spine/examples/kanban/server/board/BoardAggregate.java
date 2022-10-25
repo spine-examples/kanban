@@ -190,32 +190,44 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     Iterable<ColumnMovedOnBoard> handle(MoveColumn c) {
         return new ImmutableList.Builder<ColumnMovedOnBoard>()
                 .add(moveColumn(c.getFrom(), c.getTo()))
-                .addAll(shiftColumns(c))
+                .addAll(shiftColumns(c.getFrom(), c.getTo()))
                 .build();
     }
 
     /**
      * Shifts the columns to fill the emptiness left by the moving column.
+     *
+     * <p> The shift direction is based on the movement direction. If a column is
+     * moving in the right direction, then columns on the way are shifted to the left
+     * and vice versa.
      */
-    private ImmutableList<ColumnMovedOnBoard> shiftColumns(MoveColumn c) {
+    private ImmutableList<ColumnMovedOnBoard> shiftColumns(
+            ColumnPosition from,
+            ColumnPosition to
+    ) {
+        if (movingRight(from, to)) {
+           return shiftColumnsLeft(from, to);
+        } else {
+            return shiftColumnsRight(from, to);
+        }
+    }
+
+    private static boolean movingRight(ColumnPosition from, ColumnPosition to) {
+        return from.getIndex() < to.getIndex();
+    }
+
+    private ImmutableList<ColumnMovedOnBoard> shiftColumnsLeft(
+            ColumnPosition from,
+            ColumnPosition to
+    ) {
         ImmutableList.Builder<ColumnMovedOnBoard> shiftedColumns =
                 new ImmutableList.Builder<>();
 
-        if (movingRight(c)) {
-            for(int i = c.getFrom().getIndex() + 1; i <= c.getTo().getIndex(); i++) {
-                shiftedColumns.add(shiftColumnLeft(i));
-            }
-        } else {
-            for(int i = c.getFrom().getIndex() - 1; i >= c.getTo().getIndex(); i--) {
-                shiftedColumns.add(shiftColumnRight(i));
-            }
+        for(int i = from.getIndex() + 1; i <= to.getIndex(); i++) {
+            shiftedColumns.add(shiftColumnLeft(i));
         }
 
         return shiftedColumns.build();
-    }
-
-    private static boolean movingRight(MoveColumn c) {
-        return c.getFrom().getIndex() < c.getTo().getIndex();
     }
 
     private ColumnMovedOnBoard shiftColumnLeft(int index) {
@@ -223,6 +235,20 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
         ColumnPosition from = ColumnPositions.of(index, total);
         ColumnPosition to = ColumnPositions.of(index - 1, total);
         return moveColumn(from, to);
+    }
+
+    private ImmutableList<ColumnMovedOnBoard> shiftColumnsRight(
+            ColumnPosition from,
+            ColumnPosition to
+    ) {
+        ImmutableList.Builder<ColumnMovedOnBoard> shiftedColumns =
+                new ImmutableList.Builder<>();
+
+        for(int i = from.getIndex() - 1; i >= to.getIndex(); i--) {
+            shiftedColumns.add(shiftColumnRight(i));
+        }
+
+        return shiftedColumns.build();
     }
 
     private ColumnMovedOnBoard shiftColumnRight(int index) {
