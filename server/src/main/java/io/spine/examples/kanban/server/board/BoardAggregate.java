@@ -185,9 +185,19 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     @Assign
     Iterable<ColumnMovedOnBoard> handle(MoveColumn c) {
         return new ImmutableList.Builder<ColumnMovedOnBoard>()
-                .add(moveColumn(c.getFrom(), c.getTo()))
+                .add(moveColumn(c))
                 .addAll(shiftColumns(c))
                 .build();
+    }
+
+    private static ColumnMovedOnBoard moveColumn(MoveColumn c) {
+        return ColumnMovedOnBoard
+                .newBuilder()
+                .setColumn(c.getColumn())
+                .setBoard(c.getBoard())
+                .setFrom(c.getFrom())
+                .setTo(c.getTo())
+                .vBuild();
     }
 
     /**
