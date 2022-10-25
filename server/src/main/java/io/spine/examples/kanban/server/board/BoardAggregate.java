@@ -169,17 +169,13 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
 
     @Apply
     private void apply(ColumnMovedOnBoard e) {
-        int index = indexOf(e.getColumn());
+        int index = state().getColumnList().indexOf(e.getColumn());
         int newIndex = e.getTo().zeroBasedIndex();
 
         if (index != newIndex) {
             builder().removeColumn(index)
                      .addColumn(newIndex, e.getColumn());
         }
-    }
-
-    private int indexOf(ColumnId column) {
-        return state().getColumnList().indexOf(column);
     }
 
     /**
@@ -198,8 +194,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
      * Shifts the columns to fill the void left by the moving column.
      *
      * <p> The shift direction is based on the movement direction. If a column is
-     * moving in the right direction, then columns on the way are shifted to the left
-     * and vice versa.
+     * moving right, then columns on the way are shifted left and vice versa.
      */
     private ImmutableList<ColumnMovedOnBoard> shiftColumns(
             ColumnPosition from,

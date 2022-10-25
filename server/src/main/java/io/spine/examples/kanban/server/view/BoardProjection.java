@@ -82,24 +82,13 @@ public final class BoardProjection
 
     @Subscribe
     void on(ColumnMovedOnBoard e) {
-        OptionalInt optionalIndex = indexOf(e.getColumn());
+        Column column = state().getColumn(e.getFrom().zeroBasedIndex());
+        column = column.toBuilder()
+                       .setPosition(e.getTo())
+                       .vBuild();
 
-        if (optionalIndex.isPresent()) {
-            int index = optionalIndex.getAsInt();
-            Column column = state().getColumn(index);
-            column = column.toBuilder()
-                           .setPosition(e.getTo())
-                           .vBuild();
-
-            builder().removeColumn(index);
-            addColumn(column);
-        }
-    }
-
-    private OptionalInt indexOf(ColumnId column) {
-        return IntStream.range(0, state().getColumnCount())
-                        .filter(i -> state().getColumn(i).getId().equals(column))
-                        .findFirst();
+        builder().removeColumn(e.getFrom().zeroBasedIndex());
+        addColumn(column);
     }
 
     @Subscribe
