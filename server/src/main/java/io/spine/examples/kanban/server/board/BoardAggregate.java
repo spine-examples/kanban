@@ -184,7 +184,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
 
     /**
      * Moves the column to the desired position and shifts all columns on the
-     * way to fill the emptiness left by the column.
+     * way to fill the void left by the column.
      */
     @Assign
     Iterable<ColumnMovedOnBoard> handle(MoveColumn c) {
@@ -195,7 +195,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     }
 
     /**
-     * Shifts the columns to fill the emptiness left by the moving column.
+     * Shifts the columns to fill the void left by the moving column.
      *
      * <p> The shift direction is based on the movement direction. If a column is
      * moving in the right direction, then columns on the way are shifted to the left
