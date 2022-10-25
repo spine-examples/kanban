@@ -182,6 +182,10 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
         return state().getColumnList().indexOf(column);
     }
 
+    /**
+     * Moves the column to the desired position and shifts all columns on the
+     * way to fill the emptiness left by the column.
+     */
     @Assign
     Iterable<ColumnMovedOnBoard> handle(MoveColumn c) {
         return new ImmutableList.Builder<ColumnMovedOnBoard>()
@@ -190,6 +194,9 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
                 .build();
     }
 
+    /**
+     * Shifts the columns to fill the emptiness left by the moving column.
+     */
     private ImmutableList<ColumnMovedOnBoard> shiftColumns(MoveColumn c) {
         ImmutableList.Builder<ColumnMovedOnBoard> shiftedColumns =
                 new ImmutableList.Builder<>();
