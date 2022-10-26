@@ -56,7 +56,8 @@ public final class BoardProjection
                               .setName(e.getName())
                               .setPosition(e.getDesiredPosition())
                               .vBuild();
-        addColumn(column);
+
+        builder().addColumn(column.getPosition().zeroBasedIndex(), column);
     }
 
     @Subscribe
@@ -67,12 +68,8 @@ public final class BoardProjection
                 .setPosition(e.getActualPosition())
                 .vBuild();
 
-        builder().removeColumn(e.getDesiredPosition().zeroBasedIndex());
-        addColumn(column);
-    }
-
-    private void addColumn(Column column) {
-        builder().addColumn(column.getPosition().zeroBasedIndex(), column);
+        builder().removeColumn(e.getDesiredPosition().zeroBasedIndex())
+                .addColumn(column.getPosition().zeroBasedIndex(), column);
     }
 
     @Subscribe
@@ -82,8 +79,8 @@ public final class BoardProjection
                        .setPosition(e.getTo())
                        .vBuild();
 
-        builder().removeColumn(e.getFrom().zeroBasedIndex());
-        addColumn(column);
+        builder().removeColumn(e.getFrom().zeroBasedIndex())
+                .addColumn(column.getPosition().zeroBasedIndex(), column);
     }
 
     @Subscribe
