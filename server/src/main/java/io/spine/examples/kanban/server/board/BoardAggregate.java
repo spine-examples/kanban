@@ -211,20 +211,31 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     }
 
     private boolean canBeMoved(MoveColumn c) {
-        return actualTotal(c.getFrom()) &&
-                actualTotal(c.getTo()) &&
-                c.getFrom().valid() &&
+        return c.getFrom().valid() &&
                 c.getTo().valid() &&
-                c.getFrom().zeroBasedIndex() == state().getColumnList().indexOf(c.getColumn()) &&
+                actualTotal(c.getFrom()) &&
+                actualTotal(c.getTo()) &&
+                actualIndex(c.getColumn(), c.getFrom()) &&
                 !c.getFrom().equals(c.getTo());
     }
 
     /**
      * Checks whether the total number of columns is coherent with the state.
+     *
      * @return {@code true} if the total number of columns is coherent with the state.
      */
     private boolean actualTotal(ColumnPosition p) {
         return p.getOfTotal() == state().getColumnCount();
+    }
+
+    /**
+     * Checks whether the provided column is actually placed at the index from
+     * the provided position.
+     *
+     * @return {@code true} if the column is placed at the index from the provided position.
+     */
+    private boolean actualIndex(ColumnId c, ColumnPosition p) {
+        return p.zeroBasedIndex() == state().getColumnList().indexOf(c);
     }
 
     /**
