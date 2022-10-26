@@ -27,12 +27,23 @@
 package io.spine.examples.kanban.server.board;
 
 import io.spine.testing.UtilityClassTest;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
 
 @DisplayName("`ColumnPositions` should")
 class ColumnPositionsTest extends UtilityClassTest<ColumnPositions> {
 
     ColumnPositionsTest() {
         super(ColumnPositions.class);
+    }
+
+    @Test
+    void makesSureIndexIsLessThanOrEqualToTotal() {
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> ColumnPositions.of(3, 2)
+        );
     }
 }

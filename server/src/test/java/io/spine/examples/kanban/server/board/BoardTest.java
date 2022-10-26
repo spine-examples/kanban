@@ -180,7 +180,7 @@ class BoardTest extends KanbanContextTest {
         @Test
         @DisplayName("reject moving columns if `from` is invalid")
         void invalidFrom() {
-            ColumnPosition invalidFrom = ColumnPositions.of(5, 4);
+            ColumnPosition invalidFrom = invalidPosition();
             ColumnId column = ColumnId.generate();
             ColumnPosition to = ColumnPositions.of(1, 4);
 
@@ -192,10 +192,17 @@ class BoardTest extends KanbanContextTest {
                                        .setFrom(invalidFrom)
                                        .setTo(to)
                                        .vBuild();
-
             assertEvents(ColumnCannotBeMoved.class)
                     .message(0)
                     .isEqualTo(expected);
+        }
+
+        private ColumnPosition invalidPosition() {
+            return ColumnPosition
+                    .newBuilder()
+                    .setIndex(3)
+                    .setOfTotal(2)
+                    .vBuild();
         }
 
         @Test
@@ -203,7 +210,7 @@ class BoardTest extends KanbanContextTest {
         void invalidTo() {
             ColumnPosition from = ColumnPositions.of(1, 4);
             ColumnId column = ColumnId.generate();
-            ColumnPosition invalidTo = ColumnPositions.of(5, 4);
+            ColumnPosition invalidTo = invalidPosition();
 
             context().receivesCommand(moveColumn(column, from, invalidTo));
 
@@ -213,7 +220,6 @@ class BoardTest extends KanbanContextTest {
                                        .setFrom(from)
                                        .setTo(invalidTo)
                                        .vBuild();
-
             assertEvents(ColumnCannotBeMoved.class)
                     .message(0)
                     .isEqualTo(expected);
@@ -234,7 +240,6 @@ class BoardTest extends KanbanContextTest {
                                        .setFrom(wrongFrom)
                                        .setTo(to)
                                        .vBuild();
-
             assertEvents(ColumnCannotBeMoved.class)
                     .message(0)
                     .isEqualTo(expected);
@@ -255,7 +260,6 @@ class BoardTest extends KanbanContextTest {
                                        .setFrom(wrongFrom)
                                        .setTo(to)
                                        .vBuild();
-
             assertEvents(ColumnCannotBeMoved.class)
                     .message(0)
                     .isEqualTo(expected);
@@ -276,7 +280,6 @@ class BoardTest extends KanbanContextTest {
                                        .setFrom(from)
                                        .setTo(wrongTo)
                                        .vBuild();
-
             assertEvents(ColumnCannotBeMoved.class)
                     .message(0)
                     .isEqualTo(expected);
@@ -296,7 +299,6 @@ class BoardTest extends KanbanContextTest {
                                        .setFrom(pos)
                                        .setTo(pos)
                                        .vBuild();
-
             assertEvents(ColumnCannotBeMoved.class)
                     .message(0)
                     .isEqualTo(expected);

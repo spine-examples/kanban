@@ -26,6 +26,7 @@
 
 package io.spine.examples.kanban.server.board;
 
+import com.google.common.base.Preconditions;
 import io.spine.examples.kanban.ColumnPosition;
 
 /**
@@ -43,6 +44,10 @@ public final class ColumnPositions {
      * Creates a column position with the passed index and total number of columns.
      */
     public static ColumnPosition of(int index, int ofTotal) {
+        Preconditions.checkArgument(
+                index <= ofTotal,
+                "The index should be less than or equal to the total number of columns."
+        );
         return ColumnPosition
                 .newBuilder()
                 .setIndex(index)
