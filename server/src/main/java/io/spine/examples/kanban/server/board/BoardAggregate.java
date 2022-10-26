@@ -230,8 +230,8 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     /**
      * Shifts the columns to fill the void left by the moving column.
      *
-     * <p> The shift direction is based on the movement direction. If a column is
-     * moving right, then columns on the way are shifted left and vice versa.
+     * <p> The shift direction is based on the movement direction. If the column is
+     * moving right, then the columns on the way are shifted left and vice versa.
      */
     private ImmutableList<ColumnMovedOnBoard> shiftColumns(MoveColumn c) {
         if (movingRight(c)) {
