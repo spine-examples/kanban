@@ -112,7 +112,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     Iterable<EventMessage> handle(PlaceColumn c) {
         return new ImmutableList.Builder<EventMessage>()
                 .add(placeColumn(c))
-                .addAll(moveColumns())
+                .addAll(makeSpaceForNewColumn())
                 .build();
     }
 
@@ -136,7 +136,10 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
         return state().getColumnCount() + 1;
     }
 
-    private ImmutableList<ColumnMovedOnBoard> moveColumns() {
+    /**
+     * Moves all columns on the board to make space for a new column.
+     */
+    private ImmutableList<ColumnMovedOnBoard> makeSpaceForNewColumn() {
         int currentTotal = state().getColumnCount();
         int newTotal = incrementColumnCount();
         ImmutableList.Builder<ColumnMovedOnBoard> columnsMoved =
