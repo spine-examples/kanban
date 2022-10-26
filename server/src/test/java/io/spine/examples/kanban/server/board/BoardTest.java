@@ -288,16 +288,16 @@ class BoardTest extends KanbanContextTest {
         @Test
         @DisplayName("reject moving columns if `from` and `to` are same")
         void samePositions() {
-            ColumnPosition pos = ColumnPositions.of(1, 4);
-            ColumnId column = currentBoardState().getColumn(pos.zeroBasedIndex());
+            ColumnPosition position = ColumnPositions.of(1, 4);
+            ColumnId column = currentBoardState().getColumn(position.zeroBasedIndex());
 
-            context().receivesCommand(moveColumn(column, pos, pos));
+            context().receivesCommand(moveColumn(column, position, position));
 
             ColumnCannotBeMoved expected =
                     ColumnCannotBeMoved.newBuilder()
                                        .setColumn(column)
-                                       .setFrom(pos)
-                                       .setTo(pos)
+                                       .setFrom(position)
+                                       .setTo(position)
                                        .vBuild();
             assertEvents(ColumnCannotBeMoved.class)
                     .message(0)
