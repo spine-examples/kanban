@@ -172,10 +172,8 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     private void apply(ColumnMovedOnBoard e) {
         int index = state().getColumnList().indexOf(e.getColumn());
         int newIndex = e.getTo().zeroBasedIndex();
-
         if (index != newIndex) {
-            builder().removeColumn(index)
-                     .addColumn(newIndex, e.getColumn());
+            builder().removeColumn(index).addColumn(newIndex, e.getColumn());
         }
     }
 
@@ -192,7 +190,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     }
 
     private ColumnMovedOnBoard moveColumn(MoveColumn c) throws ColumnCannotBeMoved {
-        if (!canBeMoved(c)) {
+        if (!canBeMoved(c.getColumn(), c.getFrom(), c.getTo())) {
             throw ColumnCannotBeMoved
                     .newBuilder()
                     .setColumn(c.getColumn())
@@ -210,13 +208,9 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
                 .vBuild();
     }
 
-    private boolean canBeMoved(MoveColumn c) {
-        return c.getFrom().valid() &&
-                c.getTo().valid() &&
-                actualTotal(c.getFrom()) &&
-                actualTotal(c.getTo()) &&
-                actualIndex(c.getColumn(), c.getFrom()) &&
-                !c.getFrom().equals(c.getTo());
+    private boolean canBeMoved(ColumnId column, ColumnPosition from, ColumnPosition to) {
+        return from.isValid() && to.isValid() && isTotalActual(from) &&
+                isTotalActual(to) && isIndexActual(column, from) && !from.equals(to);
     }
 
     /**
@@ -224,7 +218,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
      *
      * @return {@code true} if the total number of columns is coherent with the state.
      */
-    private boolean actualTotal(ColumnPosition p) {
+    private boolean isTotalActual(ColumnPosition p) {
         return p.getOfTotal() == state().getColumnCount();
     }
 
@@ -234,7 +228,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
      *
      * @return {@code true} if the column is placed at the index from the provided position.
      */
-    private boolean actualIndex(ColumnId c, ColumnPosition p) {
+    private boolean isIndexActual(ColumnId c, ColumnPosition p) {
         return p.zeroBasedIndex() == state().getColumnList().indexOf(c);
     }
 
@@ -245,14 +239,14 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
      * moving right, then the columns on the way are shifted left and vice versa.
      */
     private ImmutableList<ColumnMovedOnBoard> shiftColumns(MoveColumn c) {
-        if (movingRight(c)) {
+        if (isColumnMovingRight(c)) {
            return shiftColumnsLeft(c.getFrom(), c.getTo());
         } else {
             return shiftColumnsRight(c.getFrom(), c.getTo());
         }
     }
 
-    private static boolean movingRight(MoveColumn c) {
+    private static boolean isColumnMovingRight(MoveColumn c) {
         return c.getFrom().getIndex() < c.getTo().getIndex();
     }
 

@@ -63,7 +63,7 @@ public interface ColumnPositionMixin extends SerializableMessage {
      * <p> The position is considered valid if its index is less than or equal to
      * the total number of columns.
      */
-    default boolean valid() {
+    default boolean isValid() {
         return getIndex() <= getOfTotal();
     }
 }
