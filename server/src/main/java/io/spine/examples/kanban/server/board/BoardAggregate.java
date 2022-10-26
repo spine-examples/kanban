@@ -42,6 +42,7 @@ import io.spine.examples.kanban.event.CardWaitingPlacement;
 import io.spine.examples.kanban.event.ColumnAdditionRequested;
 import io.spine.examples.kanban.event.ColumnMovedOnBoard;
 import io.spine.examples.kanban.event.ColumnPlaced;
+import io.spine.examples.kanban.rejection.ColumnCannotBeMoved;
 import io.spine.examples.kanban.rejection.ColumnNameAlreadyTaken;
 import io.spine.server.aggregate.Aggregate;
 import io.spine.server.aggregate.Apply;
@@ -183,14 +184,23 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
      * way to fill the void left by the column.
      */
     @Assign
-    Iterable<ColumnMovedOnBoard> handle(MoveColumn c) {
+    Iterable<ColumnMovedOnBoard> handle(MoveColumn c) throws ColumnCannotBeMoved {
         return new ImmutableList.Builder<ColumnMovedOnBoard>()
                 .add(moveColumn(c))
                 .addAll(shiftColumns(c))
                 .build();
     }
 
-    private static ColumnMovedOnBoard moveColumn(MoveColumn c) {
+    private ColumnMovedOnBoard moveColumn(MoveColumn c) throws ColumnCannotBeMoved {
+        if (!canBeMoved(c)) {
+            throw ColumnCannotBeMoved
+                    .newBuilder()
+                    .setColumn(c.getColumn())
+                    .setFrom(c.getFrom())
+                    .setTo(c.getTo())
+                    .build();
+        }
+
         return ColumnMovedOnBoard
                 .newBuilder()
                 .setColumn(c.getColumn())
@@ -198,6 +208,23 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
                 .setFrom(c.getFrom())
                 .setTo(c.getTo())
                 .vBuild();
+    }
+
+    private boolean canBeMoved(MoveColumn c) {
+        return actualTotal(c.getFrom()) &&
+                actualTotal(c.getTo()) &&
+                c.getFrom().valid() &&
+                c.getTo().valid() &&
+                c.getFrom().zeroBasedIndex() == state().getColumnList().indexOf(c.getColumn()) &&
+                !c.getFrom().equals(c.getTo());
+    }
+
+    /**
+     * Checks whether the total number of columns is coherent with the state.
+     * @return {@code true} if the total number of columns is coherent with the state.
+     */
+    private boolean actualTotal(ColumnPosition p) {
+        return p.getOfTotal() == state().getColumnCount();
     }
 
     /**

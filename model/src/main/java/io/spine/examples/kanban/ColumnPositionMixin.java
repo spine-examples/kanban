@@ -43,6 +43,11 @@ public interface ColumnPositionMixin extends SerializableMessage {
     int getIndex();
 
     /**
+     * The total number of columns on the board.
+     */
+    int getOfTotal();
+
+    /**
      * Converts the one-based index to the zero-based.
      *
      * <p> This helper method is for accessing items in lists or arrays using a
@@ -50,5 +55,15 @@ public interface ColumnPositionMixin extends SerializableMessage {
      */
     default int zeroBasedIndex() {
         return getIndex() - 1;
+    }
+
+    /**
+     * Validates the column position.
+     *
+     * <p> The position is considered valid if its index is less than or equal to
+     * the total number of columns.
+     */
+    default boolean valid() {
+        return getIndex() <= getOfTotal();
     }
 }
