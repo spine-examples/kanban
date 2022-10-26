@@ -233,63 +233,73 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     }
 
     /**
-     * Shifts the columns to fill the void left by the moving column.
+     * Shifts columns to fill the void left by the moving column.
      *
      * <p> The shift direction is based on the movement direction. If the column is
      * moving right, then the columns on the way are shifted left and vice versa.
      */
     private ImmutableList<ColumnMovedOnBoard> shiftColumns(MoveColumn c) {
-        if (isColumnMovingRight(c)) {
-           return shiftColumnsLeft(c.getFrom(), c.getTo());
+        if (isColumnMovingRight(c.getFrom(), c.getTo())) {
+            ColumnPosition rightToFrom = rightTo(c.getFrom());
+            return shiftColumnsLeft(rightToFrom, c.getTo());
         } else {
-            return shiftColumnsRight(c.getFrom(), c.getTo());
+            ColumnPosition leftToFrom = leftTo(c.getFrom());
+            return shiftColumnsRight(leftToFrom, c.getTo());
         }
     }
 
-    private static boolean isColumnMovingRight(MoveColumn c) {
-        return c.getFrom().getIndex() < c.getTo().getIndex();
+    private static boolean isColumnMovingRight(ColumnPosition from, ColumnPosition to) {
+        return from.getIndex() < to.getIndex();
+    }
+
+    /**
+     * Returns the position right to the provided one.
+     *
+     * <p> The total number of columns remains unchanged.
+     */
+    private static ColumnPosition rightTo(ColumnPosition p) {
+        return ColumnPositions.of(p.getIndex() + 1, p.getOfTotal());
+    }
+
+    /**
+     * Returns the position left to the provided one.
+     *
+     * <p> The total number of columns remains unchanged.
+     */
+    private static ColumnPosition leftTo(ColumnPosition p) {
+        return ColumnPositions.of(p.getIndex() - 1, p.getOfTotal());
     }
 
     private ImmutableList<ColumnMovedOnBoard> shiftColumnsLeft(
             ColumnPosition from,
             ColumnPosition to
     ) {
-        ImmutableList.Builder<ColumnMovedOnBoard> shiftedColumns =
-                new ImmutableList.Builder<>();
+        ImmutableList.Builder<ColumnMovedOnBoard> movedColumns = new ImmutableList.Builder<>();
 
-        for(int i = from.getIndex() + 1; i <= to.getIndex(); i++) {
-            shiftedColumns.add(shiftColumnLeft(i));
+        ColumnPosition current = from;
+        while (!current.equals(to)) {
+            ColumnPosition newPosition = leftTo(current);
+            movedColumns.add(moveColumn(current, newPosition));
+            current = rightTo(current);
         }
 
-        return shiftedColumns.build();
-    }
-
-    private ColumnMovedOnBoard shiftColumnLeft(int index) {
-        int total = state().getColumnCount();
-        ColumnPosition from = ColumnPositions.of(index, total);
-        ColumnPosition to = ColumnPositions.of(index - 1, total);
-        return moveColumn(from, to);
+        return movedColumns.build();
     }
 
     private ImmutableList<ColumnMovedOnBoard> shiftColumnsRight(
             ColumnPosition from,
             ColumnPosition to
     ) {
-        ImmutableList.Builder<ColumnMovedOnBoard> shiftedColumns =
-                new ImmutableList.Builder<>();
+        ImmutableList.Builder<ColumnMovedOnBoard> movedColumns = new ImmutableList.Builder<>();
 
-        for(int i = from.getIndex() - 1; i >= to.getIndex(); i--) {
-            shiftedColumns.add(shiftColumnRight(i));
+        ColumnPosition current = from;
+        while (!current.equals(to)) {
+            ColumnPosition newPosition = rightTo(current);
+            movedColumns.add(moveColumn(current, newPosition));
+            current = leftTo(current);
         }
 
-        return shiftedColumns.build();
-    }
-
-    private ColumnMovedOnBoard shiftColumnRight(int index) {
-        int total = state().getColumnCount();
-        ColumnPosition from = ColumnPositions.of(index, total);
-        ColumnPosition to = ColumnPositions.of(index + 1, total);
-        return moveColumn(from, to);
+        return movedColumns.build();
     }
 
     /**
