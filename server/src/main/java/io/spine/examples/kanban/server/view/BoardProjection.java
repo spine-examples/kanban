@@ -69,18 +69,19 @@ public final class BoardProjection
                 .vBuild();
 
         builder().removeColumn(e.getDesiredPosition().zeroBasedIndex())
-                .addColumn(column.getPosition().zeroBasedIndex(), column);
+                 .addColumn(column.getPosition().zeroBasedIndex(), column);
     }
 
     @Subscribe
     void on(ColumnMovedOnBoard e) {
-        Column column = state().getColumn(e.getFrom().zeroBasedIndex());
-        column = column.toBuilder()
-                       .setPosition(e.getTo())
-                       .vBuild();
+        Column column = state()
+                .getColumn(e.getFrom().zeroBasedIndex())
+                .toBuilder()
+                .setPosition(e.getTo())
+                .vBuild();
 
         builder().removeColumn(e.getFrom().zeroBasedIndex())
-                .addColumn(column.getPosition().zeroBasedIndex(), column);
+                 .addColumn(column.getPosition().zeroBasedIndex(), column);
     }
 
     @Subscribe
