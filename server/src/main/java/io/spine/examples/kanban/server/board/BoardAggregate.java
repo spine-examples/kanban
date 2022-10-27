@@ -49,8 +49,6 @@ import io.spine.server.aggregate.Apply;
 import io.spine.server.command.Assign;
 import io.spine.server.event.React;
 
-import java.util.List;
-
 /**
  * An aggregate of a Kanban board.
  */
