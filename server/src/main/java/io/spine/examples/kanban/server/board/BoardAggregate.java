@@ -212,8 +212,12 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     }
 
     private boolean canBeMoved(ColumnId column, ColumnPosition from, ColumnPosition to) {
-        return from.isValid() && to.isValid() && isTotalActual(from) &&
-                isTotalActual(to) && isIndexActual(column, from) && !from.equals(to);
+        return from.isValid() &&
+                to.isValid() &&
+                isTotalActual(from) &&
+                isTotalActual(to) &&
+                isIndexActual(column, from) &&
+                !from.equals(to);
     }
 
     /**
@@ -273,10 +277,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
         return ColumnPositions.of(p.getIndex() - 1, p.getOfTotal());
     }
 
-    private ImmutableList<ColumnMovedOnBoard> shiftColumnsLeft(
-            ColumnPosition from,
-            ColumnPosition to
-    ) {
+    private ImmutableList<ColumnMovedOnBoard> shiftColumnsLeft(ColumnPosition from, ColumnPosition to) {
         ImmutableList.Builder<ColumnMovedOnBoard> movedColumns = new ImmutableList.Builder<>();
 
         ColumnPosition current = from;
@@ -289,10 +290,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
         return movedColumns.build();
     }
 
-    private ImmutableList<ColumnMovedOnBoard> shiftColumnsRight(
-            ColumnPosition from,
-            ColumnPosition to
-    ) {
+    private ImmutableList<ColumnMovedOnBoard> shiftColumnsRight(ColumnPosition from, ColumnPosition to) {
         ImmutableList.Builder<ColumnMovedOnBoard> movedColumns = new ImmutableList.Builder<>();
 
         ColumnPosition current = from;
