@@ -25,43 +25,37 @@
  */
 
 import { BoardAction } from "@/store/board/actions/base/board-action";
-import { BoardId, ColumnAdded } from "@/store/board/aliases";
+import { client } from "@/dependency/container";
+import { Board, BoardId } from "@/store/board/aliases";
+import { MutationType } from "@/store/board/mutations";
 import { ActionContext, ActionHandler } from "vuex";
 import { BoardState } from "@/store/board/state/board-state";
 import { RootState } from "@/store/root/root-state";
-import { client } from "@/dependency/container";
-import { Event } from "spine-web/proto/spine/core/event_pb";
-import { AnyPacker } from "spine-web/client/any-packer";
-import { Type } from "spine-web/client/typed-message";
-import { MutationType } from "@/store/board/mutations";
-import { Filters } from "spine-web";
-
-type Column = proto.spine_examples.kanban.Column;
 
 /**
- * Subscribes to {@link ColumnAdded} events produced by the provided board.
+ * Subscribes to changes of the {@link Board} with the provided ID.
  */
-export default class SubscribeToColumnAddedAction extends BoardAction<
+export default class SubscribeToBoardChangesAction extends BoardAction<
   BoardId,
   void
 > {
   /**
-   * Creates a subscription for {@link ColumnAdded} events produced by the board with
-   * the provided ID.
+   * Creates a subscription for changes of the {@link Board} with the provided ID.
    *
-   * Extracts columns from arrived events and adds them to the local state.
+   * When changes arrive the board in the local state is overwritten with the
+   * arrived one.
    * @protected
    */
   protected execute(): void {
     client
-      .subscribeToEvent(proto.spine_examples.kanban.ColumnAdded)
-      .where(Filters.eq("board", this.boardId()))
+      .subscribeTo(proto.spine_examples.kanban.BoardView)
+      .byId(this.boardId())
       .post()
-      .then(({ eventEmitted }) => {
-        eventEmitted.subscribe((e: Event) => {
-          const innerEvent: ColumnAdded = this.unpackColumnAdded(e);
-          const column = this.extractColumn(innerEvent);
-          this.addColumnToState(column);
+      .then(({ itemChanged }) => {
+        itemChanged.subscribe({
+          next: (board: Board) => {
+            this.overwriteBoardInState(board);
+          },
         });
       });
   }
@@ -75,34 +69,12 @@ export default class SubscribeToColumnAddedAction extends BoardAction<
   }
 
   /**
-   * Unpacks the {@link ColumnAdded} event from the {@link Event}.
+   * Commits the mutation to overwrite the {@link Board} in the state with
+   * the provided one.
    * @private
    */
-  private unpackColumnAdded(e: Event): ColumnAdded {
-    return AnyPacker.unpack(e.getMessage()).as(
-      Type.forClass(proto.spine_examples.kanban.ColumnAdded)
-    );
-  }
-
-  /**
-   * Extracts the {@link Column} from the {@link ColumnAdded} event.
-   * @private
-   */
-  private extractColumn(e: ColumnAdded): Column {
-    const column = new proto.spine_examples.kanban.Column();
-    column.setId(e.getColumn());
-    column.setBoard(e.getBoard());
-    column.setName(e.getName());
-    column.setPosition(e.getPosition());
-    return column;
-  }
-
-  /**
-   * Commits the mutation to add the provided {@link Column} to the state.
-   * @private
-   */
-  private addColumnToState(c: Column): void {
-    this.getActionContext().commit(MutationType.ADD_COLUMN, c);
+  private overwriteBoardInState(b: Board): void {
+    this.getActionContext().commit(MutationType.SET_BOARD, b);
   }
 
   /**
@@ -110,7 +82,7 @@ export default class SubscribeToColumnAddedAction extends BoardAction<
    */
   public static newHandler(): ActionHandler<BoardState, RootState> {
     return (ctx: ActionContext<BoardState, RootState>, p: BoardId): void => {
-      new SubscribeToColumnAddedAction(ctx, p).execute();
+      return new SubscribeToBoardChangesAction(ctx, p).execute();
     };
   }
 }

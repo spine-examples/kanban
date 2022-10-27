@@ -39,7 +39,7 @@ import { BoardState } from "@/store/board/state/board-state";
 import { RootState } from "@/store/root/root-state";
 
 /**
- * Payload of the `AddColumnAction` action.
+ * Payload of the {@link AddColumnAction} action.
  *
  * Contains the name of a new column.
  */
@@ -61,10 +61,6 @@ export default class AddColumnAction extends BoardAction<
 > {
   /**
    * Sends the command to add a column.
-   *
-   * It is assumed that the {@linkplain SubscribeToColumnAddedAction subscription} to
-   * {@link ColumnAdded} events already exists.
-   * @protected
    */
   protected execute(): void {
     const command = this.command();

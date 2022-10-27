@@ -43,14 +43,15 @@ export default defineComponent({
     const boardId = new proto.spine_examples.kanban.BoardId();
     boardId.setUuid(boardUuid);
     this.fetchBoard(boardId);
-    this.subscribeToColumnAdded(boardId);
+    this.subscribeToBoardChanges(boardId);
   },
   computed: {
     ...mapState(["board"]),
   },
   methods: {
     ...mapActions({
-      subscribeToColumnAdded: ActionType.Subscription.SUBSCRIBE_TO_COLUMN_ADDED,
+      subscribeToBoardChanges:
+        ActionType.Subscription.SUBSCRIBE_TO_BOARD_CHANGES,
       fetchBoard: ActionType.Query.FETCH_BOARD,
     }),
     openAddColumnForm() {
