@@ -26,8 +26,9 @@
 
 package io.spine.examples.kanban.server.board;
 
-import com.google.common.base.Preconditions;
 import io.spine.examples.kanban.ColumnPosition;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Provides utility methods for {@link ColumnPosition}.
@@ -44,7 +45,7 @@ public final class ColumnPositions {
      * Creates a column position with the passed index and total number of columns.
      */
     public static ColumnPosition of(int index, int ofTotal) {
-        Preconditions.checkArgument(
+        checkArgument(
                 index <= ofTotal,
                 "The index should be less than or equal to the total number of columns."
         );
