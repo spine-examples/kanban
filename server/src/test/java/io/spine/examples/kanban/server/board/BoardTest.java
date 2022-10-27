@@ -192,6 +192,14 @@ class BoardTest extends KanbanContextTest {
                     .isEqualTo(expected);
         }
 
+        private ColumnPosition invalidPosition() {
+            return ColumnPosition
+                    .newBuilder()
+                    .setIndex(3)
+                    .setOfTotal(2)
+                    .vBuild();
+        }
+
         private ColumnCannotBeMoved columnCannotBeMoved(
                 ColumnId column,
                 ColumnPosition from,
@@ -202,14 +210,6 @@ class BoardTest extends KanbanContextTest {
                     .setColumn(column)
                     .setFrom(from)
                     .setTo(to)
-                    .vBuild();
-        }
-
-        private ColumnPosition invalidPosition() {
-            return ColumnPosition
-                    .newBuilder()
-                    .setIndex(3)
-                    .setOfTotal(2)
                     .vBuild();
         }
 
