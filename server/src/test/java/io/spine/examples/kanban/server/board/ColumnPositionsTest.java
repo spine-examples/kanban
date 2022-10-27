@@ -40,7 +40,8 @@ class ColumnPositionsTest extends UtilityClassTest<ColumnPositions> {
     }
 
     @Test
-    void makesSureIndexIsLessThanOrEqualToTotal() {
+    @DisplayName("make sure that the index is less than or equal to the total number of columsn")
+    void test() {
         Assertions.assertThrows(
                 IllegalArgumentException.class,
                 () -> ColumnPositions.of(3, 2)
