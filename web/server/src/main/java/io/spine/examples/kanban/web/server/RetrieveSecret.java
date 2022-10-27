@@ -39,7 +39,7 @@ import static io.spine.util.Exceptions.newIllegalStateException;
  * Retrieves from the Secret Manager the {@code latest} version of the secret
  * with the provided name.
  *
- * <p> Secret is assumed to belong to the {@link Configuration#projectId()}.
+ * <p>Secret is assumed to belong to the {@link Configuration#projectId()}.
  */
 final class RetrieveSecret {
 

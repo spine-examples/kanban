@@ -41,7 +41,7 @@ import io.spine.web.firebase.subscription.FirebaseSubscriptionBridge;
 /**
  * Acts as the entrypoint to the Kanban application.
  *
- * Configures the {@linkplain ServerEnvironment server environment} and initializes
+ * <p>Configures the {@linkplain ServerEnvironment server environment} and initializes
  * the {@linkplain CommandService command service}, {@linkplain FirebaseQueryBridge query}
  * and {@linkplain FirebaseSubscriptionBridge subscription bridge} for the {@link KanbanContext}.
  */

@@ -50,7 +50,7 @@ public interface ColumnPositionMixin extends SerializableMessage {
     /**
      * Converts the one-based index to the zero-based.
      *
-     * <p> This helper method is for accessing items in lists or arrays using a
+     * <p>This helper method is for accessing items in lists or arrays using a
      * {@link ColumnPosition} object to avoid the {@link IndexOutOfBoundsException}.
      */
     default int zeroBasedIndex() {
@@ -60,7 +60,7 @@ public interface ColumnPositionMixin extends SerializableMessage {
     /**
      * Validates the column position.
      *
-     * <p> The position is considered valid if its index is less than or equal to
+     * <p>The position is considered valid if its index is less than or equal to
      * the total number of columns.
      */
     default boolean isValid() {

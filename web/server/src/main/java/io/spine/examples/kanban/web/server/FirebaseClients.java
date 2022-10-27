@@ -40,11 +40,11 @@ import static io.spine.examples.kanban.web.server.Configuration.productionEnv;
 /**
  * Creates a singleton of the {@link FirebaseClient}.
  *
- * <p> The creation process depends on the server's environment.
+ * <p>The creation process depends on the server's environment.
  * <ul>
- *     <li> In the production environment retrieves the service account JSON key from
+ *     <li>In the production environment retrieves the service account JSON key from
  *     Secret Manager to access Firebase Database.
- *     <li> In the development environment assumes that a database emulator is used
+ *     <li>In the development environment assumes that a database emulator is used
  *     and mocks credentials to access the emulator.
  * </ul>
  */
