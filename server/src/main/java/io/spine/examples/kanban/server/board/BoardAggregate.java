@@ -259,7 +259,8 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
         /**
          * Checks whether the total number of columns is coherent with the state.
          *
-         * @return {@code true} if the total number of columns is coherent with the state
+         * @return {@code true} if the total number of columns is coherent with
+         *         the state
          */
         private boolean isTotalActual(ColumnPosition p) {
             return p.getOfTotal() == state().getColumnCount();
@@ -269,7 +270,8 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
          * Checks whether the provided column is actually placed at the index from
          * the provided position.
          *
-         * @return {@code true} if the column is placed at the index from the provided position
+         * @return {@code true} if the column is placed at the index from the
+         *         provided position
          */
         private boolean isIndexActual(ColumnId c, ColumnPosition p) {
             return p.zeroBasedIndex() == state().getColumnList().indexOf(c);

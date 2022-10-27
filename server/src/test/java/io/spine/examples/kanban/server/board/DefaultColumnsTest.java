@@ -75,7 +75,7 @@ class DefaultColumnsTest extends UtilityClassTest<DefaultColumns> {
      * {@link DefaultColumns#additionCommands(BoardId)} considering both methods get
      * the same input.
      *
-     * <p> Produced commands do not have column IDs as they are supposed to be used
+     * <p>Produced commands do not have column IDs as they are supposed to be used
      * for comparison with an actual output of the mentioned method.
      */
     private static ImmutableList<AddColumn> expectedAdditionCommands(BoardId board) {
