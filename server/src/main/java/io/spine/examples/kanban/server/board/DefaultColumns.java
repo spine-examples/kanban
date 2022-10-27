@@ -58,7 +58,7 @@ final class DefaultColumns {
      * Returns an ordered list of commands for adding defaults columns to the
      * provided board.
      *
-     * <p> The list is ordered following the natural order of Kanban columns. This order
+     * <p>The list is ordered following the natural order of Kanban columns. This order
      * corresponds to the declaration order of entries in the {@link DefaultColumn}.
      */
     static ImmutableList<AddColumn> additionCommands(BoardId board) {

@@ -201,7 +201,6 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
                     .setTo(c.getTo())
                     .build();
         }
-
         return ColumnMovedOnBoard
                 .newBuilder()
                 .setColumn(c.getColumn())
@@ -223,7 +222,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     /**
      * Checks whether the total number of columns is coherent with the state.
      *
-     * @return {@code true} if the total number of columns is coherent with the state.
+     * @return {@code true} if the total number of columns is coherent with the state
      */
     private boolean isTotalActual(ColumnPosition p) {
         return p.getOfTotal() == state().getColumnCount();
@@ -233,7 +232,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
      * Checks whether the provided column is actually placed at the index from
      * the provided position.
      *
-     * @return {@code true} if the column is placed at the index from the provided position.
+     * @return {@code true} if the column is placed at the index from the provided position
      */
     private boolean isIndexActual(ColumnId c, ColumnPosition p) {
         return p.zeroBasedIndex() == state().getColumnList().indexOf(c);
@@ -242,7 +241,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     /**
      * Shifts columns to fill the void left by the moving column.
      *
-     * <p> The shift direction is based on the movement direction. If the column is
+     * <p>The shift direction is based on the movement direction. If the column is
      * moving right, then the columns on the way are shifted left and vice versa.
      */
     private ImmutableList<ColumnMovedOnBoard> shiftColumns(MoveColumn c) {
@@ -262,7 +261,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     /**
      * Returns the position right to the provided one.
      *
-     * <p> The total number of columns remains unchanged.
+     * <p>The total number of columns remains unchanged.
      */
     private static ColumnPosition rightTo(ColumnPosition p) {
         return ColumnPositions.of(p.getIndex() + 1, p.getOfTotal());
@@ -271,7 +270,7 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     /**
      * Returns the position left to the provided one.
      *
-     * <p> The total number of columns remains unchanged.
+     * <p>The total number of columns remains unchanged.
      */
     private static ColumnPosition leftTo(ColumnPosition p) {
         return ColumnPositions.of(p.getIndex() - 1, p.getOfTotal());
