@@ -186,15 +186,23 @@ class BoardTest extends KanbanContextTest {
 
             context().receivesCommand(moveColumn(column, invalidFrom, to));
 
-            ColumnCannotBeMoved expected =
-                    ColumnCannotBeMoved.newBuilder()
-                                       .setColumn(column)
-                                       .setFrom(invalidFrom)
-                                       .setTo(to)
-                                       .vBuild();
+            ColumnCannotBeMoved expected = columnCannotBeMoved(column, invalidFrom, to);
             assertEvents(ColumnCannotBeMoved.class)
                     .message(0)
                     .isEqualTo(expected);
+        }
+
+        private ColumnCannotBeMoved columnCannotBeMoved(
+                ColumnId column,
+                ColumnPosition from,
+                ColumnPosition to
+        ) {
+            return ColumnCannotBeMoved
+                    .newBuilder()
+                    .setColumn(column)
+                    .setFrom(from)
+                    .setTo(to)
+                    .vBuild();
         }
 
         private ColumnPosition invalidPosition() {
@@ -214,12 +222,7 @@ class BoardTest extends KanbanContextTest {
 
             context().receivesCommand(moveColumn(column, from, invalidTo));
 
-            ColumnCannotBeMoved expected =
-                    ColumnCannotBeMoved.newBuilder()
-                                       .setColumn(column)
-                                       .setFrom(from)
-                                       .setTo(invalidTo)
-                                       .vBuild();
+            ColumnCannotBeMoved expected = columnCannotBeMoved(column, from, invalidTo);
             assertEvents(ColumnCannotBeMoved.class)
                     .message(0)
                     .isEqualTo(expected);
@@ -234,12 +237,7 @@ class BoardTest extends KanbanContextTest {
 
             context().receivesCommand(moveColumn(column, wrongFrom, to));
 
-            ColumnCannotBeMoved expected =
-                    ColumnCannotBeMoved.newBuilder()
-                                       .setColumn(column)
-                                       .setFrom(wrongFrom)
-                                       .setTo(to)
-                                       .vBuild();
+            ColumnCannotBeMoved expected = columnCannotBeMoved(column, wrongFrom, to);
             assertEvents(ColumnCannotBeMoved.class)
                     .message(0)
                     .isEqualTo(expected);
@@ -254,12 +252,7 @@ class BoardTest extends KanbanContextTest {
 
             context().receivesCommand(moveColumn(column, wrongFrom, to));
 
-            ColumnCannotBeMoved expected =
-                    ColumnCannotBeMoved.newBuilder()
-                                       .setColumn(column)
-                                       .setFrom(wrongFrom)
-                                       .setTo(to)
-                                       .vBuild();
+            ColumnCannotBeMoved expected = columnCannotBeMoved(column, wrongFrom, to);
             assertEvents(ColumnCannotBeMoved.class)
                     .message(0)
                     .isEqualTo(expected);
@@ -274,12 +267,7 @@ class BoardTest extends KanbanContextTest {
 
             context().receivesCommand(moveColumn(column, from, wrongTo));
 
-            ColumnCannotBeMoved expected =
-                    ColumnCannotBeMoved.newBuilder()
-                                       .setColumn(column)
-                                       .setFrom(from)
-                                       .setTo(wrongTo)
-                                       .vBuild();
+            ColumnCannotBeMoved expected = columnCannotBeMoved(column, from, wrongTo);
             assertEvents(ColumnCannotBeMoved.class)
                     .message(0)
                     .isEqualTo(expected);
@@ -293,12 +281,7 @@ class BoardTest extends KanbanContextTest {
 
             context().receivesCommand(moveColumn(column, position, position));
 
-            ColumnCannotBeMoved expected =
-                    ColumnCannotBeMoved.newBuilder()
-                                       .setColumn(column)
-                                       .setFrom(position)
-                                       .setTo(position)
-                                       .vBuild();
+            ColumnCannotBeMoved expected = columnCannotBeMoved(column, position, position);
             assertEvents(ColumnCannotBeMoved.class)
                     .message(0)
                     .isEqualTo(expected);
