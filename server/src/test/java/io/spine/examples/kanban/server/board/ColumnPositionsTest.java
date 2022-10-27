@@ -27,10 +27,10 @@
 package io.spine.examples.kanban.server.board;
 
 import io.spine.testing.UtilityClassTest;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("`ColumnPositions` should")
 class ColumnPositionsTest extends UtilityClassTest<ColumnPositions> {
@@ -42,7 +42,7 @@ class ColumnPositionsTest extends UtilityClassTest<ColumnPositions> {
     @Test
     @DisplayName("make sure that the index is less than or equal to the total number of columsn")
     void test() {
-        Assertions.assertThrows(
+        assertThrows(
                 IllegalArgumentException.class,
                 () -> ColumnPositions.of(3, 2)
         );
