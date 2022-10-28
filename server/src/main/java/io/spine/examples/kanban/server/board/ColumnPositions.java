@@ -24,46 +24,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.examples.kanban;
+package io.spine.examples.kanban.server.board;
 
-import com.google.errorprone.annotations.Immutable;
-import io.spine.annotation.GeneratedMixin;
-import io.spine.base.SerializableMessage;
+import io.spine.examples.kanban.ColumnPosition;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- * Defines custom operations for the {@link ColumnPosition}.
+ * Provides utility methods for {@link ColumnPosition}.
  */
-@Immutable
-@GeneratedMixin
-public interface ColumnPositionMixin extends SerializableMessage {
+public final class ColumnPositions {
 
     /**
-     * The index of a column in a column list.
+     * Prevents utility class instantiation.
      */
-    int getIndex();
-
-    /**
-     * The total number of columns on the board.
-     */
-    int getOfTotal();
-
-    /**
-     * Converts the one-based index to the zero-based.
-     *
-     * <p>This helper method is for accessing items in lists or arrays using a
-     * {@link ColumnPosition} object to avoid the {@link IndexOutOfBoundsException}.
-     */
-    default int zeroBasedIndex() {
-        return getIndex() - 1;
+    private ColumnPositions() {
     }
 
     /**
-     * Validates the column position.
-     *
-     * <p>The position is considered valid if its index is less than or equal to
-     * the total number of columns.
+     * Creates a column position with the passed index and total number of columns.
      */
-    default boolean isValid() {
-        return getIndex() <= getOfTotal();
+    public static ColumnPosition of(int index, int ofTotal) {
+        checkArgument(
+                index <= ofTotal,
+                "The index should be less than or equal to the total number of columns."
+        );
+        return ColumnPosition
+                .newBuilder()
+                .setIndex(index)
+                .setOfTotal(ofTotal)
+                .vBuild();
     }
 }

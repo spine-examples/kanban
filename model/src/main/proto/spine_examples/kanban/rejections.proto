@@ -43,6 +43,7 @@ option java_multiple_files = false;
 
 import "spine_examples/kanban/identifiers.proto";
 import "spine_examples/kanban/wip_limit.proto";
+import "spine_examples/kanban/column_position.proto";
 
 // A column cannot be added as its name is already taken.
 message ColumnNameAlreadyTaken {
@@ -52,6 +53,19 @@ message ColumnNameAlreadyTaken {
 
     // The provided name of the column.
     string name = 2 [(required) = true];
+}
+
+// A column cannot be moved.
+message ColumnCannotBeMoved {
+
+    // The ID of the column failed to be moved.
+    ColumnId column = 1 [(required) = true];
+
+    // The provided initial position of the column.
+    ColumnPosition from = 2 [(required) = true];
+
+    // The provided desired position of the column.
+    ColumnPosition to = 3 [(required) = true];
 }
 
 // A rejection thrown on attempt to add a card to a column which already has the number of cards

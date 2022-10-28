@@ -24,29 +24,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.examples.kanban.server.given;
+package io.spine.examples.kanban.server.board;
 
-import io.spine.examples.kanban.ColumnPosition;
+import io.spine.testing.UtilityClassTest;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
-/**
- * Provides utility methods for {@link ColumnPosition} for testing purposes.
- */
-public final class ColumnPositions {
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-    /**
-     * Prevents utility class instantiation.
-     */
-    private ColumnPositions() {
+@DisplayName("`ColumnPositions` should")
+class ColumnPositionsTest extends UtilityClassTest<ColumnPositions> {
+
+    ColumnPositionsTest() {
+        super(ColumnPositions.class);
     }
 
-    /**
-     * Creates a column position with the passed index and total number of columns.
-     */
-    public static ColumnPosition of(int index, int ofTotal) {
-        return ColumnPosition
-                .newBuilder()
-                .setIndex(index)
-                .setOfTotal(ofTotal)
-                .vBuild();
+    @Test
+    @DisplayName("make sure that the index is less than or equal to the total number of columns")
+    void rejectsInvalidParams() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> ColumnPositions.of(3, 2)
+        );
     }
 }

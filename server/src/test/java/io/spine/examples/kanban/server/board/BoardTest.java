@@ -30,9 +30,9 @@ import io.spine.examples.kanban.Board;
 import io.spine.examples.kanban.ColumnId;
 import io.spine.examples.kanban.ColumnPosition;
 import io.spine.examples.kanban.command.AddColumn;
+import io.spine.examples.kanban.command.MoveColumn;
 import io.spine.examples.kanban.event.BoardCreated;
 import io.spine.examples.kanban.server.KanbanContextTest;
-import io.spine.examples.kanban.server.given.ColumnPositions;
 import io.spine.testing.server.EventSubject;
 import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,6 +40,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import static com.google.common.truth.Truth.assertThat;
+import static io.spine.examples.kanban.rejection.Rejections.ColumnCannotBeMoved;
 import static io.spine.examples.kanban.rejection.Rejections.ColumnNameAlreadyTaken;
 import static io.spine.testing.TestValues.randomString;
 
@@ -126,6 +128,137 @@ class BoardTest extends KanbanContextTest {
                                           .vBuild();
             assertRejections.message(0)
                             .isEqualTo(expected);
+        }
+    }
+
+    @Nested
+    class MoveColumns {
+
+        @Test
+        @DisplayName("move columns left")
+        void moveLeft() {
+            ColumnPosition from = ColumnPositions.of(1, 4);
+            ColumnId column = currentBoardState().getColumn(from.zeroBasedIndex());
+            ColumnPosition to = ColumnPositions.of(4, 4);
+            moveColumn(column, from, to);
+            ColumnId actual = currentBoardState().getColumn(to.zeroBasedIndex());
+            assertThat(column).isEqualTo(actual);
+        }
+
+        private Board currentBoardState() {
+            return (Board) context()
+                    .assertEntityWithState(board(), Board.class)
+                    .actual()
+                    .state();
+        }
+
+        private void moveColumn(ColumnId column, ColumnPosition from, ColumnPosition to) {
+            MoveColumn command =
+                    MoveColumn.newBuilder()
+                              .setColumn(column)
+                              .setBoard(board())
+                              .setFrom(from)
+                              .setTo(to)
+                              .vBuild();
+            context().receivesCommand(command);
+        }
+
+        @Test
+        @DisplayName("move columns right")
+        void moveRight() {
+            ColumnPosition from = ColumnPositions.of(4, 4);
+            ColumnId column = currentBoardState().getColumn(from.zeroBasedIndex());
+            ColumnPosition to = ColumnPositions.of(1, 4);
+            moveColumn(column, from, to);
+            ColumnId actual = currentBoardState().getColumn(to.zeroBasedIndex());
+            assertThat(column).isEqualTo(actual);
+        }
+
+        @Test
+        @DisplayName("reject moving columns if `from` is invalid")
+        void invalidFrom() {
+            ColumnPosition invalidFrom = invalidPosition();
+            ColumnId column = ColumnId.generate();
+            ColumnPosition to = ColumnPositions.of(1, 4);
+            moveColumn(column, invalidFrom, to);
+            assertColumnCannotBeMoved(column, invalidFrom, to);
+        }
+
+        private ColumnPosition invalidPosition() {
+            return ColumnPosition
+                    .newBuilder()
+                    .setIndex(3)
+                    .setOfTotal(2)
+                    .vBuild();
+        }
+
+        private void assertColumnCannotBeMoved(ColumnId column, ColumnPosition from, ColumnPosition to) {
+            ColumnCannotBeMoved expected = columnCannotBeMoved(column, from, to);
+            assertEvents(ColumnCannotBeMoved.class)
+                    .message(0)
+                    .isEqualTo(expected);
+        }
+
+        private ColumnCannotBeMoved columnCannotBeMoved(
+                ColumnId column,
+                ColumnPosition from,
+                ColumnPosition to
+        ) {
+            return ColumnCannotBeMoved
+                    .newBuilder()
+                    .setColumn(column)
+                    .setFrom(from)
+                    .setTo(to)
+                    .vBuild();
+        }
+
+        @Test
+        @DisplayName("reject moving columns if `to` is invalid")
+        void invalidTo() {
+            ColumnPosition from = ColumnPositions.of(1, 4);
+            ColumnId column = ColumnId.generate();
+            ColumnPosition invalidTo = invalidPosition();
+            moveColumn(column, from, invalidTo);
+            assertColumnCannotBeMoved(column, from, invalidTo);
+        }
+
+        @Test
+        @DisplayName("reject moving columns if index in `from` is wrong")
+        void wrongIndexInFrom() {
+            ColumnPosition wrongFrom = ColumnPositions.of(3, 4);
+            ColumnId column = currentBoardState().getColumn(0);
+            ColumnPosition to = ColumnPositions.of(2, 4);
+            moveColumn(column, wrongFrom, to);
+            assertColumnCannotBeMoved(column, wrongFrom, to);
+        }
+
+        @Test
+        @DisplayName("reject moving columns if the total number of columns in `from` is wrong")
+        void wrongTotalInFrom() {
+            ColumnPosition wrongFrom = ColumnPositions.of(1, 2);
+            ColumnId column = currentBoardState().getColumn(wrongFrom.zeroBasedIndex());
+            ColumnPosition to = ColumnPositions.of(2, 4);
+            moveColumn(column, wrongFrom, to);
+            assertColumnCannotBeMoved(column, wrongFrom, to);
+        }
+
+        @Test
+        @DisplayName("reject moving columns if the total number of columns in `to` is wrong")
+        void wrongTotalInTo() {
+            ColumnPosition from = ColumnPositions.of(1, 4);
+            ColumnId column = currentBoardState().getColumn(from.zeroBasedIndex());
+            ColumnPosition wrongTo = ColumnPositions.of(2, 2);
+            moveColumn(column, from, wrongTo);
+            assertColumnCannotBeMoved(column, from, wrongTo);
+        }
+
+        @Test
+        @DisplayName("reject moving columns if `from` and `to` are same")
+        void samePositions() {
+            ColumnPosition position = ColumnPositions.of(1, 4);
+            ColumnId column = currentBoardState().getColumn(position.zeroBasedIndex());
+            moveColumn(column, position, position);
+            assertColumnCannotBeMoved(column, position, position);
         }
     }
 

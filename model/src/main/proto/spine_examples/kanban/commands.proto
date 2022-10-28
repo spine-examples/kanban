@@ -98,6 +98,22 @@ message PlaceColumn {
     ColumnPosition desired_position = 3 [(required) = true];
 }
 
+// A command to move a column on a board.
+message MoveColumn {
+
+    // The ID of the board on which to move the column.
+    BoardId board = 1;
+
+    // The ID of the column to move.
+    ColumnId column = 2 [(required) = true];
+
+    // The initial position of the column.
+    ColumnPosition from = 3 [(required) = true];
+
+    // The desired position of the column.
+    ColumnPosition to = 4 [(required) = true];
+}
+
 // A command to create a new card on the specified board.
 //
 // New cards are placed into the first column of the board.

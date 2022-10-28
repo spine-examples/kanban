@@ -57,7 +57,7 @@ public final class BoardProjection
                               .setPosition(e.getDesiredPosition())
                               .vBuild();
 
-        builder().addColumn(e.getDesiredPosition().zeroBasedIndex(), column);
+        builder().addColumn(column.getPosition().zeroBasedIndex(), column);
     }
 
     @Subscribe

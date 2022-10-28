@@ -58,7 +58,7 @@ final class DefaultColumns {
      * Returns an ordered list of commands for adding defaults columns to the
      * provided board.
      *
-     * <p> The list is ordered following the natural order of Kanban columns. This order
+     * <p>The list is ordered following the natural order of Kanban columns. This order
      * corresponds to the declaration order of entries in the {@link DefaultColumn}.
      */
     static ImmutableList<AddColumn> additionCommands(BoardId board) {
@@ -70,12 +70,7 @@ final class DefaultColumns {
 
         for (int oneBasedIndex = 1; oneBasedIndex <= total; oneBasedIndex++) {
             DefaultColumn column = columns[oneBasedIndex - 1];
-            ColumnPosition position =
-                    ColumnPosition.newBuilder()
-                                  .setIndex(oneBasedIndex)
-                                  .setOfTotal(total)
-                                  .vBuild();
-
+            ColumnPosition position = ColumnPositions.of(oneBasedIndex, total);
             commands.add(additionCommand(board, column, position));
         }
 

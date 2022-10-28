@@ -34,6 +34,7 @@ import io.spine.examples.kanban.ColumnId;
 import io.spine.examples.kanban.ColumnPosition;
 import io.spine.examples.kanban.command.AddColumn;
 import io.spine.examples.kanban.command.CreateBoard;
+import io.spine.examples.kanban.command.MoveColumn;
 import io.spine.examples.kanban.command.PlaceColumn;
 import io.spine.examples.kanban.event.BoardCreated;
 import io.spine.examples.kanban.event.CardCreated;
@@ -41,6 +42,7 @@ import io.spine.examples.kanban.event.CardWaitingPlacement;
 import io.spine.examples.kanban.event.ColumnAdditionRequested;
 import io.spine.examples.kanban.event.ColumnMovedOnBoard;
 import io.spine.examples.kanban.event.ColumnPlaced;
+import io.spine.examples.kanban.rejection.ColumnCannotBeMoved;
 import io.spine.examples.kanban.rejection.ColumnNameAlreadyTaken;
 import io.spine.server.aggregate.Aggregate;
 import io.spine.server.aggregate.Apply;
@@ -110,16 +112,16 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     Iterable<EventMessage> handle(PlaceColumn c) {
         return new ImmutableList.Builder<EventMessage>()
                 .add(placeColumn(c))
-                .addAll(moveColumns())
+                .addAll(makeSpaceForNewColumn())
                 .build();
     }
 
     private ColumnPlaced placeColumn(PlaceColumn c) {
         ColumnPosition actualPosition =
-                ColumnPosition.newBuilder()
-                              .setIndex(c.getDesiredPosition().getIndex())
-                              .setOfTotal(incrementColumnCount())
-                              .vBuild();
+                ColumnPositions.of(
+                    c.getDesiredPosition().getIndex(),
+                    incrementColumnCount()
+                );
 
         return ColumnPlaced
                 .newBuilder()
@@ -134,36 +136,31 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
         return state().getColumnCount() + 1;
     }
 
-    private ImmutableList<ColumnMovedOnBoard> moveColumns() {
+    /**
+     * Moves all columns on the board to make space for a new column.
+     */
+    private ImmutableList<ColumnMovedOnBoard> makeSpaceForNewColumn() {
         int currentTotal = state().getColumnCount();
         int newTotal = incrementColumnCount();
         ImmutableList.Builder<ColumnMovedOnBoard> columnsMoved =
                 new ImmutableList.Builder<>();
 
         for (int i = 1; i <= currentTotal; i++) {
-            columnsMoved.add(updateTotal(i, currentTotal, newTotal));
+            ColumnPosition from = ColumnPositions.of(i, currentTotal);
+            ColumnPosition to = ColumnPositions.of(i, newTotal);
+            columnsMoved.add(moveColumn(from, to));
         }
 
         return columnsMoved.build();
     }
 
-    private ColumnMovedOnBoard updateTotal(int index, int currentTotal, int newTotal) {
-        ColumnPosition from =
-                ColumnPosition.newBuilder()
-                              .setIndex(index)
-                              .setOfTotal(currentTotal)
-                              .vBuild();
-        ColumnPosition to =
-                ColumnPosition.newBuilder()
-                              .setIndex(index)
-                              .setOfTotal(newTotal)
-                              .vBuild();
+    private ColumnMovedOnBoard moveColumn(ColumnPosition from, ColumnPosition to) {
         ColumnId column = state().getColumn(from.zeroBasedIndex());
-
+        BoardId board = state().getId();
         return ColumnMovedOnBoard
                 .newBuilder()
                 .setColumn(column)
-                .setBoard(state().getId())
+                .setBoard(board)
                 .setFrom(from)
                 .setTo(to)
                 .vBuild();
@@ -176,8 +173,16 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
 
     @Apply
     private void apply(ColumnMovedOnBoard e) {
-        builder().removeColumn(e.getFrom().zeroBasedIndex())
-                 .addColumn(e.getTo().zeroBasedIndex(), e.getColumn());
+        int index = state().getColumnList().indexOf(e.getColumn());
+        int newIndex = e.getTo().zeroBasedIndex();
+        if (index != newIndex) {
+            builder().removeColumn(index).addColumn(newIndex, e.getColumn());
+        }
+    }
+
+    @Assign
+    Iterable<ColumnMovedOnBoard> handle(MoveColumn c) throws ColumnCannotBeMoved {
+        return new MoveColumnHandler(c).handle();
     }
 
     /**
@@ -197,5 +202,137 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
     @SuppressWarnings("PMD.UnusedFormalParameter")
     private void event(CardWaitingPlacement event) {
         // Do nothing on the board. The corresponding column will handle the event.
+    }
+
+    /**
+     * Handles the {@link MoveColumn} command.
+     */
+    private class MoveColumnHandler {
+        private final ColumnId column;
+        private final ColumnPosition from;
+        private final ColumnPosition to;
+
+        private MoveColumnHandler(MoveColumn command) {
+            this.column = command.getColumn();
+            this.from = command.getFrom();
+            this.to = command.getTo();
+        }
+
+        /**
+         * Moves the column to the desired position and shifts all columns on the
+         * way to fill the void left by the column.
+         */
+        public ImmutableList<ColumnMovedOnBoard> handle() throws ColumnCannotBeMoved {
+            return new ImmutableList.Builder<ColumnMovedOnBoard>()
+                    .add(moveColumn())
+                    .addAll(shiftColumns())
+                    .build();
+        }
+
+        private ColumnMovedOnBoard moveColumn() throws ColumnCannotBeMoved {
+            if (!canBeMoved()) {
+                throw ColumnCannotBeMoved
+                        .newBuilder()
+                        .setColumn(column)
+                        .setFrom(from)
+                        .setTo(to)
+                        .build();
+            }
+            return ColumnMovedOnBoard
+                    .newBuilder()
+                    .setColumn(column)
+                    .setBoard(state().getId())
+                    .setFrom(from)
+                    .setTo(to)
+                    .vBuild();
+        }
+
+        private boolean canBeMoved() {
+            return from.isValid() &&
+                    to.isValid() &&
+                    isTotalActual(from) &&
+                    isTotalActual(to) &&
+                    isIndexActual(column, from) &&
+                    !from.equals(to);
+        }
+
+        /**
+         * Checks whether the total number of columns is coherent with the state.
+         *
+         * @return {@code true} if the total number of columns is coherent with
+         *         the state
+         */
+        private boolean isTotalActual(ColumnPosition p) {
+            return p.getOfTotal() == state().getColumnCount();
+        }
+
+        /**
+         * Checks whether the provided column is actually placed at the index from
+         * the provided position.
+         *
+         * @return {@code true} if the column is placed at the index from the
+         *         provided position
+         */
+        private boolean isIndexActual(ColumnId c, ColumnPosition p) {
+            return p.zeroBasedIndex() == state().getColumnList().indexOf(c);
+        }
+
+        /**
+         * Shifts columns to fill the void left by the moving column.
+         *
+         * <p>The shift direction is based on the movement direction. If the column is
+         * moving right, then the columns on the way are shifted left and vice versa.
+         */
+        private ImmutableList<ColumnMovedOnBoard> shiftColumns() {
+            return isColumnMovingRight() ? shiftColumnsLeft() : shiftColumnsRight();
+        }
+
+        private boolean isColumnMovingRight() {
+            return from.getIndex() < to.getIndex();
+        }
+
+        private ImmutableList<ColumnMovedOnBoard> shiftColumnsLeft() {
+            ImmutableList.Builder<ColumnMovedOnBoard> movedColumns = new ImmutableList.Builder<>();
+
+            ColumnPosition current = rightTo(from);
+            while (!current.equals(to)) {
+                ColumnPosition newPosition = leftTo(current);
+                movedColumns.add(BoardAggregate.this.moveColumn(current, newPosition));
+                current = rightTo(current);
+            }
+
+            return movedColumns.build();
+        }
+
+        /**
+         * Returns the position right to the provided one.
+         *
+         * <p>The total number of columns remains unchanged.
+         */
+        private ColumnPosition rightTo(ColumnPosition p) {
+            return ColumnPositions.of(p.getIndex() + 1, p.getOfTotal());
+        }
+
+        /**
+         * Returns the position left to the provided one.
+         *
+         * <p>The total number of columns remains unchanged.
+         */
+        private ColumnPosition leftTo(ColumnPosition p) {
+            return ColumnPositions.of(p.getIndex() - 1, p.getOfTotal());
+        }
+
+        private ImmutableList<ColumnMovedOnBoard> shiftColumnsRight() {
+            ImmutableList.Builder<ColumnMovedOnBoard> movedColumns = new ImmutableList.Builder<>();
+
+            ColumnPosition current = leftTo(from);
+            while (!current.equals(to)) {
+                ColumnPosition newPosition = rightTo(current);
+                movedColumns.add(BoardAggregate.this.moveColumn(current, newPosition));
+                current = leftTo(current);
+            }
+
+            return movedColumns.build();
+        }
     }
 }
