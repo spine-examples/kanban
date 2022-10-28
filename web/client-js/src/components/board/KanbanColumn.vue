@@ -80,8 +80,8 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  min-height: 200px;
-  max-height: 400px;
+  min-height: 40px;
+  max-height: calc(100vh - 80px);
   border-radius: 4px;
   margin-bottom: 20px;
 }
