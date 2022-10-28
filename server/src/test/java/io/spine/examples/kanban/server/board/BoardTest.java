@@ -140,9 +140,7 @@ class BoardTest extends KanbanContextTest {
             ColumnPosition from = ColumnPositions.of(1, 4);
             ColumnId column = currentBoardState().getColumn(from.zeroBasedIndex());
             ColumnPosition to = ColumnPositions.of(4, 4);
-
-            context().receivesCommand(moveColumn(column, from, to));
-
+            moveColumn(column, from, to);
             ColumnId actual = currentBoardState().getColumn(to.zeroBasedIndex());
             assertThat(column).isEqualTo(actual);
         }
@@ -154,14 +152,16 @@ class BoardTest extends KanbanContextTest {
                     .state();
         }
 
-        private MoveColumn moveColumn(ColumnId column, ColumnPosition from, ColumnPosition to) {
-            return MoveColumn
-                    .newBuilder()
-                    .setColumn(column)
-                    .setBoard(board())
-                    .setFrom(from)
-                    .setTo(to)
-                    .vBuild();
+        private void moveColumn(ColumnId column, ColumnPosition from, ColumnPosition to) {
+            MoveColumn command =
+                    MoveColumn.newBuilder()
+                              .setColumn(column)
+                              .setBoard(board())
+                              .setFrom(from)
+                              .setTo(to)
+                              .vBuild();
+
+            context().receivesCommand(command);
         }
 
         @Test
@@ -170,9 +170,7 @@ class BoardTest extends KanbanContextTest {
             ColumnPosition from = ColumnPositions.of(4, 4);
             ColumnId column = currentBoardState().getColumn(from.zeroBasedIndex());
             ColumnPosition to = ColumnPositions.of(1, 4);
-
-            context().receivesCommand(moveColumn(column, from, to));
-
+            moveColumn(column, from, to);
             ColumnId actual = currentBoardState().getColumn(to.zeroBasedIndex());
             assertThat(column).isEqualTo(actual);
         }
@@ -183,13 +181,8 @@ class BoardTest extends KanbanContextTest {
             ColumnPosition invalidFrom = invalidPosition();
             ColumnId column = ColumnId.generate();
             ColumnPosition to = ColumnPositions.of(1, 4);
-
-            context().receivesCommand(moveColumn(column, invalidFrom, to));
-
-            ColumnCannotBeMoved expected = columnCannotBeMoved(column, invalidFrom, to);
-            assertEvents(ColumnCannotBeMoved.class)
-                    .message(0)
-                    .isEqualTo(expected);
+            moveColumn(column, invalidFrom, to);
+            assertColumnCannotBeMoved(column, invalidFrom, to);
         }
 
         private ColumnPosition invalidPosition() {
@@ -198,6 +191,13 @@ class BoardTest extends KanbanContextTest {
                     .setIndex(3)
                     .setOfTotal(2)
                     .vBuild();
+        }
+
+        private void assertColumnCannotBeMoved(ColumnId column, ColumnPosition from, ColumnPosition to) {
+            ColumnCannotBeMoved expected = columnCannotBeMoved(column, from, to);
+            assertEvents(ColumnCannotBeMoved.class)
+                    .message(0)
+                    .isEqualTo(expected);
         }
 
         private ColumnCannotBeMoved columnCannotBeMoved(
@@ -219,13 +219,8 @@ class BoardTest extends KanbanContextTest {
             ColumnPosition from = ColumnPositions.of(1, 4);
             ColumnId column = ColumnId.generate();
             ColumnPosition invalidTo = invalidPosition();
-
-            context().receivesCommand(moveColumn(column, from, invalidTo));
-
-            ColumnCannotBeMoved expected = columnCannotBeMoved(column, from, invalidTo);
-            assertEvents(ColumnCannotBeMoved.class)
-                    .message(0)
-                    .isEqualTo(expected);
+            moveColumn(column, from, invalidTo);
+            assertColumnCannotBeMoved(column, from, invalidTo);
         }
 
         @Test
@@ -234,13 +229,8 @@ class BoardTest extends KanbanContextTest {
             ColumnPosition wrongFrom = ColumnPositions.of(3, 4);
             ColumnId column = currentBoardState().getColumn(0);
             ColumnPosition to = ColumnPositions.of(2, 4);
-
-            context().receivesCommand(moveColumn(column, wrongFrom, to));
-
-            ColumnCannotBeMoved expected = columnCannotBeMoved(column, wrongFrom, to);
-            assertEvents(ColumnCannotBeMoved.class)
-                    .message(0)
-                    .isEqualTo(expected);
+            moveColumn(column, wrongFrom, to);
+            assertColumnCannotBeMoved(column, wrongFrom, to);
         }
 
         @Test
@@ -249,13 +239,8 @@ class BoardTest extends KanbanContextTest {
             ColumnPosition wrongFrom = ColumnPositions.of(1, 2);
             ColumnId column = currentBoardState().getColumn(wrongFrom.zeroBasedIndex());
             ColumnPosition to = ColumnPositions.of(2, 4);
-
-            context().receivesCommand(moveColumn(column, wrongFrom, to));
-
-            ColumnCannotBeMoved expected = columnCannotBeMoved(column, wrongFrom, to);
-            assertEvents(ColumnCannotBeMoved.class)
-                    .message(0)
-                    .isEqualTo(expected);
+            moveColumn(column, wrongFrom, to);
+            assertColumnCannotBeMoved(column, wrongFrom, to);
         }
 
         @Test
@@ -264,13 +249,8 @@ class BoardTest extends KanbanContextTest {
             ColumnPosition from = ColumnPositions.of(1, 4);
             ColumnId column = currentBoardState().getColumn(from.zeroBasedIndex());
             ColumnPosition wrongTo = ColumnPositions.of(2, 2);
-
-            context().receivesCommand(moveColumn(column, from, wrongTo));
-
-            ColumnCannotBeMoved expected = columnCannotBeMoved(column, from, wrongTo);
-            assertEvents(ColumnCannotBeMoved.class)
-                    .message(0)
-                    .isEqualTo(expected);
+            moveColumn(column, from, wrongTo);
+            assertColumnCannotBeMoved(column, from, wrongTo);
         }
 
         @Test
@@ -278,13 +258,8 @@ class BoardTest extends KanbanContextTest {
         void samePositions() {
             ColumnPosition position = ColumnPositions.of(1, 4);
             ColumnId column = currentBoardState().getColumn(position.zeroBasedIndex());
-
-            context().receivesCommand(moveColumn(column, position, position));
-
-            ColumnCannotBeMoved expected = columnCannotBeMoved(column, position, position);
-            assertEvents(ColumnCannotBeMoved.class)
-                    .message(0)
-                    .isEqualTo(expected);
+            moveColumn(column, position, position);
+            assertColumnCannotBeMoved(column, position, position);
         }
     }
 
