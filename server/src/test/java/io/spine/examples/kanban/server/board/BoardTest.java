@@ -160,7 +160,6 @@ class BoardTest extends KanbanContextTest {
                               .setFrom(from)
                               .setTo(to)
                               .vBuild();
-
             context().receivesCommand(command);
         }
 
