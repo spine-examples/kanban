@@ -24,30 +24,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { MutationTree } from "vuex";
+import { Mutation } from "vuex";
 import { BoardState } from "@/store/board/state/board-state";
-import SetBoardMutation from "@/store/board/mutations/set-board-mutation";
-import SwapColumnsMutation from "@/store/board/mutations/swap-columns-mutation";
 
-/**
- * Defines mutation types of the local {@linkplain BoardState board state}.
- */
-export const MutationType = {
-  /**
-   * Sets the board in the {@linkplain BoardState local state} to the provided value.
-   */
-  SET_BOARD: "setBoard",
-
-  /**
-   * Swaps two columns in the {@linkplain BoardState local state}.
-   */
-  SWAP_COLUMNS: "swapColumns",
+export type SwapColumnsMutationPayload = {
+  firstIndex: number;
+  secondIndex: number;
 };
 
 /**
- * Exposes mutations of the local {@linkplain BoardState board state}.
+ * Swaps two columns in the {@linkplain BoardState local state}.
  */
-export const mutations: MutationTree<BoardState> = {
-  [MutationType.SET_BOARD]: SetBoardMutation.newHandler(),
-  [MutationType.SWAP_COLUMNS]: SwapColumnsMutation.newHandler(),
-};
+export default class SwapColumnsMutation {
+  /**
+   * Creates the mutation handler to be used by the store.
+   */
+  public static newHandler(): Mutation<BoardState> {
+    return (s: BoardState, p: SwapColumnsMutationPayload) => {
+      if (p.firstIndex != p.secondIndex) {
+        const columns = s.board!.getColumnList();
+        [columns[p.firstIndex], columns[p.secondIndex]] = [
+          columns[p.secondIndex],
+          columns[p.firstIndex],
+        ];
+        s.board!.setColumnList(columns);
+      }
+    };
+  }
+}
