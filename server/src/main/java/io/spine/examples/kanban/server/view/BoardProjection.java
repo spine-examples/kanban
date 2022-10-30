@@ -91,10 +91,11 @@ public final class BoardProjection
     }
 
     private int indexOf(ColumnId c) {
-        return IntStream.rangeClosed(0, state().getColumnCount() - 1)
+        return IntStream.range(0, state().getColumnCount())
                         .filter(i -> state().getColumn(i).getId().equals(c))
                         .findFirst().orElse(-1);
     }
+
     @Subscribe
     void updated(Card card) {
         int index = state().getCardList()
