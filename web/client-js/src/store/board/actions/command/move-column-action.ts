@@ -51,10 +51,7 @@ export type MoveColumnPayload = {
 /**
  * Moves a column.
  */
-export default class MoveColumnAction extends BoardAction<
-  MoveColumnPayload,
-  void
-> {
+export default class MoveColumnAction extends BoardAction<MoveColumnPayload, void> {
   /**
    * Sends the command to move a column.
    * @protected
@@ -104,20 +101,14 @@ export default class MoveColumnAction extends BoardAction<
    * Dispatches the action to fetch the board.
    */
   private fetchBoard(): void {
-    this.getActionContext().dispatch(
-      ActionType.Query.FETCH_BOARD,
-      this.getBoard()!.getId()
-    );
+    this.getActionContext().dispatch(ActionType.Query.FETCH_BOARD, this.getBoard()!.getId());
   }
 
   /**
    * Creates the {@link ActionHandler} to be used by the store.
    */
   public static newHandler(): ActionHandler<BoardState, RootState> {
-    return (
-      ctx: ActionContext<BoardState, RootState>,
-      p: MoveColumnPayload
-    ): void => {
+    return (ctx: ActionContext<BoardState, RootState>, p: MoveColumnPayload): void => {
       new MoveColumnAction(ctx, p).execute();
     };
   }

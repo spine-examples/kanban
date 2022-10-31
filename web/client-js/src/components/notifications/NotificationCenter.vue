@@ -29,9 +29,7 @@
     <NotificationMessage
       v-for="notification of notifications.getItems()"
       :key="notification.id"
-      :notification="notification"
-    >
-    </NotificationMessage>
+      :notification="notification" />
   </div>
 </template>
 
@@ -50,9 +48,9 @@ export default defineComponent({
   components: { NotificationMessage },
   computed: {
     ...mapState({
-      notifications: "notifications",
-    }),
-  },
+      notifications: "notifications"
+    })
+  }
 });
 </script>
 

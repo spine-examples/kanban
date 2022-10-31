@@ -45,7 +45,7 @@ export default class SwapColumnsMutation {
         const columns = s.board!.getColumnList();
         [columns[p.firstIndex], columns[p.secondIndex]] = [
           columns[p.secondIndex],
-          columns[p.firstIndex],
+          columns[p.firstIndex]
         ];
         s.board!.setColumnList(columns);
       }

@@ -30,8 +30,8 @@ module.exports = {
   resolve: {
     plugins: [
       new TsconfigPathsPlugin({
-        extensions: [".js", ".ts"],
-      }),
-    ],
-  },
+        extensions: [".js", ".ts"]
+      })
+    ]
+  }
 };

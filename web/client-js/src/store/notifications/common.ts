@@ -38,9 +38,7 @@ export function addNotification<S, T>(
   context: ActionContext<S, T>,
   notification: Notification
 ): void {
-  context.commit(
-    `${Notifications.MODULE_NAME}/${MutationType.ADD_NOTIFICATION}`,
-    notification,
-    { root: true }
-  );
+  context.commit(`${Notifications.MODULE_NAME}/${MutationType.ADD_NOTIFICATION}`, notification, {
+    root: true
+  });
 }

@@ -35,6 +35,6 @@ import Notifications from "@/store/notifications";
 export default createStore<RootState>({
   modules: {
     [Board.MODULE_NAME]: Board.MODULE,
-    [Notifications.MODULE_NAME]: Notifications.MODULE,
-  },
+    [Notifications.MODULE_NAME]: Notifications.MODULE
+  }
 });

@@ -39,7 +39,7 @@
  * Displays the website header with the Spine logo.
  */
 export default {
-  name: "TheHeader",
+  name: "TheHeader"
 };
 </script>
 

@@ -41,7 +41,7 @@ export const ActionType = {
     /**
      * Fetches the {@link Board} with the provided ID.
      */
-    FETCH_BOARD: "fetchBoard",
+    FETCH_BOARD: "fetchBoard"
   },
   Command: {
     /**
@@ -57,11 +57,11 @@ export const ActionType = {
     /**
      * Adds a column.
      */
-    MOVE_COLUMN: "moveColumn",
+    MOVE_COLUMN: "moveColumn"
   },
   Subscription: {
-    SUBSCRIBE_TO_BOARD_CHANGES: "subscribeToBoardChanges",
-  },
+    SUBSCRIBE_TO_BOARD_CHANGES: "subscribeToBoardChanges"
+  }
 };
 
 /**
@@ -72,6 +72,5 @@ export const actions: ActionTree<BoardState, RootState> = {
   [ActionType.Command.CREATE_BOARD]: CreateBoardAction.newHandler(),
   [ActionType.Command.ADD_COLUMN]: AddColumnAction.newHandler(),
   [ActionType.Command.MOVE_COLUMN]: MoveColumnAction.newHandler(),
-  [ActionType.Subscription.SUBSCRIBE_TO_BOARD_CHANGES]:
-    SubscribeToBoardChangesAction.newHandler(),
+  [ActionType.Subscription.SUBSCRIBE_TO_BOARD_CHANGES]: SubscribeToBoardChangesAction.newHandler()
 };

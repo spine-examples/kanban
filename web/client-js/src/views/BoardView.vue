@@ -1,10 +1,7 @@
 <template>
   <div v-if="board" id="board">
     <div id="columns">
-      <div
-        v-for="(column, $columnIndex) of board.getColumnList()"
-        :key="$columnIndex"
-      >
+      <div v-for="(column, $columnIndex) of board.getColumnList()" :key="$columnIndex">
         <div
           @dragenter="swapColumns($columnIndex)"
           @dragleave.prevent
@@ -12,26 +9,19 @@
           @dragend="stopMovingColumn"
           @drop="stopMovingColumn"
           :class="{
-            'drop-target': this.isDropTarget($columnIndex),
+            'drop-target': this.isDropTarget($columnIndex)
           }"
-          class="column-container"
-        >
+          class="column-container">
           <KanbanColumn
             :column="column"
             draggable="true"
-            @dragstart="startMovingColumn($event, $columnIndex)"
-          />
+            @dragstart="startMovingColumn($event, $columnIndex)" />
         </div>
       </div>
     </div>
     <div id="add-column">
-      <button v-if="!addColumnFormOpened" v-on:click="openAddColumnForm()">
-        Add a column
-      </button>
-      <AddColumnForm
-        v-if="addColumnFormOpened"
-        @closed="closeAddColumnForm()"
-      />
+      <button v-if="!addColumnFormOpened" v-on:click="openAddColumnForm()">Add a column</button>
+      <AddColumnForm v-if="addColumnFormOpened" @closed="closeAddColumnForm()" />
     </div>
   </div>
 </template>
@@ -48,9 +38,7 @@ import { MutationType } from "@/store/board/mutations";
 import { SwapColumnsMutationPayload } from "@/store/board/mutations/swap-columns-mutation";
 import { MoveColumnPayload } from "@/store/board/actions/command/move-column-action";
 
-const { mapActions, mapMutations, mapState } = createNamespacedHelpers(
-  Board.MODULE_NAME
-);
+const { mapActions, mapMutations, mapState } = createNamespacedHelpers(Board.MODULE_NAME);
 
 /**
  * Displays the Kanban board.
@@ -62,9 +50,9 @@ export default defineComponent({
     return {
       columnMovement: {
         initialIndex: -1,
-        currentIndex: -1,
+        currentIndex: -1
       },
-      addColumnFormOpened: false,
+      addColumnFormOpened: false
     };
   },
   created() {
@@ -75,17 +63,16 @@ export default defineComponent({
     this.subscribeToBoardChanges(boardId);
   },
   computed: {
-    ...mapState(["board"]),
+    ...mapState(["board"])
   },
   methods: {
     ...mapActions({
-      subscribeToBoardChanges:
-        ActionType.Subscription.SUBSCRIBE_TO_BOARD_CHANGES,
+      subscribeToBoardChanges: ActionType.Subscription.SUBSCRIBE_TO_BOARD_CHANGES,
       fetchBoard: ActionType.Query.FETCH_BOARD,
-      moveColumn: ActionType.Command.MOVE_COLUMN,
+      moveColumn: ActionType.Command.MOVE_COLUMN
     }),
     ...mapMutations({
-      swapColumnsMutation: MutationType.SWAP_COLUMNS,
+      swapColumnsMutation: MutationType.SWAP_COLUMNS
     }),
     startMovingColumn(event: DragEvent, columnIndex: number): void {
       event.dataTransfer!.dropEffect = "move";
@@ -96,7 +83,7 @@ export default defineComponent({
     swapColumns(columnIndex: number): void {
       const payload: SwapColumnsMutationPayload = {
         firstIndex: this.columnMovement.currentIndex,
-        secondIndex: columnIndex,
+        secondIndex: columnIndex
       };
       this.swapColumnsMutation(payload);
       this.columnMovement.currentIndex = columnIndex;
@@ -118,7 +105,7 @@ export default defineComponent({
         const payload: MoveColumnPayload = {
           column: column,
           from: from,
-          to: to,
+          to: to
         };
         this.moveColumn(payload);
       }
@@ -128,13 +115,10 @@ export default defineComponent({
       return index + 1;
     },
     hasColumnMoved(): boolean {
-      return (
-        this.columnMovement.initialIndex != this.columnMovement.currentIndex
-      );
+      return this.columnMovement.initialIndex != this.columnMovement.currentIndex;
     },
     positionOf(index: number): ColumnPosition {
-      const p: ColumnPosition =
-        new proto.spine_examples.kanban.ColumnPosition();
+      const p: ColumnPosition = new proto.spine_examples.kanban.ColumnPosition();
       p.setIndex(index);
       p.setOfTotal(this.board.getColumnList().length);
       return p;
@@ -148,8 +132,8 @@ export default defineComponent({
     },
     closeAddColumnForm(): void {
       this.addColumnFormOpened = false;
-    },
-  },
+    }
+  }
 });
 </script>
 

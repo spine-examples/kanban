@@ -35,10 +35,7 @@ import { RootState } from "@/store/root/root-state";
 /**
  * Subscribes to changes of the {@link Board} with the provided ID.
  */
-export default class SubscribeToBoardChangesAction extends BoardAction<
-  BoardId,
-  void
-> {
+export default class SubscribeToBoardChangesAction extends BoardAction<BoardId, void> {
   /**
    * Creates a subscription for changes of the {@link Board} with the provided ID.
    *
@@ -55,7 +52,7 @@ export default class SubscribeToBoardChangesAction extends BoardAction<
         itemChanged.subscribe({
           next: (board: Board) => {
             this.overwriteBoardInState(board);
-          },
+          }
         });
       });
   }

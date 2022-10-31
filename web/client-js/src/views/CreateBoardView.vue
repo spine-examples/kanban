@@ -44,9 +44,9 @@ export default defineComponent({
   name: "CreateBoardView",
   methods: {
     ...mapActions({
-      createBoard: ActionType.Command.CREATE_BOARD,
-    }),
-  },
+      createBoard: ActionType.Command.CREATE_BOARD
+    })
+  }
 });
 </script>
 <style>

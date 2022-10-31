@@ -32,19 +32,19 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/boards/:id",
     name: "board",
-    component: BoardView,
+    component: BoardView
   },
   {
     path: "/boards/create",
     name: "create-board",
-    component: CreateBoardView,
+    component: CreateBoardView
   },
   {
     path: "/",
     redirect: {
-      name: "create-board",
-    },
-  },
+      name: "create-board"
+    }
+  }
 ];
 
 /**
@@ -52,7 +52,7 @@ const routes: Array<RouteRecordRaw> = [
  */
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes,
+  routes
 });
 
 export default router;

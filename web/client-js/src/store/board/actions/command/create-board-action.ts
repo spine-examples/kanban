@@ -29,12 +29,7 @@ import { newBoardId } from "@/store/board/id-factory";
 import { client } from "@/dependency/container";
 import { MutationType } from "@/store/board/mutations";
 import { Event } from "spine-web/proto/spine/core/event_pb";
-import {
-  Board,
-  BoardCreated,
-  BoardId,
-  ColumnAdded,
-} from "@/store/board/aliases";
+import { Board, BoardCreated, BoardId, ColumnAdded } from "@/store/board/aliases";
 import { AnyPacker } from "spine-web/client/any-packer";
 import { Type } from "spine-web/client/typed-message";
 import { Filters } from "spine-web";
@@ -129,7 +124,7 @@ export default class CreateBoardAction extends BoardAction<null, void> {
   private static redirectToBoard(b: BoardId): void {
     router.push({
       name: "board",
-      params: { id: b.getUuid() },
+      params: { id: b.getUuid() }
     });
   }
 

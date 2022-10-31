@@ -46,5 +46,5 @@ export const client: Client = init({
   protoIndexFiles: [KanbanModel, SpineWebTypes],
   endpointUrl: spineConfig.endpointUrl,
   firebaseDatabase: firebaseApp.database(),
-  actorProvider: actorProvider,
+  actorProvider: actorProvider
 });

@@ -47,6 +47,6 @@ export default class {
     namespaced: true,
     state,
     mutations,
-    actions,
+    actions
   };
 }

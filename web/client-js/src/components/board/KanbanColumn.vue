@@ -30,12 +30,7 @@
       <h3>{{ column.getName() }}</h3>
     </div>
     <hr class="separator" />
-    <div
-      class="cards"
-      draggable="true"
-      @dragstart.prevent
-      @dragstart.stop
-    ></div>
+    <div class="cards" draggable="true" @dragstart.prevent @dragstart.stop></div>
     <div class="add-card" draggable="true" @dragstart.prevent @dragstart.stop>
       <button>Add a card</button>
     </div>
@@ -53,9 +48,9 @@ export default defineComponent({
   props: {
     column: {
       type: proto.spine_examples.kanban.Column,
-      required: true,
-    },
-  },
+      required: true
+    }
+  }
 });
 </script>
 

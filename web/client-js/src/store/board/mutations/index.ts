@@ -41,7 +41,7 @@ export const MutationType = {
   /**
    * Swaps two columns in the {@linkplain BoardState local state}.
    */
-  SWAP_COLUMNS: "swapColumns",
+  SWAP_COLUMNS: "swapColumns"
 };
 
 /**
@@ -49,5 +49,5 @@ export const MutationType = {
  */
 export const mutations: MutationTree<BoardState> = {
   [MutationType.SET_BOARD]: SetBoardMutation.newHandler(),
-  [MutationType.SWAP_COLUMNS]: SwapColumnsMutation.newHandler(),
+  [MutationType.SWAP_COLUMNS]: SwapColumnsMutation.newHandler()
 };

@@ -45,6 +45,6 @@ export default class {
   public static MODULE: Module<NotificationsCenterState, RootState> = {
     namespaced: true,
     state,
-    mutations,
+    mutations
   };
 }

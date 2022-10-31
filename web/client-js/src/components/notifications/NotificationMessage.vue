@@ -52,20 +52,20 @@ export default defineComponent({
   props: {
     notification: {
       type: Notification,
-      required: true,
-    },
+      required: true
+    }
   },
   methods: {
     ...mapMutations({
-      removeNotification: MutationType.REMOVE_NOTIFICATION,
+      removeNotification: MutationType.REMOVE_NOTIFICATION
     }),
     isError() {
       return this.notification instanceof ErrorNotification;
     },
     close() {
       this.removeNotification(this.notification.getId());
-    },
-  },
+    }
+  }
 });
 </script>
 
