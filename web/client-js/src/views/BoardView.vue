@@ -87,13 +87,13 @@ export default defineComponent({
     ...mapMutations({
       swapColumnsMutation: MutationType.SWAP_COLUMNS,
     }),
-    startMovingColumn(event: DragEvent, columnIndex: number) {
+    startMovingColumn(event: DragEvent, columnIndex: number): void {
       event.dataTransfer!.dropEffect = "move";
       event.dataTransfer!.effectAllowed = "move";
       this.columnMovement.initialIndex = columnIndex;
       this.columnMovement.currentIndex = columnIndex;
     },
-    swapColumns(columnIndex: number) {
+    swapColumns(columnIndex: number): void {
       const payload: SwapColumnsMutationPayload = {
         firstIndex: this.columnMovement.currentIndex,
         secondIndex: columnIndex,
@@ -104,7 +104,7 @@ export default defineComponent({
     isDropTarget(index: number): boolean {
       return index == this.columnMovement.currentIndex;
     },
-    stopMovingColumn() {
+    stopMovingColumn(): void {
       if (this.hasColumnMoved()) {
         const column: ColumnId = this.board
           .getColumnList()
@@ -139,14 +139,14 @@ export default defineComponent({
       p.setOfTotal(this.board.getColumnList().length);
       return p;
     },
-    resetColumnMovement() {
+    resetColumnMovement(): void {
       this.columnMovement.initialIndex = -1;
       this.columnMovement.currentIndex = -1;
     },
-    openAddColumnForm() {
+    openAddColumnForm(): void {
       this.addColumnFormOpened = true;
     },
-    closeAddColumnForm() {
+    closeAddColumnForm(): void {
       this.addColumnFormOpened = false;
     },
   },

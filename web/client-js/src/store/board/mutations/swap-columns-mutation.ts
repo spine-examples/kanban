@@ -40,7 +40,7 @@ export default class SwapColumnsMutation {
    * Creates the mutation handler to be used by the store.
    */
   public static newHandler(): Mutation<BoardState> {
-    return (s: BoardState, p: SwapColumnsMutationPayload) => {
+    return (s: BoardState, p: SwapColumnsMutationPayload): void => {
       if (p.firstIndex != p.secondIndex) {
         const columns = s.board!.getColumnList();
         [columns[p.firstIndex], columns[p.secondIndex]] = [
