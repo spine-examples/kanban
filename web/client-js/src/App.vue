@@ -41,8 +41,8 @@ import "proto/index";
 export default {
   components: {
     TheHeader,
-    NotificationCenter,
-  },
+    NotificationCenter
+  }
 };
 </script>
 

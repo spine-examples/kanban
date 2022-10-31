@@ -27,21 +27,27 @@
 import { Mutation } from "vuex";
 import { BoardState } from "@/store/board/state/board-state";
 
-type Column = proto.spine_examples.kanban.Column;
+export type SwapColumnsMutationPayload = {
+  firstIndex: number;
+  secondIndex: number;
+};
 
 /**
- * Adds the provided column to the board in the {@linkplain BoardState local state}.
- *
- * If the column is already present in the state, it is not added.
+ * Swaps two columns in the {@linkplain BoardState local state}.
  */
-export default class AddColumnMutation {
+export default class SwapColumnsMutation {
   /**
    * Creates the mutation handler to be used by the store.
    */
   public static newHandler(): Mutation<BoardState> {
-    return (s: BoardState, c: Column) => {
-      if (!s.board?.getColumnList().includes(c)) {
-        s.board!.addColumn(c);
+    return (s: BoardState, p: SwapColumnsMutationPayload): void => {
+      if (p.firstIndex != p.secondIndex) {
+        const columns = s.board!.getColumnList();
+        [columns[p.firstIndex], columns[p.secondIndex]] = [
+          columns[p.secondIndex],
+          columns[p.firstIndex]
+        ];
+        s.board!.setColumnList(columns);
       }
     };
   }

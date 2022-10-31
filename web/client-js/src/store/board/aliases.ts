@@ -52,3 +52,8 @@ export type BoardId = proto.spine_examples.kanban.BoardId;
  * An alias for the `proto.spine_examples.kanban.ColumnId`.
  */
 export type ColumnId = proto.spine_examples.kanban.ColumnId;
+
+/**
+ * An alias for the `proto.spine_examples.kanban.ColumnPosition`.
+ */
+export type ColumnPosition = proto.spine_examples.kanban.ColumnPosition;

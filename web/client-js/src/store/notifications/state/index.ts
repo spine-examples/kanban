@@ -31,7 +31,7 @@ import { Notifications } from "@/store/notifications/state/notifications";
  * The instance of the notification center state.
  */
 const state: NotificationsCenterState = {
-  notifications: new Notifications(),
+  notifications: new Notifications()
 };
 
 export default state;

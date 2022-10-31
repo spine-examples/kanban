@@ -30,7 +30,7 @@ import { BoardState } from "@/store/board/state/board-state";
  * The instance of the local Kanban board state.
  */
 const state: BoardState = {
-  board: null,
+  board: null
 };
 
 export default state;

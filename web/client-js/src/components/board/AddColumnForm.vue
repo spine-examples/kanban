@@ -48,17 +48,17 @@ export default defineComponent({
   name: "AddColumnForm",
   data() {
     return {
-      name: "",
+      name: ""
     };
   },
   methods: {
     ...mapActions({
-      addColumn: ActionType.Command.ADD_COLUMN,
+      addColumn: ActionType.Command.ADD_COLUMN
     }),
     submit() {
       if (this.name.length > 0) {
         const payload: AddColumnActionPayload = {
-          name: this.name,
+          name: this.name
         };
         this.addColumn(payload);
         this.close();
@@ -66,8 +66,8 @@ export default defineComponent({
     },
     close() {
       this.$emit("closed");
-    },
-  },
+    }
+  }
 });
 </script>
 

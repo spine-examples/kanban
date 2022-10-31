@@ -39,7 +39,7 @@ import { BoardState } from "@/store/board/state/board-state";
 import { RootState } from "@/store/root/root-state";
 
 /**
- * Payload of the `AddColumnAction` action.
+ * Payload of the {@link AddColumnAction} action.
  *
  * Contains the name of a new column.
  */
@@ -49,22 +49,14 @@ export type AddColumnActionPayload = {
 
 type ColumnPosition = proto.spine_examples.kanban.ColumnPosition;
 type AddColumn = proto.spine_examples.kanban.AddColumn;
-type ColumnNameAlreadyTaken =
-  proto.spine_examples.kanban.ColumnNameAlreadyTaken;
+type ColumnNameAlreadyTaken = proto.spine_examples.kanban.ColumnNameAlreadyTaken;
 
 /**
  * Adds a column.
  */
-export default class AddColumnAction extends BoardAction<
-  AddColumnActionPayload,
-  void
-> {
+export default class AddColumnAction extends BoardAction<AddColumnActionPayload, void> {
   /**
    * Sends the command to add a column.
-   *
-   * It is assumed that the {@linkplain SubscribeToColumnAddedAction subscription} to
-   * {@link ColumnAdded} events already exists.
-   * @protected
    */
   protected execute(): void {
     const command = this.command();
@@ -114,11 +106,8 @@ export default class AddColumnAction extends BoardAction<
       .then(({ eventEmitted, unsubscribe }) => {
         eventEmitted.subscribe((e: Event) => {
           unsubscribe();
-          const rejection: ColumnNameAlreadyTaken =
-            this.unpackColumnNameAlreadyTaken(e);
-          const error = ErrorNotification.of(
-            `The name "${rejection.getName()}" is already taken`
-          );
+          const rejection: ColumnNameAlreadyTaken = this.unpackColumnNameAlreadyTaken(e);
+          const error = ErrorNotification.of(`The name "${rejection.getName()}" is already taken`);
           addNotification(this.getActionContext(), error);
         });
       });
@@ -138,10 +127,7 @@ export default class AddColumnAction extends BoardAction<
    * Creates the {@link ActionHandler} to be used by the store.
    */
   public static newHandler(): ActionHandler<BoardState, RootState> {
-    return (
-      ctx: ActionContext<BoardState, RootState>,
-      p: AddColumnActionPayload
-    ): void => {
+    return (ctx: ActionContext<BoardState, RootState>, p: AddColumnActionPayload): void => {
       new AddColumnAction(ctx, p).execute();
     };
   }

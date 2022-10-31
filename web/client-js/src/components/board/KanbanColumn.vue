@@ -30,8 +30,8 @@
       <h3>{{ column.getName() }}</h3>
     </div>
     <hr class="separator" />
-    <div class="cards"></div>
-    <div class="add-card">
+    <div class="cards" draggable="true" @dragstart.prevent @dragstart.stop></div>
+    <div class="add-card" draggable="true" @dragstart.prevent @dragstart.stop>
       <button>Add a card</button>
     </div>
   </div>
@@ -48,9 +48,9 @@ export default defineComponent({
   props: {
     column: {
       type: proto.spine_examples.kanban.Column,
-      required: true,
-    },
-  },
+      required: true
+    }
+  }
 });
 </script>
 
@@ -70,6 +70,7 @@ export default defineComponent({
   width: 250px;
   text-align: center;
   margin-bottom: 5px;
+  cursor: grab;
 }
 
 .separator {
@@ -80,8 +81,8 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  min-height: 200px;
-  max-height: 400px;
+  min-height: 40px;
+  max-height: calc(100vh - 80px);
   border-radius: 4px;
   margin-bottom: 20px;
 }

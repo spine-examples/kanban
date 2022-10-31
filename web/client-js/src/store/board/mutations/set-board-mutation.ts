@@ -36,7 +36,7 @@ export default class SetBoardMutation {
    * Creates the mutation handler to be used by the store.
    */
   public static newHandler(): Mutation<BoardState> {
-    return (s: BoardState, b: Board) => {
+    return (s: BoardState, b: Board): void => {
       s.board = b;
     };
   }

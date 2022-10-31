@@ -44,7 +44,7 @@ export const MutationType = {
   /**
    * Removes the notification with the provided ID from the notification center.
    */
-  REMOVE_NOTIFICATION: "removeNotification",
+  REMOVE_NOTIFICATION: "removeNotification"
 };
 
 /**
@@ -52,5 +52,5 @@ export const MutationType = {
  */
 export const mutations: MutationTree<NotificationsCenterState> = {
   [MutationType.ADD_NOTIFICATION]: AddNotificationMutation.newHandler(),
-  [MutationType.REMOVE_NOTIFICATION]: RemoveNotificationMutation.newHandler(),
+  [MutationType.REMOVE_NOTIFICATION]: RemoveNotificationMutation.newHandler()
 };

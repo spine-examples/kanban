@@ -27,7 +27,7 @@
 import { MutationTree } from "vuex";
 import { BoardState } from "@/store/board/state/board-state";
 import SetBoardMutation from "@/store/board/mutations/set-board-mutation";
-import AddColumnMutation from "@/store/board/mutations/add-column-mutation";
+import SwapColumnsMutation from "@/store/board/mutations/swap-columns-mutation";
 
 /**
  * Defines mutation types of the local {@linkplain BoardState board state}.
@@ -39,9 +39,9 @@ export const MutationType = {
   SET_BOARD: "setBoard",
 
   /**
-   * Adds the provided column to the board in the {@linkplain BoardState local state}.
+   * Swaps two columns in the {@linkplain BoardState local state}.
    */
-  ADD_COLUMN: "addColumn",
+  SWAP_COLUMNS: "swapColumns"
 };
 
 /**
@@ -49,5 +49,5 @@ export const MutationType = {
  */
 export const mutations: MutationTree<BoardState> = {
   [MutationType.SET_BOARD]: SetBoardMutation.newHandler(),
-  [MutationType.ADD_COLUMN]: AddColumnMutation.newHandler(),
+  [MutationType.SWAP_COLUMNS]: SwapColumnsMutation.newHandler()
 };

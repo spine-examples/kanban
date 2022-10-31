@@ -30,7 +30,8 @@ import { RootState } from "@/store/root/root-state";
 import CreateBoardAction from "@/store/board/actions/command/create-board-action";
 import AddColumnAction from "@/store/board/actions/command/add-column-action";
 import FetchBoardAction from "@/store/board/actions/query/fetch-board-action";
-import SubscribeToColumnAddedAction from "@/store/board/actions/subscription/subscribe-to-column-added-action";
+import SubscribeToBoardChangesAction from "@/store/board/actions/subscription/subscribe-to-board-changes-action";
+import MoveColumnAction from "@/store/board/actions/command/move-column-action";
 
 /**
  * Defines action types to interact with the remote board state.
@@ -40,7 +41,7 @@ export const ActionType = {
     /**
      * Fetches the {@link Board} with the provided ID.
      */
-    FETCH_BOARD: "fetchBoard",
+    FETCH_BOARD: "fetchBoard"
   },
   Command: {
     /**
@@ -52,13 +53,15 @@ export const ActionType = {
      * Adds a column.
      */
     ADD_COLUMN: "addColumn",
+
+    /**
+     * Adds a column.
+     */
+    MOVE_COLUMN: "moveColumn"
   },
   Subscription: {
-    /**
-     * Subscribes to {@link ColumnAdded} events produced by the provided board.
-     */
-    SUBSCRIBE_TO_COLUMN_ADDED: "subscribeToColumnAdded",
-  },
+    SUBSCRIBE_TO_BOARD_CHANGES: "subscribeToBoardChanges"
+  }
 };
 
 /**
@@ -68,6 +71,6 @@ export const actions: ActionTree<BoardState, RootState> = {
   [ActionType.Query.FETCH_BOARD]: FetchBoardAction.newHandler(),
   [ActionType.Command.CREATE_BOARD]: CreateBoardAction.newHandler(),
   [ActionType.Command.ADD_COLUMN]: AddColumnAction.newHandler(),
-  [ActionType.Subscription.SUBSCRIBE_TO_COLUMN_ADDED]:
-    SubscribeToColumnAddedAction.newHandler(),
+  [ActionType.Command.MOVE_COLUMN]: MoveColumnAction.newHandler(),
+  [ActionType.Subscription.SUBSCRIBE_TO_BOARD_CHANGES]: SubscribeToBoardChangesAction.newHandler()
 };
