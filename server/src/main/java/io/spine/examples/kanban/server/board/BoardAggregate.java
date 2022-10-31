@@ -295,13 +295,17 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
             ImmutableList.Builder<ColumnMovedOnBoard> movedColumns = new ImmutableList.Builder<>();
 
             ColumnPosition current = rightTo(from);
-            while (!current.equals(to)) {
-                ColumnPosition newPosition = leftTo(current);
-                movedColumns.add(BoardAggregate.this.moveColumn(current, newPosition));
+            while(!current.equals(to)) {
+                movedColumns.add(shiftColumnLeft(current));
                 current = rightTo(current);
             }
+            movedColumns.add(shiftColumnLeft(to));
 
             return movedColumns.build();
+        }
+
+        private ColumnMovedOnBoard shiftColumnLeft(ColumnPosition position) {
+            return BoardAggregate.this.moveColumn(position, leftTo(position));
         }
 
         /**
@@ -326,13 +330,17 @@ final class BoardAggregate extends Aggregate<BoardId, Board, Board.Builder> {
             ImmutableList.Builder<ColumnMovedOnBoard> movedColumns = new ImmutableList.Builder<>();
 
             ColumnPosition current = leftTo(from);
-            while (!current.equals(to)) {
-                ColumnPosition newPosition = rightTo(current);
-                movedColumns.add(BoardAggregate.this.moveColumn(current, newPosition));
+            while(!current.equals(to)) {
+                movedColumns.add(shiftColumnRight(current));
                 current = leftTo(current);
             }
+            movedColumns.add(shiftColumnRight(to));
 
             return movedColumns.build();
+        }
+
+        private ColumnMovedOnBoard shiftColumnRight(ColumnPosition position) {
+            return BoardAggregate.this.moveColumn(position, rightTo(position));
         }
     }
 }

@@ -30,12 +30,15 @@ import io.spine.core.Subscribe;
 import io.spine.examples.kanban.BoardId;
 import io.spine.examples.kanban.Card;
 import io.spine.examples.kanban.Column;
+import io.spine.examples.kanban.ColumnId;
 import io.spine.examples.kanban.event.BoardCreated;
 import io.spine.examples.kanban.event.ColumnAdditionRequested;
 import io.spine.examples.kanban.event.ColumnMovedOnBoard;
 import io.spine.examples.kanban.event.ColumnPlaced;
 import io.spine.examples.kanban.view.BoardView;
 import io.spine.server.projection.Projection;
+
+import java.util.stream.IntStream;
 
 /**
  * Builds display information for a board.
@@ -74,14 +77,23 @@ public final class BoardProjection
 
     @Subscribe
     void on(ColumnMovedOnBoard e) {
-        Column column = state()
-                .getColumn(e.getFrom().zeroBasedIndex())
-                .toBuilder()
-                .setPosition(e.getTo())
-                .vBuild();
+        int index = indexOf(e.getColumn());
+        int newIndex = e.getTo().zeroBasedIndex();
+        if (index != newIndex) {
+            Column column = state()
+                    .getColumn(index)
+                    .toBuilder()
+                    .setPosition(e.getTo())
+                    .vBuild();
+            builder().removeColumn(index)
+                     .addColumn(column.getPosition().zeroBasedIndex(), column);
+        }
+    }
 
-        builder().removeColumn(e.getFrom().zeroBasedIndex())
-                 .addColumn(column.getPosition().zeroBasedIndex(), column);
+    private int indexOf(ColumnId c) {
+        return IntStream.range(0, state().getColumnCount())
+                        .filter(i -> state().getColumn(i).getId().equals(c))
+                        .findFirst().orElse(-1);
     }
 
     @Subscribe
