@@ -39,7 +39,7 @@ repositories {
  *
  * Keep in sync with [io.spine.examples.kanban.dependency.ErrorProne.GradlePlugin.version].
  */
-val errorProneVersion = "2.0.2"
+val errorProneVersion = "3.1.0"
 
 /**
  * The version of the Spine Gradle plugin.
