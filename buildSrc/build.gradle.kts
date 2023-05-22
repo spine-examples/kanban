@@ -46,7 +46,7 @@ val errorProneVersion = "2.0.2"
  *
  * Keep in sync with [io.spine.examples.kanban.dependency.Spine.version].
  */
-val spineVersion = "1.8.2"
+val spineVersion = "1.9.0"
 
 dependencies {
     implementation("net.ltgt.gradle:gradle-errorprone-plugin:${errorProneVersion}")
